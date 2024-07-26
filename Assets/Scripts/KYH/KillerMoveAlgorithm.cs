@@ -25,8 +25,8 @@ public class KillerMoveAlgorithm : MonoBehaviour
     #region SetStartLookDir() 변수
     int startLookDir;   // 킬러가 처음 바라볼 방향 (랜덤 값[0 ~ 359]을 transform.eulerAngles.y에 대입)
     #endregion
+
     #region SetNowTracingState() 변수
-    string nowTrace = "";
     #endregion
 
     void Start()
@@ -50,10 +50,6 @@ public class KillerMoveAlgorithm : MonoBehaviour
 
     }
 
-    //public string NoEvidenceState() // 증거가 없는 상태를 알리는 함수
-    //{
-
-    //}
 
 
 }
