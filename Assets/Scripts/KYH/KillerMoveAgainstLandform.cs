@@ -13,17 +13,23 @@ public class KillerMoveAgainstLandform : MonoBehaviour
      */
     #endregion
 
+    Rigidbody rb;
     float moveSpeed = 7.0f;
 
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody>();
+    }
+    private void FixedUpdate()
+    {
+        // 앞으로 이동한다.
+        rb.velocity = transform.forward * moveSpeed;
+
     }
 
     void Update()
     {
-        // 앞으로 이동한다.
-        transform.position += transform.forward * moveSpeed * Time.deltaTime;
+
     }
 
     void dirRetarget()
