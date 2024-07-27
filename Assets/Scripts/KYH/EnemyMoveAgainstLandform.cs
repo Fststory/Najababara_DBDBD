@@ -35,5 +35,6 @@ public class EnemyMoveAgainstLandform : MonoBehaviour
     void dirRetarget()
     {
 
+        //transform.eulerAngles = 
     }
 }

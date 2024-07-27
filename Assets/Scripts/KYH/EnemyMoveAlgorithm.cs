@@ -36,7 +36,7 @@ public class EnemyMoveAlgorithm : MonoBehaviour
 
     void Update()
     {
-        SetNowTracingState();   // 현재 추격 상태를 설정한다.
+        //SetNowTracingState();   // 현재 추격 상태를 설정한다.
     }
 
     void SetStartLookDir()  // 처음 바라보는 방향을 정함
@@ -47,9 +47,10 @@ public class EnemyMoveAlgorithm : MonoBehaviour
 
     void SetNowTracingState()  // 현재 추격 상태를 설정하는 함수 (1. 상태 간 우선순위를 매긴다.)
     {
+        if (EnemyMovingManager.emm.nowTracingMode == "JustStarted")
+        {
 
+        }
     }
-
-
 
 }
