@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KillerTracingMod : MonoBehaviour
+public class EnemyTracingMod : MonoBehaviour
 {
     // 다양한 추격 상태를 다루는 스크립트입니다.
     

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KillerMoveAlgorithm : MonoBehaviour
+public class EnemyMoveAlgorithm : MonoBehaviour
 {
     // 킬러의 움직임 알고리즘을 구현하는 스크립트
 

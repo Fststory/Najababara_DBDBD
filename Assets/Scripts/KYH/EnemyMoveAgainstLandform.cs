@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KillerMoveAgainstLandform : MonoBehaviour
+public class EnemyMoveAgainstLandform : MonoBehaviour
 {
     // 이동하다가 벽을 감지하면 방향을 바꾼다
 

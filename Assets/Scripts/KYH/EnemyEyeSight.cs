@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KillerEyeSight : MonoBehaviour
+public class EnemyEyeSight : MonoBehaviour
 {
     // 킬러의 시야를 구현하는 스크립트
 
