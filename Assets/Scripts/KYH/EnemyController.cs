@@ -15,6 +15,9 @@ public class EnemyController : MonoBehaviour
     Vector3 dir;
     Transform targetTransform;
     public float moveSpeed = 7.0f;
+    HangPlayerHookInteraction hang;
+    public short playerState=2;  // 플레이어 상태 구현 시 지울 예정*************
+                                // 0 - 건강, 1 - 아야, 2 - 빌빌 기어
 
     enum EnemyState
     {
@@ -22,6 +25,7 @@ public class EnemyController : MonoBehaviour
         FindAura,   // 오라(아우라) 발견
         FindTrace,  // 흔적 발견
         FindPlayer, // 플레이어 발견
+        GetPlayer,
         Attack  // 공격
     }
 
@@ -35,10 +39,11 @@ public class EnemyController : MonoBehaviour
         //currentState = EnemyState.NoEvidence;   // 초기 상태는 "배회" 상태 => 이게 기존 코드 밑에 줄은 실험을 위해 추가한 코드 이후 삭제 **********
         currentState = EnemyState.FindPlayer;   // 실험용 이후 삭제할 것임 **************************************************************************
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;  // 씬 상의 "Player" 태그를 가진 오브젝트의 트랜스폼 캐싱
+        hang = GetComponent<HangPlayerHookInteraction>();
     }
 
     private void FixedUpdate()
-    {     
+    {
         switch (currentState)
         {
             case EnemyState.NoEvidence:
@@ -52,6 +57,9 @@ public class EnemyController : MonoBehaviour
                 break;
             case EnemyState.FindPlayer:
                 ChasePlayer();
+                break;
+            case EnemyState.GetPlayer:
+                GetPlayer();
                 break;
             case EnemyState.Attack:
                 Attack();
@@ -77,7 +85,27 @@ public class EnemyController : MonoBehaviour
     void ChasePlayer()
     {
         dir = playerTransform.position - transform.position;
+        dir.Normalize();
         rb.velocity += dir * moveSpeed * Time.deltaTime;
+        float distance = Vector3.Distance(transform.position, hang.playerObject.transform.position);
+        if (playerState>1&&distance<2)
+        {
+            hang.HangPlayerOnMe();
+            ChangeState(EnemyState.GetPlayer);
+        }
+    }
+
+    void GetPlayer()
+    {
+        dir = hang.pillarTransform.position - transform.position;
+        dir.Normalize();
+        dir.y = 0;
+        rb.velocity += dir * moveSpeed * Time.deltaTime;
+        float distance = Vector3.Distance(transform.position, hang.pillarTransform.position);
+        if (distance < 2.0f)
+        {
+            hang.HangPlayerOnHook();
+        }
     }
 
     void Attack()
