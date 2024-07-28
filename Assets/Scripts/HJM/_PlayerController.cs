@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
 
     Animator animator;
 
-
+    public float mouseSensitivity = 10000.0f; // 마우스 감도
     public float playerSpeed = 7.0f;
 
     // Start is called before the first frame update
@@ -45,7 +45,8 @@ public class PlayerController : MonoBehaviour
             Vector3 lookRight = new Vector3(cameraArm.right.x, 0f, cameraArm.right.z).normalized;
             Vector3 moveDir = lookForward * moveInput.y + lookRight * moveInput.x;
             // WASD 입력을 받아 Vector3 playerDir에 저장하고 P = P0 + vt로 움직인다
-            characterBody.forward = lookForward;
+            //characterBody.forward = lookForward;
+            characterBody.forward = moveDir;
             transform.position += moveDir * playerSpeed*  Time.deltaTime;
         }
         
@@ -70,7 +71,7 @@ public class PlayerController : MonoBehaviour
 
     private void LookAround()
     {   // Vector2 mouseDelta 변수에 마우스 움직임 값을 저장한다.
-        Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) * mouseSensitivity;
 
         // cameraArm의 각도값을 오일러 값으로 변환한다.
         Vector3 camAngle = cameraArm.rotation.eulerAngles;

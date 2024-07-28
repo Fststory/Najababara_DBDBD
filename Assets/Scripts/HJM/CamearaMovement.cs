@@ -23,6 +23,7 @@ public class CamearaMovement : MonoBehaviour
     public float finalDistance; // 최종적으로 결정된 카메라와 대상 간 거리
     // 방해물이 있을 시에 카메라가 이동해서 위치하게 될 거리
 
+
     void Start()
     {
         // 마우스 회전값을 초기화 시켜준다.
@@ -35,6 +36,7 @@ public class CamearaMovement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
+           
 
     void Update()
     {   // 매 프레임마다 마우스의 값을 받아와 감도와 시간을 곱해준다.
