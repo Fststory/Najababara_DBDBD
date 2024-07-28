@@ -20,15 +20,15 @@ public class HangPlayerHookInteraction : MonoBehaviour
         playerObject = GameObject.FindGameObjectWithTag("Player"); // "플레이어" 오브젝트 캐싱
     }
     
-    public void HangPlayerOnMe() // 플레이어를 업는 기능
+    public void HangPlayerOnMe()    // 플레이어를 업는 기능
     {
-        playerObject.transform.SetParent(hangPoint); // 업는 지점에 플레이어의 위치를 둔다.
+        playerObject.transform.SetParent(hangPoint);
         playerObject.transform.localPosition = new Vector3(0, 0, 0);
     }
 
-    public void HangPlayerOnHook()
+    public void HangPlayerOnHook()  // 플레이어를 매다는 기능
     {
-        playerObject.transform.SetParent(hookPoint); // 갈고리에 플레이어의 위치를 둔다.
+        playerObject.transform.SetParent(hookPoint);
         playerObject.transform.localPosition = new Vector3(0, 0, 0);
     }
 }
