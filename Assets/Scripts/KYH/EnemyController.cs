@@ -23,7 +23,7 @@ public class EnemyController : MonoBehaviour
     float delay = 2.0f;
 
 
-    enum EnemyState
+    public enum EnemyState
     {
         NoEvidence, //증거 없음
         FindAura,   // 오라(아우라) 발견
@@ -32,7 +32,7 @@ public class EnemyController : MonoBehaviour
         GetPlayer,  // 플레이어 업음
     }
 
-    EnemyState currentState;    // 현재 상태
+    public EnemyState currentState;    // 현재 상태
     Transform playerTransform;   // 플레이어의 트랜스폼(직접 추격 때 사용)
 
 
