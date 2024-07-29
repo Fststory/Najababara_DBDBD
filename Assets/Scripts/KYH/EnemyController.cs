@@ -17,19 +17,22 @@ public class EnemyController : MonoBehaviour
     public float moveSpeed = 7.0f;
     HangPlayerHookInteraction hang;
     public short playerState=2;  // 플레이어 상태 구현 시 지울 예정*************
-                                // 0 - 건강, 1 - 아야, 2 - 빌빌 기어
+                                 // 0 - 건강, 1 - 부상, 2 - 빈사
 
-    enum EnemyState
+    public float currentTime = 0;
+    float delay = 2.0f;
+
+
+    public enum EnemyState
     {
         NoEvidence, //증거 없음
         FindAura,   // 오라(아우라) 발견
         FindTrace,  // 흔적 발견
         FindPlayer, // 플레이어 발견
-        GetPlayer,
-        Attack  // 공격
+        GetPlayer,  // 플레이어 업음
     }
 
-    EnemyState currentState;    // 현재 상태
+    public EnemyState currentState;    // 현재 상태
     Transform playerTransform;   // 플레이어의 트랜스폼(직접 추격 때 사용)
 
 
@@ -61,9 +64,6 @@ public class EnemyController : MonoBehaviour
             case EnemyState.GetPlayer:
                 GetPlayer();
                 break;
-            case EnemyState.Attack:
-                Attack();
-                break;
         }
     }
 
@@ -86,21 +86,25 @@ public class EnemyController : MonoBehaviour
     {
         dir = playerTransform.position - transform.position;
         dir.Normalize();
-        rb.velocity += dir * moveSpeed * Time.deltaTime;
+        rb.velocity = dir * moveSpeed;
         float distance = Vector3.Distance(transform.position, hang.playerObject.transform.position);
-        if (playerState>1&&distance<2)
+        if (playerState <= 1 && distance < 2)   // 범위 내에서 아직 플레이어가 빈사 상태가 아니면 공격을 시도
+        {
+            Attack();
+        }
+        if (playerState > 1 && distance < 2)    // 범위 내에서 플레이어가 빈사 상태면 업을 수 있다
         {
             hang.HangPlayerOnMe();
             ChangeState(EnemyState.GetPlayer);
         }
     }
 
-    void GetPlayer()
+    void GetPlayer()    // 플레이어를 업었을 때 갈고리로 향하는 기능
     {
         dir = hang.pillarTransform.position - transform.position;
         dir.Normalize();
         dir.y = 0;
-        rb.velocity += dir * moveSpeed * Time.deltaTime;
+        rb.velocity = dir * moveSpeed;
         float distance = Vector3.Distance(transform.position, hang.pillarTransform.position);
         if (distance < 2.0f)
         {
@@ -108,12 +112,17 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    void Attack()
+    void Attack()   // 공격 기능
     {
-
+        currentTime += Time.deltaTime;
+        if (currentTime > delay)
+        {
+            playerState++;
+            currentTime = 0;
+        }
     }
 
-    void ChangeState(EnemyState newState)
+    void ChangeState(EnemyState newState)   // 상태 변화 기능
     {
         currentState = newState;
     }
