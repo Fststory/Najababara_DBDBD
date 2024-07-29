@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour
 {
@@ -11,12 +13,14 @@ public class EnemyController : MonoBehaviour
         
     */
 
+    NavMeshAgent NMA;
+
     Rigidbody rb;
     Vector3 dir;
     Transform targetTransform;
     public float moveSpeed = 7.0f;
     HangPlayerHookInteraction hang;
-    public short playerState=2;  // 플레이어 상태 구현 시 지울 예정*************
+    public int playerState=2;  // 플레이어 상태 구현 시 지울 예정, playerState를 이용해 조건을 판단하는 부분 수정 필요 *************
                                  // 0 - 건강, 1 - 부상, 2 - 빈사
 
     public float currentTime = 0;
@@ -43,6 +47,7 @@ public class EnemyController : MonoBehaviour
         currentState = EnemyState.FindPlayer;   // 실험용 이후 삭제할 것임 **************************************************************************
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;  // 씬 상의 "Player" 태그를 가진 오브젝트의 트랜스폼 캐싱
         hang = GetComponent<HangPlayerHookInteraction>();
+        NMA = GetComponent<NavMeshAgent>();
     }
 
     private void FixedUpdate()
@@ -69,24 +74,55 @@ public class EnemyController : MonoBehaviour
 
     void Wander()
     {
+        // 증거가 없으면 돌아다닌다.
 
+        // 증거 발견 시 우선 순위에 따라 특정 증거를 타겟으로 지정하고 상태를 변경
+        if (seePlayer)
+        {
+            ChangeState(ChasePlayer);
+        }
+        else if (seeTrace)
+        {
+            ChangeState(ChaseTrace);
+        }
+        else if (seeAura)
+        {
+            ChangeState(ChaseAura);
+        }
     }
 
     void ChaseAura()
     {
+        targetTransform = aura.transform;
+        NMA.SetDestination(targetTransform.position);
 
+        if (seePlayer)
+        {
+            ChangeState(ChasePlayer);
+        }
+        else if (seeTrace)
+        {
+            ChangeState(ChaseTrace);
+        }
     }
 
     void ChaseTrace()
     {
+        targetTransform = trace.transform;
+        NMA.SetDestination(targetTransform.position);
 
+        if (seePlayer)
+        {
+            ChangeState(ChasePlayer);
+        }
     }
 
     void ChasePlayer()
     {
-        dir = playerTransform.position - transform.position;
-        dir.Normalize();
-        rb.velocity = dir * moveSpeed;
+        //dir = playerTransform.position - transform.position;
+        //dir.Normalize();
+        //rb.velocity = dir * moveSpeed;
+        NMA.SetDestination(playerTransform.position);
         float distance = Vector3.Distance(transform.position, hang.playerObject.transform.position);
         if (playerState <= 1 && distance < 2)   // 범위 내에서 아직 플레이어가 빈사 상태가 아니면 공격을 시도
         {
@@ -101,10 +137,11 @@ public class EnemyController : MonoBehaviour
 
     void GetPlayer()    // 플레이어를 업었을 때 갈고리로 향하는 기능
     {
-        dir = hang.pillarTransform.position - transform.position;
-        dir.Normalize();
-        dir.y = 0;
-        rb.velocity = dir * moveSpeed;
+        //dir = hang.pillarTransform.position - transform.position;
+        //dir.Normalize();
+        //dir.y = 0;
+        //rb.velocity = dir * moveSpeed;
+        NMA.SetDestination(hang.pillarTransform.position);
         float distance = Vector3.Distance(transform.position, hang.pillarTransform.position);
         if (distance < 2.0f)
         {
