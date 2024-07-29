@@ -35,8 +35,10 @@ public class CamearaMovement : MonoBehaviour
         // 커서를 플레이 화면에 잠궈준다.
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+
     }
-           
+
 
     void Update()
     {   // 매 프레임마다 마우스의 값을 받아와 감도와 시간을 곱해준다.
