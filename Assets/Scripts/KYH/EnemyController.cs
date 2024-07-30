@@ -21,7 +21,8 @@ public class EnemyController : MonoBehaviour
     public float moveSpeed = 7.0f;
     HangPlayerHookInteraction hang;
     public int playerState=2;  // 플레이어 상태 구현 시 지울 예정, playerState를 이용해 조건을 판단하는 부분 수정 필요 *************
-                                 // 0 - 건강, 1 - 부상, 2 - 빈사
+                               // 0 - 건강, 1 - 부상, 2 - 빈사
+    public float attackRange = 2.0f;
 
     public float currentTime = 0;
     float delay = 2.0f;
@@ -34,6 +35,7 @@ public class EnemyController : MonoBehaviour
         FindTrace,  // 흔적 발견
         FindPlayer, // 플레이어 발견
         GetPlayer,  // 플레이어 업음
+        OnGroggy    // 조작 불능(스턴)
     }
 
     public EnemyState currentState;    // 현재 상태
@@ -68,6 +70,9 @@ public class EnemyController : MonoBehaviour
                 break;
             case EnemyState.GetPlayer:
                 GetPlayer();
+                break;
+            case EnemyState.OnGroggy:
+                Stuned();
                 break;
         }
     }
@@ -124,11 +129,11 @@ public class EnemyController : MonoBehaviour
         //rb.velocity = dir * moveSpeed;
         NMA.SetDestination(playerTransform.position);
         float distance = Vector3.Distance(transform.position, hang.playerObject.transform.position);
-        if (playerState <= 1 && distance < 2)   // 범위 내에서 아직 플레이어가 빈사 상태가 아니면 공격을 시도
+        if (playerState <= 1 && distance < attackRange)   // 범위 내에서 아직 플레이어가 빈사 상태가 아니면 공격을 시도
         {
             Attack();
         }
-        if (playerState > 1 && distance < 2)    // 범위 내에서 플레이어가 빈사 상태면 업을 수 있다
+        if (playerState > 1 && distance < attackRange)    // 범위 내에서 플레이어가 빈사 상태면 업을 수 있다
         {
             hang.HangPlayerOnMe();
             ChangeState(EnemyState.GetPlayer);
@@ -137,12 +142,9 @@ public class EnemyController : MonoBehaviour
 
     void GetPlayer()    // 플레이어를 업었을 때 갈고리로 향하는 기능
     {
-        //dir = hang.pillarTransform.position - transform.position;
-        //dir.Normalize();
-        //dir.y = 0;
-        //rb.velocity = dir * moveSpeed;
-        NMA.SetDestination(hang.pillarTransform.position);
-        float distance = Vector3.Distance(transform.position, hang.pillarTransform.position);
+        targetTransform = hang.pillarTransform;
+        NMA.SetDestination(targetTransform.position);
+        float distance = Vector3.Distance(transform.position, targetTransform.position);
         if (distance < 2.0f)
         {
             hang.HangPlayerOnHook();
@@ -159,9 +161,37 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    void CheckPlayerInSight(float degree, float maxDistance)   // 시야 내 플레이어 탐지 기능. 시야각:degree, 시야 거리:maxDistance
+    {                                                           // 시야 거리에 있는지 확인 -> 타겟과 나 사이의 각도와 시야각 비교
+        targetTransform = null;
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        for(int i = 0; i < players.Length; i++)
+        {
+            float distance = Vector3.Distance(players[i].transform.position, transform.position);
+            if (distance < maxDistance)
+            {
+                Vector3 lookVector = players[i].transform.position - transform.position;
+                lookVector.Normalize();
+
+                float cosTheta = Vector3.Dot(lookVector, transform.forward);
+                float theta = Mathf.Acos(cosTheta) * Mathf.Rad2Deg;
+
+                if (theta < degree)
+                {
+                    targetTransform = players[i].transform;
+                    ChangeState(EnemyState.FindPlayer);
+                }
+            }
+        }
+    }
+
+    void Stuned() // 판자 맞을 때 그로기 걸리는 기능
+    {
+        // 스턴 시간 동안 움직임이 없고 스턴 시간이 끝나면 다시 증거를 찾아 다님
+    }
+
     void ChangeState(EnemyState newState)   // 상태 변화 기능
     {
         currentState = newState;
     }
-
 }

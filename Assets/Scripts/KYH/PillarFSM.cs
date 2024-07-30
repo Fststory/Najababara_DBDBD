@@ -10,14 +10,17 @@ public class PillarFSM : MonoBehaviour
         NoSacrifice,    // 제물 없음
         SacrificeLV1,   // 해당 제물 진행도 1
         SacrificeLV2,   // 해당 제물 진행도 2
-        AbsorbSacrifice  // 제물 먹음
+        AbsorbSacrifice,  // 제물 먹음
+        Damaged   // 망가짐
     }
 
-    public GameObject player;
-    pillarState currentState;
+    public GameObject player;   // 플레이어 오브젝트
+    pillarState currentState;   // 현재 상태
 
-    float currentTime = 0;
-    public float eatTime;
+    float currentTime = 0;  // 현재 시간
+    public float eatTime;   // 흡수 시간
+    public float damagedTime;  // 부숴지는데 걸리는 시간
+    public float repairTime;    // 수리 시간
 
     void Start()
     {
@@ -28,6 +31,9 @@ public class PillarFSM : MonoBehaviour
     {
         switch (currentState)
         {
+            case pillarState.Damaged:
+                SelfRepair();
+                break;
             case pillarState.NoSacrifice:
                 WaitSacrifice();
                 break;
@@ -43,7 +49,16 @@ public class PillarFSM : MonoBehaviour
         }
     }
 
-    private void WaitSacrifice()    // 제물이 걸리면 상태를 기준으로 다음 태세로의 전환 기능/ 플레이어 체력& 구현 시 해당 값으로 판단 **********************
+    private void SelfRepair()   // 플레이어가 망가뜨리면 저절로 수리하는 기능
+    {
+        currentTime += Time.deltaTime;
+        if (currentTime > repairTime)
+        {
+            ChangeState(pillarState.NoSacrifice);
+        }
+    }
+
+    private void WaitSacrifice()    // 제물이 걸리면 상태를 기준으로 다음 태세로의 전환 기능/ 플레이어 체력 & 상태 구현 시 해당 값으로 판단 **********************
     {                                                                                       // 일단 player hp, state로 표시
         //if (player.GetComponent<>().hp > 50.0f)
         //{
@@ -73,7 +88,6 @@ public class PillarFSM : MonoBehaviour
     {
         Destroy(player.gameObject);
 
-
         currentTime += Time.deltaTime;
         if (currentTime > eatTime)
         {
@@ -84,5 +98,25 @@ public class PillarFSM : MonoBehaviour
     void ChangeState(pillarState newState)      // 상태 전환 기능
     {
         currentState = newState;
+    }
+
+    public void TakeDamage()    // 상대방이 나에게 데미지를 입히는 기능
+    {
+        ChangeState(pillarState.Damaged);
+    }
+
+    private void OnTriggerStay(Collider other)  // 플레이어가 갈고리에 걸리지 않은 상태로 상호작용 범위에 있을 때 사용 가능한 기능
+    {
+        //if (other.CompareTag("Player") && playerState != playerState.Hooked)    // 플레이어 상태 구현 시 그에 맞게 적용 *********************
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                currentTime += Time.deltaTime;
+                if (currentTime > damagedTime)
+                {
+                    TakeDamage();
+                }
+            }
+        }
     }
 }
