@@ -6,7 +6,6 @@ public class EnemyRandomSpawn : MonoBehaviour
 {
     // 매 플레이마다 에너미가 랜덤 좌표에서 랜덤 방향을 바라보며 시작
     
-    Vector3 startPos; // 시작할 때 위치(랜덤)
     int startLookDir; // 시작할 때 y축 회전값(랜덤)
     Transform floorTransform;
 
@@ -31,5 +30,4 @@ public class EnemyRandomSpawn : MonoBehaviour
         startLookDir = Random.Range(0, 360);
         transform.eulerAngles = new Vector3(0, startLookDir, 0);
     }
-
 }
