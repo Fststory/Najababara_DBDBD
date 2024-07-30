@@ -77,44 +77,44 @@ public class EnemyController : MonoBehaviour
         // 증거가 없으면 돌아다닌다.
 
         // 증거 발견 시 우선 순위에 따라 특정 증거를 타겟으로 지정하고 상태를 변경
-        if (seePlayer)
-        {
-            ChangeState(ChasePlayer);
-        }
-        else if (seeTrace)
-        {
-            ChangeState(ChaseTrace);
-        }
-        else if (seeAura)
-        {
-            ChangeState(ChaseAura);
-        }
+        //if (seePlayer)
+        //{
+        //    ChangeState(ChasePlayer);
+        //}
+        //else if (seeTrace)
+        //{
+        //    ChangeState(ChaseTrace);
+        //}
+        //else if (seeAura)
+        //{
+        //    ChangeState(ChaseAura);
+        //}
     }
 
     void ChaseAura()
     {
-        targetTransform = aura.transform;
-        NMA.SetDestination(targetTransform.position);
+        //targetTransform = aura.transform;
+        //NMA.SetDestination(targetTransform.position);
 
-        if (seePlayer)
-        {
-            ChangeState(ChasePlayer);
-        }
-        else if (seeTrace)
-        {
-            ChangeState(ChaseTrace);
-        }
+        //if (seePlayer)
+        //{
+        //    ChangeState(ChasePlayer);
+        //}
+        //else if (seeTrace)
+        //{
+        //    ChangeState(ChaseTrace);
+        //}
     }
 
     void ChaseTrace()
     {
-        targetTransform = trace.transform;
-        NMA.SetDestination(targetTransform.position);
+        //targetTransform = trace.transform;
+        //NMA.SetDestination(targetTransform.position);
 
-        if (seePlayer)
-        {
-            ChangeState(ChasePlayer);
-        }
+        //if (seePlayer)
+        //{
+        //    ChangeState(ChasePlayer);
+        //}
     }
 
     void ChasePlayer()
