@@ -1747,6 +1747,7 @@ MonoBehaviour:
   player: {fileID: 1495872552}
   traceMarkPrefab: {fileID: 5062645497159981678, guid: 052844acbcdfcd04c8b18ebf119c4db2,
     type: 3}
+  markCycle: 0.25
 --- !u!1 &1632396789
 GameObject:
   m_ObjectHideFlags: 0
@@ -1919,6 +1920,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 8801032759615661773, guid: 8e83653efa46cde4588176c5421a7de1,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
