@@ -6,26 +6,22 @@ public class PlayerLeaveMark : MonoBehaviour
 {
     // 플레이어가 이동하며 흔적을 남기는 기능
 
-    /*  뛰어다닐 때 흔적을 남김
-        ㄴ흔적 프리팹 생성 => 
-
-        걷거나 앉아서 갈 때는 안 남김
-        
+    /*  
+        뛰어다닐 때 흔적을 남김
      */
 
     public Transform player;
     public GameObject traceMarkPrefab;
     float currentTime = 0;
-    float markCycle = 0.5f;  // 흔적을 남기는 주기
+    public float markCycle = 0.5f;  // 흔적을 남기는 주기
 
-    void Start()
-    {
-        
-    }
 
     void Update()
     {
-        LeaveMark();
+        //if (playerController.run)
+        //{
+            LeaveMark();
+        //}
     }
 
     public void LeaveMark() // 플레이어가 뛰는 상태일 때 사용
