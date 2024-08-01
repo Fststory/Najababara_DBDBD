@@ -8,8 +8,8 @@ public class PlayerController : MonoBehaviour
     Camera _camera;
     CharacterController _controller;
 
-    public float speed = 5.0f;
-    public float runSpeed = 8.0f;
+    public float moveSpeed;
+    public float runSpeed;
     public float finalSpeed;
     public bool run;
 
@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour
             toggleCameraRotation = false; // 둘러보기 비활성화
         }
 
+        // LeftShift 누르면 달리기
         if (Input.GetKey(KeyCode.LeftShift))
         {
             run = true;
@@ -43,7 +44,7 @@ public class PlayerController : MonoBehaviour
             run = false;
         }
 
-        InputMovement();
+        
     }
 
     void LateUpdate()
@@ -56,9 +57,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void InputMovement()
+    public void InputMovement(float moveSpeed, float runSpeed)
     {
-        finalSpeed = run ? runSpeed : speed;
+        // 만약 run이 true라면, finalSpeed는 runSpeed 값을 갖는다.
+        // 만약 run이 false라면, finalSpeed는 speed 값을 갖는다.
+        finalSpeed = run ? runSpeed : moveSpeed;
 
         // 카메라의 방향을 기준으로 이동 벡터 계산
         Vector3 forward = _camera.transform.forward;
