@@ -15,7 +15,8 @@ public class PillarFSM : MonoBehaviour
     }
 
     public GameObject player;   // 플레이어 오브젝트
-    //public PlayerController playerController;   // 플레이어 컨트롤러 컴포넌트
+    public PlayerController playerController;   // 플레이어 컨트롤러
+    public PlayerFSM playerFSM;   // 플레이어 상태
     pillarState currentState;   // 갈고리 현재 상태
 
     float currentTime = 0;  // 현재 시간
@@ -26,6 +27,7 @@ public class PillarFSM : MonoBehaviour
     void Start()
     {
         currentState = pillarState.NoSacrifice;
+        playerFSM = player.GetComponent<PlayerFSM>();
     }
 
     void Update()
@@ -54,18 +56,18 @@ public class PillarFSM : MonoBehaviour
 
     private void WaitSacrifice()    // 제물이 걸리면 상태를 기준으로 다음 태세로의 전환 기능/ 플레이어 체력 & 상태 구현 시 해당 값으로 판단 **********************
     {                                                                                       // 일단 player hp, state로 표시
-        //if (playerState == 4)   // 플레이어가 걸렸으면 체력 확인!
-        //{
-        //    if (playerController.hp > 50.0f)
-        //    {
-        //        ChangeState(pillarState.SacrificeLV1);
-        //    }
-        //    else if (1.0f < playerController.hp && playerController.hp < 50.0f
-        //    || playerController.alreadyHooked) playerController에 bool alreadyHooked 추가!
-        //    {
-        //        ChangeState(pillarState.SacrificeLV2);
-        //    }
-        //}
+        if (playerFSM.pyState == PlayerFSM.PlayerState.Hooked)   // 플레이어가 걸렸으면 체력 확인!
+        {
+            if (playerFSM.currentHp > 50.0f)
+            {
+                ChangeState(pillarState.SacrificeLV1);
+            }
+            //else if (1.0f < playerFSM.currentHp && playerFSM.currentHp < 50.0f
+            //|| playerController.alreadyHooked)  // playerController에 bool alreadyHooked 추가!
+            //    {
+            //    ChangeState(pillarState.SacrificeLV2);
+            //}
+        }
     }
     private void GiveFalseHope()    // 희망고문하는 기능    [SacrificeLV1]
     {
@@ -115,7 +117,7 @@ public class PillarFSM : MonoBehaviour
     // 갈고리 부수기, 갈고리에 트리거 있어야 됨 **********************************
     private void OnTriggerStay(Collider other)  // 플레이어가 갈고리에 걸리지 않은 상태로 상호작용 범위에 있을 때 사용 가능한 기능
     {
-        //if (other.CompareTag("Player") && playerState < 2)    // 플레이어 상태 구현 시 그에 맞게 적용 *********************
+        if (other.CompareTag("Player") && (int)playerFSM.pyState < 2)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {

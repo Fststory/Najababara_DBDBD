@@ -16,11 +16,12 @@ public class EnemyController : MonoBehaviour
 
     NavMeshAgent NMA;
 
+    public GameObject player;
     public Transform targetTransform;
     public float moveSpeed = 7.0f;
     HangPlayerHookInteraction hang;
-    public int playerState = 2;  // 플레이어 상태 구현 시 지울 예정, playerState를 이용해 조건을 판단하는 부분 수정 필요 *************
-                               // 0 - 건강, 1 - 부상, 2 - 빈사, 3 - 업힘, 4 - 걸림
+    public PlayerFSM playerFSM;
+                               // 0 - 건강, 1 - 부상, 2 - 빈사, 3 - 특수 행동(업힘, 수리, 구조, 창문 넘기 등), 4 - 걸림
     public float attackRange = 2.0f;    // 공격 사정 거리
 
     public float currentTime = 0;
@@ -48,6 +49,7 @@ public class EnemyController : MonoBehaviour
     {
         currentState = EnemyState.NoEvidence;   // 초기 상태는 "배회" 상태 => 이게 기존 코드 밑에 줄은 실험을 위해 추가한 코드 이후 삭제 **********
         hang = GetComponent<HangPlayerHookInteraction>();
+        playerFSM = player.GetComponent<PlayerFSM>();
         NMA = GetComponent<NavMeshAgent>();
         generators = GameObject.FindGameObjectsWithTag("Generator");
     }
@@ -156,11 +158,11 @@ public class EnemyController : MonoBehaviour
             print("플레이어에게 간다!");
 
             float distance = Vector3.Distance(transform.position, targetTransform.position);
-            if (playerState <= 1 && distance < attackRange)   // 범위 내에서 아직 플레이어가 건강 or 부상 상태면 공격을 시도
+            if ((int)playerFSM.pyState <= 1 && distance < attackRange)   // 범위 내에서 아직 플레이어가 건강 or 부상 상태면 공격을 시도
             {
                 Attack();
             }
-            else if (playerState > 1 && distance < attackRange)    // 범위 내에서 플레이어가 빈사 or 특수행동 상태면 업을 수 있다
+            else if ((int)playerFSM.pyState > 1 && distance < attackRange)    // 범위 내에서 플레이어가 빈사 or 특수행동 상태면 업을 수 있다
             {
                 ChangeState(EnemyState.GetPlayer);
             }
@@ -177,9 +179,18 @@ public class EnemyController : MonoBehaviour
         currentTime += Time.deltaTime;
         if (currentTime > attackDelay)
         {
-            playerState++;
-            currentTime = 0;
-            print("Attack");
+            if (playerFSM.pyState == PlayerFSM.PlayerState.Normal)
+            {
+                playerFSM.pyState = PlayerFSM.PlayerState.Injured;
+                currentTime = 0;
+                print("Attack");
+            }
+            else if (playerFSM.pyState == PlayerFSM.PlayerState.Injured)
+            {
+                playerFSM.pyState = PlayerFSM.PlayerState.Dying;
+                currentTime = 0;
+                print("Attack");
+            }
         }
     }
 
