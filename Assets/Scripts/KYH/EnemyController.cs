@@ -49,7 +49,7 @@ public class EnemyController : MonoBehaviour
         currentState = EnemyState.NoEvidence;   // 초기 상태는 "배회" 상태 => 이게 기존 코드 밑에 줄은 실험을 위해 추가한 코드 이후 삭제 **********
         hang = GetComponent<HangPlayerHookInteraction>();
         NMA = GetComponent<NavMeshAgent>();
-        //generators = GameObject.FindGameObjectsWithTag("Generator");
+        generators = GameObject.FindGameObjectsWithTag("Generator");
     }
 
     private void FixedUpdate()
@@ -84,10 +84,10 @@ public class EnemyController : MonoBehaviour
         // 이때 가장 가까운 발전기를 찾은 뒤 타겟으로 잡는다. 근처에 도달하면 다음 발전기를 타겟으로
         //for(int i = 0; i < generators.Length; i++)
         //{
-            //targetTransform = generator[i].transform;
-            //NMA.SetDestination(targetTransform.position);
+        targetTransform = generators[0].transform;
+        NMA.SetDestination(targetTransform.position);
 
-            // 증거 발견 시 우선 순위에 따라 특정 증거를 타겟으로 지정하고 상태를 변경
+        // 증거 발견 시 우선 순위에 따라 특정 증거를 타겟으로 지정하고 상태를 변경
             if (ISaw("Player", degree, maxDistance))
             {
                 ChangeState(EnemyState.FindPlayer);
@@ -150,21 +150,21 @@ public class EnemyController : MonoBehaviour
     // [EnemyState.FindPlayer] 플레이어를 쫓는 상태
     void ChasePlayer()
     {
-        if (ISaw("Player", degree, maxDistance))    // 시야 내에 플레이어가 있으면 (타겟 = 플레이어 설정과 동시에 if문 실행)
-        {
+        //if (ISaw("Player", degree, maxDistance))    // 시야 내에 플레이어가 있으면 (타겟 = 플레이어 설정과 동시에 if문 실행)
+        //{
             NMA.SetDestination(targetTransform.position);
+            print("플레이어에게 간다!");
 
             float distance = Vector3.Distance(transform.position, targetTransform.position);
             if (playerState <= 1 && distance < attackRange)   // 범위 내에서 아직 플레이어가 건강 or 부상 상태면 공격을 시도
             {
                 Attack();
             }
-            if (playerState > 1 && distance < attackRange)    // 범위 내에서 플레이어가 빈사 or 특수행동 상태면 업을 수 있다
+            else if (playerState > 1 && distance < attackRange)    // 범위 내에서 플레이어가 빈사 or 특수행동 상태면 업을 수 있다
             {
-                hang.HangPlayerOnMe();
                 ChangeState(EnemyState.GetPlayer);
             }
-        }
+        //}
         else if (targetTransform == null)           // 시야에서 플레이어를 놓치면
         {
             ChangeState(EnemyState.NoEvidence);     // 다시 증거 없는 상태로 돌아간다.
@@ -186,6 +186,9 @@ public class EnemyController : MonoBehaviour
     // [EnemyState.GetPlayer] 플레이어를 업었을 때 갈고리로 향한다.
     void GoToHang()
     {
+        hang.HangPlayerOnMe();
+        print("Player를 업었다!");
+
         targetTransform = hang.pillarTransform;
         NMA.SetDestination(targetTransform.position);
         float distance = Vector3.Distance(transform.position, targetTransform.position);
@@ -299,6 +302,7 @@ public class EnemyController : MonoBehaviour
                 if (theta < degree)
                 {
                     targetTransform = evidences[i].transform;
+                    print(evidence + "를 찾음!");
                     return true;
                 }
             }
