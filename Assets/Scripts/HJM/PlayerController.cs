@@ -16,12 +16,22 @@ public class PlayerController : MonoBehaviour
     public float smoothness = 10.0f;
     public bool toggleCameraRotation;
 
+    float[] idleAnims = new float[3] { 0.0f, 0.5f, 1.0f };
+
+
+
     void Start()
     {
         _animator = this.GetComponent<Animator>();
         _camera = Camera.main;
         _controller = this.GetComponent<CharacterController>();
+
+        
+
+
     }
+
+    
 
     void Update()
     {
@@ -44,7 +54,18 @@ public class PlayerController : MonoBehaviour
             run = false;
         }
 
-        
+
+        // Ctrl 누르면 앉기
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            _animator.SetBool("isCrouch", true);
+        }
+        else
+        {
+            _animator.SetBool("isCrouch", false);
+        }
+
+
     }
 
     void LateUpdate()
@@ -73,15 +94,25 @@ public class PlayerController : MonoBehaviour
 
         Vector3 moveDirection = forward * Input.GetAxisRaw("Vertical") + right * Input.GetAxisRaw("Horizontal");
 
+        // 마우스 상하좌우 값을 h, v에 담는다.
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+
+        // 애니메이터의 플롯변수 값에 h,v 를 전달한다.
+        _animator.SetFloat("MoveHorizontal", h);
+        _animator.SetFloat("MoveVertical", v);
+
         if (moveDirection != Vector3.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * smoothness);
         }
 
+        //print(moveDirection.magnitude);
         _controller.Move(moveDirection.normalized * finalSpeed * Time.deltaTime);
+        _animator.SetFloat("DirLength", moveDirection.magnitude);
 
-        float percent = (run ? 1 : 0.5f) * moveDirection.magnitude;
-        _animator.SetFloat("Blend", percent, 0.1f, Time.deltaTime);
+        //float percent = (run ? 1 : 0.5f) * moveDirection.magnitude;
+        //_animator.SetFloat("Blend", percent, 0.1f, Time.deltaTime);
     }
 }
