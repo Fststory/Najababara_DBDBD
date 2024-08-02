@@ -34,12 +34,12 @@ public class EnemyController : MonoBehaviour
 
     public enum EnemyState
     {
-        NoEvidence, //증거 없음
-        FindAura,   // 오라(아우라) 발견
-        FindTrace,  // 흔적 발견
-        FindPlayer, // 플레이어 발견
-        GetPlayer,  // 플레이어 업음
-        OnGroggy    // 조작 불능(스턴)
+        NoEvidence = 0, //증거 없음
+        FindAura = 1,   // 오라(아우라) 발견
+        FindTrace = 2,  // 흔적 발견
+        FindPlayer = 3, // 플레이어 발견
+        GetPlayer = 4,  // 플레이어 업음
+        OnGroggy = 5   // 조작 불능(스턴)
     }
 
     public EnemyState currentState;    // 현재 상태
@@ -101,11 +101,7 @@ public class EnemyController : MonoBehaviour
             //else if (ISaw("Aura", 180.0f, 1000))
             //{
             //    ChangeState(EnemyState.FindAura);
-            //}
-            else if (targetTransform == null)
-            {
-                ChangeState(EnemyState.NoEvidence);
-            }
+            //}           
         //}
     }
 

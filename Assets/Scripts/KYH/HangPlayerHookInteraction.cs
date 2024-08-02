@@ -15,11 +15,13 @@ public class HangPlayerHookInteraction : MonoBehaviour
     public Transform pillarTransform;
     public Transform hookPoint;
     public PlayerFSM playerFSM;
+    public PlayerController playerController;
 
     void Start()
     {
         playerObject = GameObject.FindGameObjectWithTag("Player"); // "플레이어" 오브젝트 캐싱
         playerFSM = playerObject.GetComponent<PlayerFSM>(); // 플레이어 상태 캐싱
+        playerController = playerObject.GetComponent<PlayerController>();
     }
     
     public void HangPlayerOnMe()    // 플레이어를 업는 기능
@@ -27,6 +29,7 @@ public class HangPlayerHookInteraction : MonoBehaviour
         playerFSM.pyState = PlayerFSM.PlayerState.InAction;
         playerObject.transform.SetParent(hangPoint);
         playerObject.transform.localPosition = new Vector3(0, 0, 0);
+        playerController.enabled = !playerController.enabled;   // 플레이어 컨트롤 비활성화!
     }
 
     public void HangPlayerOnHook()  // 플레이어를 매다는 기능

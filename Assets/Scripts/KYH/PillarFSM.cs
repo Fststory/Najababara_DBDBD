@@ -7,11 +7,11 @@ public class PillarFSM : MonoBehaviour
 {
     enum pillarState
     {
-        NoSacrifice,    // 제물 없음
-        SacrificeLV1,   // 해당 제물 진행도 1
-        SacrificeLV2,   // 해당 제물 진행도 2
-        AbsorbSacrifice,  // 제물 먹음
-        Damaged   // 망가짐
+        NoSacrifice = 0,    // 제물 없음
+        SacrificeLV1 = 1,   // 해당 제물 진행도 1
+        SacrificeLV2 = 2,   // 해당 제물 진행도 2
+        AbsorbSacrifice = 3,  // 제물 먹음
+        Damaged = 4   // 망가짐
     }
 
     public GameObject player;   // 플레이어 오브젝트
