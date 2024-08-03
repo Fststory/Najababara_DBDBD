@@ -62,6 +62,10 @@ public class PlayerFSM : MonoBehaviour
                 Hooked();
                 break;
         }
+
+
+
+
     }
 
     public void Normal()
@@ -92,27 +96,6 @@ public class PlayerFSM : MonoBehaviour
     {
     }
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

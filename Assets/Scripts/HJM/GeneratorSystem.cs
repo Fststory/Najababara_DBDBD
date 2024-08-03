@@ -39,6 +39,8 @@ public class GeneratorSystem : MonoBehaviour
         repairSlider.SetActive(false);
         // 슬라이더 바의 값을 0 으로 시작한다.
         repairPercent = 98;
+        repairSliderUI.value = repairPercent;
+        
 
     }
 
@@ -46,12 +48,14 @@ public class GeneratorSystem : MonoBehaviour
     {
         // 수리 영역 안에서 마우스 좌클 누르고 있는 때에는
         // 수리 안내 문구를 숨기고, 슬라이더 바만 보이게 한다.
-        if(isPlayerInTrigger == true && Input.GetMouseButton(0) && repairPercent < 100)
+
+        if (isPlayerInTrigger == true && Input.GetMouseButton(0) && repairPercent < 100)
         {
             print("수리 중입니다.");
+            repairSliderUI.value = repairPercent;
+
             repairGuide.SetActive(false);
             repairSlider.SetActive(true);
-            repairSliderUI.value = repairPercent;
             repairPercent += repairSpeed * Time.deltaTime;
             if(repairPercent >= 100)
             {
@@ -107,7 +111,7 @@ public class GeneratorSystem : MonoBehaviour
 
     void RepairsComplete()
          {
-             //print("수리 완료됨");
+            print("수리 완료됨");
             GeneratorManager.generatorManager.AddRepairCount(1);
              //repairCount += CompleteGenerator;
              repairPercent = 100;
