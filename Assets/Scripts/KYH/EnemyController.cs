@@ -10,17 +10,16 @@ public class EnemyController : MonoBehaviour
 
     /*
         매 이동시 방향 전환을 위한 타겟이 필요하다(트랜스폼 컴포넌트를 받아온다)
-        시야에 들어온 증거들 중에 우선순위를 따져서 타겟으로 잡는다.
-        
+        시야에 들어온 증거들 중에 우선순위를 따져서 타겟으로 잡는다.        
     */
 
     NavMeshAgent NMA;
 
+    public GameObject player;
     public Transform targetTransform;
     public float moveSpeed = 7.0f;
     HangPlayerHookInteraction hang;
-    public int playerState = 2;  // 플레이어 상태 구현 시 지울 예정, playerState를 이용해 조건을 판단하는 부분 수정 필요 *************
-                               // 0 - 건강, 1 - 부상, 2 - 빈사, 3 - 업힘, 4 - 걸림
+    public PlayerFSM playerFSM;         // 0 - 건강, 1 - 부상, 2 - 빈사, 3 - 특수 행동(업힘, 수리, 구조, 창문 넘기 등), 4 - 걸림
     public float attackRange = 2.0f;    // 공격 사정 거리
 
     public float currentTime = 0;
@@ -33,12 +32,12 @@ public class EnemyController : MonoBehaviour
 
     public enum EnemyState
     {
-        NoEvidence, //증거 없음
-        FindAura,   // 오라(아우라) 발견
-        FindTrace,  // 흔적 발견
-        FindPlayer, // 플레이어 발견
-        GetPlayer,  // 플레이어 업음
-        OnGroggy    // 조작 불능(스턴)
+        NoEvidence = 0, //증거 없음
+        FindAura = 1,   // 오라(아우라) 발견
+        FindTrace = 2,  // 흔적 발견
+        FindPlayer = 3, // 플레이어 발견
+        GetPlayer = 4,  // 플레이어 업음
+        OnGroggy = 5   // 조작 불능(스턴)
     }
 
     public EnemyState currentState;    // 현재 상태
@@ -48,6 +47,7 @@ public class EnemyController : MonoBehaviour
     {
         currentState = EnemyState.NoEvidence;   // 초기 상태는 "배회" 상태 => 이게 기존 코드 밑에 줄은 실험을 위해 추가한 코드 이후 삭제 **********
         hang = GetComponent<HangPlayerHookInteraction>();
+        playerFSM = player.GetComponent<PlayerFSM>();
         NMA = GetComponent<NavMeshAgent>();
         generators = GameObject.FindGameObjectsWithTag("Generator");
     }
@@ -99,11 +99,7 @@ public class EnemyController : MonoBehaviour
             //else if (ISaw("Aura", 180.0f, 1000))
             //{
             //    ChangeState(EnemyState.FindAura);
-            //}
-            else if (targetTransform == null)
-            {
-                ChangeState(EnemyState.NoEvidence);
-            }
+            //}           
         //}
     }
 
@@ -149,23 +145,20 @@ public class EnemyController : MonoBehaviour
 
     // [EnemyState.FindPlayer] 플레이어를 쫓는 상태
     void ChasePlayer()
-    {
-        //if (ISaw("Player", degree, maxDistance))    // 시야 내에 플레이어가 있으면 (타겟 = 플레이어 설정과 동시에 if문 실행)
-        //{
-            NMA.SetDestination(targetTransform.position);
-            print("플레이어에게 간다!");
+    {        
+        NMA.SetDestination(targetTransform.position);
+        print("플레이어에게 간다!");
 
-            float distance = Vector3.Distance(transform.position, targetTransform.position);
-            if (playerState <= 1 && distance < attackRange)   // 범위 내에서 아직 플레이어가 건강 or 부상 상태면 공격을 시도
-            {
-                Attack();
-            }
-            else if (playerState > 1 && distance < attackRange)    // 범위 내에서 플레이어가 빈사 or 특수행동 상태면 업을 수 있다
-            {
-                ChangeState(EnemyState.GetPlayer);
-            }
-        //}
-        else if (targetTransform == null)           // 시야에서 플레이어를 놓치면
+        float distance = Vector3.Distance(transform.position, targetTransform.position);
+        if ((int)playerFSM.pyState <= 1 && distance < attackRange)   // 범위 내에서 아직 플레이어가 건강 or 부상 상태면 공격을 시도
+        {
+            Attack();
+        }
+        else if ((int)playerFSM.pyState > 1 && distance < attackRange)    // 범위 내에서 플레이어가 빈사 or 특수행동 상태면 업을 수 있다
+        {
+            ChangeState(EnemyState.GetPlayer);
+        }
+        else if (!ISaw("Player", degree, maxDistance))      // 시야에서 플레이어를 놓치면
         {
             ChangeState(EnemyState.NoEvidence);     // 다시 증거 없는 상태로 돌아간다.
         }
@@ -177,19 +170,29 @@ public class EnemyController : MonoBehaviour
         currentTime += Time.deltaTime;
         if (currentTime > attackDelay)
         {
-            playerState++;
-            currentTime = 0;
-            print("Attack");
+            if (playerFSM.pyState == PlayerFSM.PlayerState.Normal)
+            {
+                playerFSM.pyState = PlayerFSM.PlayerState.Injured;
+                currentTime = 0;
+                print("Attack");
+            }
+            else if (playerFSM.pyState == PlayerFSM.PlayerState.Injured)
+            {
+                playerFSM.pyState = PlayerFSM.PlayerState.Dying;
+                currentTime = 0;
+                print("Attack");
+            }
         }
     }
 
     // [EnemyState.GetPlayer] 플레이어를 업었을 때 갈고리로 향한다.
     void GoToHang()
     {
+        targetTransform = hang.pillarTransform;
+
         hang.HangPlayerOnMe();
         print("Player를 업었다!");
 
-        targetTransform = hang.pillarTransform;
         NMA.SetDestination(targetTransform.position);
         float distance = Vector3.Distance(transform.position, targetTransform.position);
         if (distance < 2.0f)
@@ -321,7 +324,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    void ChangeState(EnemyState newState)   // 상태 변화 기능
+    public void ChangeState(EnemyState newState)   // 상태 변화 기능
     {
         currentState = newState;
         currentTime = 0;
