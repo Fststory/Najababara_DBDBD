@@ -54,18 +54,17 @@ public class PillarFSM : MonoBehaviour
         }
     }    
 
-    private void WaitSacrifice()    // 제물이 걸리면 상태를 기준으로 다음 태세로의 전환 기능/ 플레이어 체력 & 상태 구현 시 해당 값으로 판단 **********************
+    private void WaitSacrifice()    // 제물이 걸리면 상태를 기준으로 다음 태세로의 전환 기능
     {
         if (playerFSM.pyState == PlayerFSM.PlayerState.Hooked)   // 플레이어가 걸렸으면 체력 확인!
         {
-            if (playerFSM.currentHp > 50.0f)
-            {
-                ChangeState(pillarState.SacrificeLV1);  // 1단계 진행
-            }
-            //else if (1.0f < playerFSM.currentHp && playerFSM.currentHp < 50.0f
-            //|| playerController.alreadyHooked)  // playerController에 bool alreadyHooked 추가!
+            //if (!playerController.alreadyHooked)    // 플레어가 처음 걸린다면
             //{
-            //    ChangeState(pillarState.SacrificeLV2);
+            //    ChangeState(pillarState.SacrificeLV1);  // 1단계 진행
+            //}
+            //else if (playerController.alreadyHooked)  // 플레이어가 이미 한번 걸렸었다면
+            //{
+            //    ChangeState(pillarState.SacrificeLV2);    // 2단계 진행
             //}
         }
     }
@@ -103,6 +102,13 @@ public class PillarFSM : MonoBehaviour
 
     private void TryToAbsorb()      // 잡아먹을 시도를 하는 기능   [SacrificeLV2]
     {
+        // 플레이어 체력을 조금씩 깎음
+        currentTime += Time.deltaTime;
+        if (currentTime > reduceHPTime)
+        {
+            playerFSM.currentHp--;
+            currentTime = 0;
+        }
         // 일정 시간마다 제물 압박
         // 스킬 체크 두 번 연속 실패 시 처형
         if (playerFSM.currentHp <= 0)
@@ -125,7 +131,7 @@ public class PillarFSM : MonoBehaviour
     public void TakeDamage()    // 상대방이 나에게 데미지를 입히는 기능
     {
         ChangeState(pillarState.Damaged);
-        print("뽀각!");
+        print("갈고리 망가짐!");
     }
 
     private void SelfRepair()   // 플레이어가 망가뜨리면 저절로 수리하는 기능  [Damaged]
@@ -135,7 +141,7 @@ public class PillarFSM : MonoBehaviour
         {
             ChangeState(pillarState.NoSacrifice);
             currentTime = 0;
-            print("수리완료!");
+            print("갈고리 셀프 수리 완료!");
         }
     }
 
