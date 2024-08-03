@@ -58,14 +58,15 @@ public class PillarFSM : MonoBehaviour
     {
         if (playerFSM.pyState == PlayerFSM.PlayerState.Hooked)   // 플레이어가 걸렸으면 체력 확인!
         {
-            //if (!playerController.alreadyHooked)    // 플레어가 처음 걸린다면
-            //{
-            //    ChangeState(pillarState.SacrificeLV1);  // 1단계 진행
-            //}
-            //else if (playerController.alreadyHooked)  // 플레이어가 이미 한번 걸렸었다면
-            //{
-            //    ChangeState(pillarState.SacrificeLV2);    // 2단계 진행
-            //}
+            if (!playerController.alraedyHooked)    // 플레어가 처음 걸린다면
+            {
+                ChangeState(pillarState.SacrificeLV1);  // 1단계 진행
+                playerController.alraedyHooked = true;
+            }
+            else if (playerController.alraedyHooked)  // 플레이어가 이미 한번 걸렸었다면
+            {
+                ChangeState(pillarState.SacrificeLV2);    // 2단계 진행
+            }
         }
     }
 
