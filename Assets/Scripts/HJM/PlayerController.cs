@@ -16,6 +16,10 @@ public class PlayerController : MonoBehaviour
     public float smoothness = 10.0f;
     public bool toggleCameraRotation;
 
+
+    public bool alraedyHooked;
+    public bool HookedLv2;
+
     float[] idleAnims = new float[3] { 0.0f, 0.5f, 1.0f };
 
 

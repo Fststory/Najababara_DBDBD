@@ -10,7 +10,7 @@ public class ExitSystem : MonoBehaviour
 
     public GameObject generator;
     public GeneratorSystem generatorSystem;
-    public int repairCount;
+    
 
 
 

@@ -11,6 +11,9 @@ public class GeneratorSystem : MonoBehaviour
     // 플레이어가 마우스 좌클 시 수리가 진행된다.(수리도가 올라간다.)
     // 일정 타이밍에 수리 타이밍게임이 나온다.
 
+    //public PlayerController playerController;
+    public Animator playerAnim;
+
     public GameObject repairGuide;
     public GameObject repairSlider;
     public Slider repairSliderUI;
@@ -40,7 +43,9 @@ public class GeneratorSystem : MonoBehaviour
         // 슬라이더 바의 값을 0 으로 시작한다.
         repairPercent = 98;
         repairSliderUI.value = repairPercent;
-        
+
+        //// playerAnim은 playerController의 애니메이터 컴포넌트다.
+        //playerAnim = playerController.GetComponent<Animator>();
 
     }
 
@@ -49,17 +54,20 @@ public class GeneratorSystem : MonoBehaviour
         // 수리 영역 안에서 마우스 좌클 누르고 있는 때에는
         // 수리 안내 문구를 숨기고, 슬라이더 바만 보이게 한다.
 
+        // 플레이어가 트리거 안이며, 마우스 좌클을 누르고 있는 동안이며, 수리퍼센트가 100이하 일 때 실행한다.
         if (isPlayerInTrigger == true && Input.GetMouseButton(0) && repairPercent < 100)
         {
             print("수리 중입니다.");
             repairSliderUI.value = repairPercent;
-
+            print("수리 애니 재생");
+            playerAnim.SetBool("isRepair", true);
             repairGuide.SetActive(false);
             repairSlider.SetActive(true);
             repairPercent += repairSpeed * Time.deltaTime;
             if(repairPercent >= 100)
             {
                 print("완료 카운트 1");
+                playerAnim.SetBool("isRepair", false);
                 RepairsComplete();
                 Complete = true;
                 return;
@@ -75,6 +83,7 @@ public class GeneratorSystem : MonoBehaviour
             if (isPlayerInTrigger == true && Input.GetMouseButtonUp(0))
             {
                 print("수리 중도 정지.");
+                playerAnim.SetBool("isRepair", false);
                 repairGuide.SetActive(true);
                 repairSlider.SetActive(false);
             }
@@ -84,11 +93,16 @@ public class GeneratorSystem : MonoBehaviour
     // 수리 영역안에 들어오면, 수리 안내 문구를 띄우고 isPlayerInTrigger true를 반환한다.
     private void OnTriggerEnter(Collider other)
     {
+        
         if(other.gameObject.name == ("Player"))
         {
+            // 여기서 플레이어 애니메이터 받아와
+            playerAnim = other.gameObject.GetComponent<Animator>();
+
             if (Complete == false)
             {
                 print("수리가능 영역에 들어옴.");
+
                 repairGuide.SetActive(true);
                 repairSlider.SetActive(true);
                 isPlayerInTrigger = true;
