@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PalletCollider : MonoBehaviour
+public class _PalletTrigger : MonoBehaviour
 {
     public PalletSystem palletSystem; // PalletSystem 스크립트를 참조
     public Animator playerAnim;
@@ -14,16 +14,15 @@ public class PalletCollider : MonoBehaviour
         palletSystem = palletSystem.GetComponent<PalletSystem>();
     }
 
-
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == ("Player"))
         {
-            //print("판자 영역 들어옴");
+            print("판자 영역 들어옴");
             playerAnim = other.gameObject.GetComponent<Animator>();
             cc = other.gameObject.GetComponent<CharacterController>();
             palletSystem.isPlayerInTrigger = true;
+            
 
         }
     }
@@ -32,7 +31,7 @@ public class PalletCollider : MonoBehaviour
     {
         if (other.gameObject.tag == ("Player"))
         {
-            //print("판자 영역 나감");
+            print("판자 영역 나감");
             palletSystem.isPlayerInTrigger = false;
         }
     }

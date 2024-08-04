@@ -14,11 +14,13 @@ public class PalletSystem : MonoBehaviour
 
     public GameObject palletCollider;
     public Transform palletAxis;
+    public Collider palCollider;
+
 
     public bool isPlayerInTrigger = false;
 
     private bool palFallen = false;
-    public float fallDuration = 3.0f; // ³Ñ¾îÁú ¶§ °É¸®´Â ½Ã°£
+    public float fallDuration = 3.0f; // ë„˜ì–´ì§ˆ ë•Œ ê±¸ë¦¬ëŠ” ì‹œê°„
     public float fallTime;
     private Vector3 targetRotation;
     private Vector3 startRotation;
@@ -35,24 +37,24 @@ public class PalletSystem : MonoBehaviour
 
     private void Update()
     {
-        // ¸¸ÀÏ, ÆÇÀÚÀÇ »óÅÂ°¡ ³Ñ¾îÁö´Â ÁßÀÏ ¶§(¸¸ ½ÇÇàÇÑ´Ù.)
+        // ë§Œì¼, íŒìì˜ ìƒíƒœê°€ ë„˜ì–´ì§€ëŠ” ì¤‘ì¼ ë•Œ(ë§Œ ì‹¤í–‰í•œë‹¤.)
         if (palFsm.palState == PalletFSM.PalletState.Falling)
         {
-            // fallTime¿¡ ½Ã°£À» ´©ÀûÇÑ´Ù.
+            // fallTimeì— ì‹œê°„ì„ ëˆ„ì í•œë‹¤.
             fallTime += Time.deltaTime;
-            // ³Ñ¾îÁö´Â ½Ã°£À» t·Î ¹Ş°í Å¬·¥ÇÁ·Î Á¦ÇÑÀ» °É¾îÁØ´Ù.
+            // ë„˜ì–´ì§€ëŠ” ì‹œê°„ì„ të¡œ ë°›ê³  í´ë¨í”„ë¡œ ì œí•œì„ ê±¸ì–´ì¤€ë‹¤.
             float t = Mathf.Clamp01(fallTime / fallDuration);
-            // Lerp¸¦ ÀÌ¿ëÇØ Å¸°Ù·ÎÅ×ÀÌ¼ÇÀ¸·Î ¼­¼­È÷ º¯ÇÏ°Ô ÇØÁØ´Ù. // ±Ùµ¥ ¼­¼­È÷ º¯ÇÏÁö¾Ê¾Æ!!!!!!!!!
+            // Lerpë¥¼ ì´ìš©í•´ íƒ€ê²Ÿë¡œí…Œì´ì…˜ìœ¼ë¡œ ì„œì„œíˆ ë³€í•˜ê²Œ í•´ì¤€ë‹¤. // ê·¼ë° ì„œì„œíˆ ë³€í•˜ì§€ì•Šì•„!!!!!!!!!
 
-            transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, targetRotation, t);
+            palletAxis.transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, targetRotation, t);
 
             //transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, t);
             //print(t);
             //print(transform.eulerAngles);
-            GetComponent<Collider>().isTrigger = false;
+            palCollider.isTrigger = false;
 
 
-            // ÆÇÀÚ°¡ ¿ÏÀüÈ÷ ³Ñ¾îÁ³´Ù¸é »óÅÂ¸¦ FallDownÀ¸·Î º¯°æÇÏ°í fallTimeÀ» ÃÊ±âÈ­ÇÑ´Ù.
+            // íŒìê°€ ì™„ì „íˆ ë„˜ì–´ì¡Œë‹¤ë©´ ìƒíƒœë¥¼ FallDownìœ¼ë¡œ ë³€ê²½í•˜ê³  fallTimeì„ ì´ˆê¸°í™”í•œë‹¤.
             if (t >= 1.0f)
             {
                 palFsm.palState = PalletFSM.PalletState.FallDown;
@@ -64,32 +66,32 @@ public class PalletSystem : MonoBehaviour
         else if (isPlayerInTrigger && Input.GetKeyDown(KeyCode.Space) && !palFallen)
         {
 
-            print("ÆÇÀÚ¾ş±â ½ºÆäÀÌ½º¹Ù ´©¸§");
-            // ÆÇÀÚÀÇ »óÅÂ¸¦ ³Ñ¾î°¡´Â ÁßÀ¸·Î ÀüÈ¯ÇÑ´Ù.
+            print("íŒìì—ê¸° ìŠ¤í˜ì´ìŠ¤ë°” ëˆ„ë¦„");
+            // íŒìì˜ ìƒíƒœë¥¼ ë„˜ì–´ê°€ëŠ” ì¤‘ìœ¼ë¡œ ì „í™˜í•œë‹¤.
             palFsm.palState = PalletFSM.PalletState.Falling;
 
-            // fallTimeÀ» 0À¸·Î ÃÊ±âÈ­ÇÏ°í palFallen °ªÀ» true·Î ÀüÈ¯ÇÑ´Ù.
+            // fallTimeì„ 0ìœ¼ë¡œ ì´ˆê¸°í™”í•˜ê³  palFallen ê°’ì„ trueë¡œ ì „í™˜í•œë‹¤.
             fallTime = 0f;
             palFallen = true;
 
-            
+
         }
 
 
-        // ¸¸ÀÏ, ÆÇÀÚÀÇ »óÅÂ°¡ ³Ñ¾îÁö´Â ÁßÀÏ ¶§(¸¸ ½ÇÇàÇÑ´Ù.)
+        // ë§Œì¼, íŒìì˜ ìƒíƒœê°€ ë„˜ì–´ì§€ëŠ” ì¤‘ì¼ ë•Œ(ë§Œ ì‹¤í–‰í•œë‹¤.)
         if (palFsm.palState == PalletFSM.PalletState.FallDown)
         {
-            if((isPlayerInTrigger && Input.GetKey(KeyCode.Space) && palFallen))
+            if ((isPlayerInTrigger && Input.GetKey(KeyCode.Space) && palFallen))
             {
-            print("³Ñ¾î°¡±â, ½ºÆäÀÌ½º¹Ù ¶Ç ´©¸§");
-                // ³Ñ¾î°¡´Â ¾Ö´Ï¸ŞÀÌ¼ÇÀ» Àç»ıÇÑ´Ù.
+                print("ë„˜ì–´ê°€ê¸°, ìŠ¤í˜ì´ìŠ¤ë°” ë˜ ëˆ„ë¦„");
+                // ë„˜ì–´ê°€ëŠ” ì• ë‹ˆë©”ì´ì…˜ì„ ì¬ìƒí•œë‹¤.
                 playerAnim.SetTrigger("isClimb");
-                // ³Ñ¾î°¡±â ÀüÀÇ À§Ä¡¿¡ Ä³¸¯ÅÍÄÁÆ®·Ñ·¯¸¦ °íÁ¤½ÃÅ²´Ù.
-                // ¸¸ÀÏ, ³Ñ¾î°¡´Â ½Ã°£ÀÌ Áö³µ´Ù¸é
-                // cc¸¦ Àü¹æ¿¡¼­ ÀÏÁ¤°Å¸® ¶³¾îÁø °÷À¸·Î º¸³½´Ù.
-                // ÆÇÀÚ ÃàÀÌ¶û Äİ¶óÀÌ´õ¿ë ¿¥Æ¼¸¦ µû·Î ÆÄ¾ßÇÒµí, ÃàÀÌ È¸ÀüÇÏ°í Äİ¶óÀÌ´õ´Â °íÁ¤
+                // ë„˜ì–´ê°€ê¸° ì „ì˜ ìœ„ì¹˜ì— ìºë¦­í„°ì»¨íŠ¸ë¡¤ëŸ¬ë¥¼ ê³ ì •ì‹œí‚¨ë‹¤.
+                // ë§Œì¼, ë„˜ì–´ê°€ëŠ” ì‹œê°„ì´ ì§€ë‚¬ë‹¤ë©´
+                // ccë¥¼ ì „ë°©ì—ì„œ ì¼ì •ê±°ë¦¬ ë–¨ì–´ì§„ ê³³ìœ¼ë¡œ ë³´ë‚¸ë‹¤.
+                // íŒì ì¶•ì´ë‘ ì½œë¼ì´ë”ìš© ì— í‹°ë¥¼ ë”°ë¡œ íŒŒì•¼í• ë“¯, ì¶•ì´ íšŒì „í•˜ê³  ì½œë¼ì´ë”ëŠ” ê³ ì •
                 //isPlayerInTrigger = false;
-                
+
             }
 
         }
@@ -97,7 +99,7 @@ public class PalletSystem : MonoBehaviour
 
     }
 
- 
+
 
 
 
@@ -106,36 +108,36 @@ public class PalletSystem : MonoBehaviour
         if (other.gameObject.tag == ("Player"))
         {
             isPlayerInTrigger = true;
-            print("ÆÇÀÚ ¿µ¿ª µé¾î¿È");
+            print("íŒì ì˜ì—­ ë“¤ì–´ì˜´");
             playerAnim = other.gameObject.GetComponent<Animator>();
             cc = other.gameObject.GetComponent<CharacterController>();
-            
+
         }
     }
 
-    
+
 
 
     public void DropPallet()
     {
-        // ÆÇÀÚ°¡ ¼¼¿öÁ® ÀÖ´Â »óÅÂÀÇ Çàµ¿
+        // íŒìê°€ ì„¸ì›Œì ¸ ìˆëŠ” ìƒíƒœì˜ í–‰ë™
     }
 
     private void FallingState()
     {
-        // ¿¹: ÆÇÀÚ°¡ ³Ñ¾î°¡´Â ÁßÀÏ ¶§ÀÇ Çàµ¿
-        
+        // ì˜ˆ: íŒìê°€ ë„˜ì–´ê°€ëŠ” ì¤‘ì¼ ë•Œì˜ í–‰ë™
+
     }
 
     private void FallDownState()
     {
-        // ¿¹: ÆÇÀÚ°¡ ¿ÏÀüÈ÷ ³Ñ¾îÁ³À» ¶§ÀÇ Çàµ¿
+        // ì˜ˆ: íŒìê°€ ì™„ì „íˆ ë„˜ì–´ì¡Œì„ ë•Œì˜ í–‰ë™
     }
 
     private void DestroyedState()
     {
-        // ¿¹: ÆÇÀÚ°¡ ºÎ¼­Á³À» ¶§ÀÇ Çàµ¿
-       
+        // ì˜ˆ: íŒìê°€ ë¶€ì„œì¡Œì„ ë•Œì˜ í–‰ë™
+
     }
 
 
