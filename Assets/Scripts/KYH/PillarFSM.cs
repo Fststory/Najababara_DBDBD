@@ -86,6 +86,7 @@ public class PillarFSM : MonoBehaviour
             {
                 playerController.enabled = playerController.enabled;   // 플레이어 컨트롤러 활성화!
                 playerFSM.pyState = PlayerFSM.PlayerState.Injured;  // 플레이어를 부상 상태로 변경
+                ChangeState(pillarState.NoSacrifice);   // 갈고리를 제물 없음 상태로 전환
                 print("탈출 성공!");
             }
             else

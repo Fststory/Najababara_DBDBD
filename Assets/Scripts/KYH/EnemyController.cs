@@ -28,6 +28,7 @@ public class EnemyController : MonoBehaviour
     public float maxDistance;       // 에너미 가시거리
     public float stunTime = 2.0f;
     public GameObject[] generators;
+    int currentGeneratorIndex = 0;
 
 
     public enum EnemyState
@@ -84,8 +85,20 @@ public class EnemyController : MonoBehaviour
         // 이때 가장 가까운 발전기를 찾은 뒤 타겟으로 잡는다. 근처에 도달하면 다음 발전기를 타겟으로
         //for(int i = 0; i < generators.Length; i++)
         //{
-        targetTransform = generators[0].transform;
+        targetTransform = generators[currentGeneratorIndex].transform;
         NMA.SetDestination(targetTransform.position);
+        if (Vector3.Distance(transform.position, targetTransform.position) < 2.0f)
+        {
+            if (currentGeneratorIndex < generators.Length - 1)
+            {
+                currentGeneratorIndex++;
+                print("다음 발전기로!");
+            }
+            else
+            {
+                currentGeneratorIndex = 0;
+            }
+        }
 
         // 증거 발견 시 우선 순위에 따라 특정 증거를 타겟으로 지정하고 상태를 변경
             if (ISaw("Player", degree, maxDistance))
@@ -156,7 +169,7 @@ public class EnemyController : MonoBehaviour
         }
         else if ((int)playerFSM.pyState > 1 && distance < attackRange)    // 범위 내에서 플레이어가 빈사 or 특수행동 상태면 업을 수 있다
         {
-            ChangeState(EnemyState.GetPlayer);
+            ChangeState(EnemyState.GetPlayer);      // 업은 상태로 전환
         }
         else if (!ISaw("Player", degree, maxDistance))      // 시야에서 플레이어를 놓치면
         {
@@ -201,86 +214,6 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    #region 시야 내 (플레이어, 흔적, 오라) 탐지 함수들 ver.~240731
-    /// <summary>
-    /// 시야 내 플레이어 탐지, 발견 시 targetTransform에 플레이어를 담고 true 반환
-    /// </summary>
-    /// <param name = "degree" > 시야각: 전방 기준 탐지 각도</param>
-    /// <param name = "maxDistance" > 가시거리: 최대 감지 가능 거리</param>
-    /// <returns></returns>
-    //bool SeePlayerInSight(float degree, float maxDistance)
-    //{
-    //    GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-    //    for (int i = 0; i < players.Length; i++)
-    //    {
-    //        float distance = Vector3.Distance(players[i].transform.position, transform.position);
-    //        if (distance < maxDistance)
-    //        {
-    //            Vector3 lookVector = players[i].transform.position - transform.position;
-    //            lookVector.Normalize();
-
-    //            float cosTheta = Vector3.Dot(lookVector, transform.forward);
-    //            float theta = Mathf.Acos(cosTheta) * Mathf.Rad2Deg;
-
-    //            if (theta < degree)
-    //            {
-    //                targetTransform = players[i].transform;
-    //                return true;    // 발견했음을 알리는 리턴
-    //            }
-    //        }
-    //    }
-    //    return false;
-    //}
-
-    //bool SeeTraceInSight(float degree, float maxDistance)   // 시야 내 흔적 탐지 기능. 시야각:degree, 가시거리:maxDistance
-    //{                                                           // 가시거리에 있는지 확인 -> 타겟과 나 사이의 각도와 시야각 비교
-    //    GameObject[] traces = GameObject.FindGameObjectsWithTag("Trace");
-    //    for (int i = 0; i < traces.Length; i++)
-    //    {
-    //        float distance = Vector3.Distance(traces[i].transform.position, transform.position);
-    //        if (distance < maxDistance)
-    //        {
-    //            Vector3 lookVector = traces[i].transform.position - transform.position;
-    //            lookVector.Normalize();
-
-    //            float cosTheta = Vector3.Dot(lookVector, transform.forward);
-    //            float theta = Mathf.Acos(cosTheta) * Mathf.Rad2Deg;
-
-    //            if (theta < degree)
-    //            {
-    //                targetTransform = traces[i].transform;
-    //                return true;
-    //            }
-    //        }
-    //    }
-    //    return false;
-    //}
-
-    //bool SeeAuraInSight(float degree, float maxDistance)   // 시야 내 흔적 탐지 기능. 시야각:degree, 가시거리:maxDistance
-    //{                                                           // 가시거리에 있는지 확인 -> 타겟과 나 사이의 각도와 시야각 비교
-    //    GameObject[] auras = GameObject.FindGameObjectsWithTag("Aura");
-    //    for (int i = 0; i < auras.Length; i++)
-    //    {
-    //        float distance = Vector3.Distance(auras[i].transform.position, transform.position);
-    //        if (distance < maxDistance)
-    //        {
-    //            Vector3 lookVector = auras[i].transform.position - transform.position;
-    //            lookVector.Normalize();
-
-    //            float cosTheta = Vector3.Dot(lookVector, transform.forward);
-    //            float theta = Mathf.Acos(cosTheta) * Mathf.Rad2Deg;
-
-    //            if (theta < degree)
-    //            {
-    //                targetTransform = auras[i].transform;
-    //                return true;
-    //            }
-    //        }
-    //    }
-    //    return false;
-    //}
-    #endregion
-
     /// <summary>
     /// 시야 내 증거 발견 시 타겟으로 설정하고 true 반환, 시야 내에 없을 시 false 반환
     /// </summary>
@@ -314,13 +247,17 @@ public class EnemyController : MonoBehaviour
         return false;
     }
 
-    void Stuned() // 판자 맞을 때 그로기 걸리는 기능
+    // [EnemyState.OnGroggy] 판자 맞을 때 그로기 걸리는 기능
+    public void Stuned()
     {
+        print("스턴!");
+        targetTransform = null;
         currentTime += Time.deltaTime;
         // 스턴 시간 동안 움직임이 없고 스턴 시간이 끝나면 다시 증거를 찾아 다님
         if (currentTime > stunTime)
         {
             ChangeState(EnemyState.NoEvidence);
+            print("스턴 해제!");
         }
     }
 
