@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CanBreakPillar : MonoBehaviour
@@ -20,8 +21,8 @@ public class CanBreakPillar : MonoBehaviour
         
     private void OnTriggerStay(Collider other) // 플레이어가 갈고리에 걸리지 않은 상태로 상호작용 범위에 있을 때 사용 가능한 기능
     {
-        // 트리거에 들어와있는 대상이 "플레이어"이고, 상태가 0(건강) or 1(부상)이라면...
-        if (other.CompareTag("Player") && (int)playerFSM.pyState < 2)
+        // 아무것도 달려있지 않은 갈고리의 트리거에 들어와있는 대상이 "플레이어"이고, 상태가 0(건강) or 1(부상)이라면...
+        if (other.CompareTag("Player") && (int)playerFSM.pyState < 2 && pillarState.currentState == PillarFSM.pillarState.NoSacrifice)
         {
             print("고장낼 수 있어!");
             // 스페이스바를 누르고 있으면
