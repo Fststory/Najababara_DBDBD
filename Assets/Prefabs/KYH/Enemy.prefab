@@ -338,6 +338,7 @@ MonoBehaviour:
   hookPoint: {fileID: 0}
   playerFSM: {fileID: 0}
   playerController: {fileID: 0}
+  enemyController: {fileID: 0}
 --- !u!195 &6917742467541304907
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -416,7 +417,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
