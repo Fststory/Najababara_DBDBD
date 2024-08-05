@@ -12,7 +12,7 @@ public class GeneratorManager : MonoBehaviour
     public int numberOfGenerators = 3; // 생성할 Generator의 수
     public int numberOfRepairs; // 수리해야할 Generator의 수
     private GameObject[] generators;
-
+    public float x_min, x_max, y_min, y_max;
 
  
 
@@ -44,7 +44,7 @@ public class GeneratorManager : MonoBehaviour
         for (int i = 0; i < numberOfGenerators; i++)
         {
             // Generator 프리팹 인스턴스 생성
-            GameObject generator = Instantiate(generatorPrefab, new Vector3(Random.Range(0, 10), 0.5f, Random.Range(0, 10)), Quaternion.identity);
+            GameObject generator = Instantiate(generatorPrefab, new Vector3(Random.Range(x_min,x_max), 0.5f, Random.Range(y_min,y_max)), Quaternion.identity);
             generators[i] = generator;
 
 
