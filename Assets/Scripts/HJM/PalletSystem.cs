@@ -12,7 +12,7 @@ public class PalletSystem : MonoBehaviour
     public Animator playerAnim;
     public CharacterController cc;
 
-    public GameObject palletCollider;
+    public Collider palletCollider;
     public Transform palletAxis;
 
     public bool isPlayerInTrigger = false;
@@ -28,7 +28,7 @@ public class PalletSystem : MonoBehaviour
         palFsm = GetComponent<PalletFSM>();
 
         //startRotation = palletAxis.eulerAngles;
-        targetRotation = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, 50);
+        targetRotation = new Vector3(transform.rotation.x, transform.rotation.y, 50);
         //targetRotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 50));
     }
 
@@ -44,12 +44,12 @@ public class PalletSystem : MonoBehaviour
             float t = Mathf.Clamp01(fallTime / fallDuration);
             // Lerp를 이용해 타겟로테이션으로 서서히 변하게 해준다. // 근데 서서히 변하지않아!!!!!!!!!
 
-            transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, targetRotation, t);
+            palletAxis.eulerAngles = Vector3.Lerp(transform.eulerAngles, targetRotation, t);
 
             //transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, t);
             //print(t);
             //print(transform.eulerAngles);
-            GetComponent<Collider>().isTrigger = false;
+            palletCollider.isTrigger = false;
 
 
             // 판자가 완전히 넘어졌다면 상태를 FallDown으로 변경하고 fallTime을 초기화한다.
