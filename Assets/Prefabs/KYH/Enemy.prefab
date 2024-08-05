@@ -304,7 +304,7 @@ MonoBehaviour:
   attackRange: 2
   currentTime: 0
   degree: 45
-  maxDistance: 15
+  maxDistance: 20
   stunTime: 2
   generators: []
   currentState: 0
@@ -382,7 +382,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 24
+  MaxDistance: 32
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0

@@ -242,6 +242,7 @@ GameObject:
   - component: {fileID: 3461189631134491183}
   - component: {fileID: 2005894768797251640}
   - component: {fileID: 6767068593144623133}
+  - component: {fileID: 8394027684803950422}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -392,6 +393,14 @@ MonoBehaviour:
     type: 3}
   markCycle: 0.5
   playerController: {fileID: 3099053549612775399}
+--- !u!81 &8394027684803950422
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1590996863029213141}
+  m_Enabled: 1
 --- !u!1 &1757307433997712543
 GameObject:
   m_ObjectHideFlags: 0
