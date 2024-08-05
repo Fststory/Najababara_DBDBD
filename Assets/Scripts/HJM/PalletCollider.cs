@@ -11,7 +11,7 @@ public class PalletCollider : MonoBehaviour
     private void Start()
     {
         // PalletSystem를 palletSystem에 받는다.
-        palletSystem = GetComponent<PalletSystem>();
+        palletSystem = palletSystem.GetComponent<PalletSystem>();
     }
 
 
@@ -23,7 +23,7 @@ public class PalletCollider : MonoBehaviour
             print("판자 영역 들어옴");
             playerAnim = other.gameObject.GetComponent<Animator>();
             cc = other.gameObject.GetComponent<CharacterController>();
-            //palletSystem.isPlayerInTrigger = true;
+            palletSystem.isPlayerInTrigger = true;
 
         }
     }

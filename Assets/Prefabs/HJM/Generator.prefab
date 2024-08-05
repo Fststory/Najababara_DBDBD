@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -853001609740433970}
   m_Layer: 0
   m_Name: Generator
-  m_TagString: Untagged
+  m_TagString: Generator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -119,6 +119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 042cf4ec96eed8f4c95e6c58fbe6ef96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerAnim: {fileID: 0}
   repairGuide: {fileID: 0}
   repairSlider: {fileID: 0}
   repairSliderUI: {fileID: 0}

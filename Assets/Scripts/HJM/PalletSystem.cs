@@ -15,8 +15,8 @@ public class PalletSystem : MonoBehaviour
     public GameObject palletCollider;
     public Transform palletAxis;
 
-
     public bool isPlayerInTrigger = false;
+
     private bool palFallen = false;
     public float fallDuration = 3.0f; // 넘어질 때 걸리는 시간
     public float fallTime;
@@ -88,7 +88,7 @@ public class PalletSystem : MonoBehaviour
                 // 만일, 넘어가는 시간이 지났다면
                 // cc를 전방에서 일정거리 떨어진 곳으로 보낸다.
                 // 판자 축이랑 콜라이더용 엠티를 따로 파야할듯, 축이 회전하고 콜라이더는 고정
-                isPlayerInTrigger = false;
+                //isPlayerInTrigger = false;
                 
             }
 
