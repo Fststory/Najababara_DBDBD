@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/KYH/Test_YH.unity
-    guid: 0d51dcf198ea56b49875955433103f7e
+    path: Assets/Scenes/ProtoMap.unity
+    guid: 37f65f4de4070d84bbf93bbeb6bd128f
   m_configObjects: {}

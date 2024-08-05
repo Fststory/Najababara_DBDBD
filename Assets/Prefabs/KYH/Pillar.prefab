@@ -31,8 +31,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0.4, z: 1.2}
   m_LocalScale: {x: 0.3, y: 0.1, z: 1.3}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 7139279945546850764}
+  m_Children: []
   m_Father: {fileID: 506008623623580689}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3550799483820757943
@@ -173,6 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerFSM: {fileID: 0}
+  currentTime: 0
   damagedTime: 0
 --- !u!1 &3651757097738402048
 GameObject:
@@ -198,12 +198,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3651757097738402048}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.39999998, z: 1.8500001}
+  m_LocalScale: {x: 0.3, y: 0.1, z: 1.2999998}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 808264338962373655}
+  m_Father: {fileID: 506008623623580689}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5759754650869604753
 GameObject:
@@ -239,6 +239,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 808264338962373655}
+  - {fileID: 7139279945546850764}
   - {fileID: 3085762829797022999}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -326,8 +327,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  playerController: {fileID: 0}
-  playerFSM: {fileID: 0}
   currentState: 0
+  currentTime: 0
+  reduceHPTime: 0
+  escapePercetage: 0
   eatTime: 0
   repairTime: 0
