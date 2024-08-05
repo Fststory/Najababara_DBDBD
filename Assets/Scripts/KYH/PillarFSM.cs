@@ -133,15 +133,19 @@ public class PillarFSM : MonoBehaviour
     public void TakeDamage()    // 상대방이 나에게 데미지를 입히는 기능
     {
         ChangeState(pillarState.Damaged);
+        transform.localEulerAngles = Vector3.Lerp(transform.localEulerAngles, transform.localEulerAngles + new Vector3(0, 0, 90), 1);
         print("갈고리 망가짐!");
     }
 
     private void SelfRepair()   // 플레이어가 망가뜨리면 저절로 수리하는 기능  [Damaged]
     {
         currentTime += Time.deltaTime;
+        
         if (currentTime > repairTime)
         {
             ChangeState(pillarState.NoSacrifice);
+            transform.localEulerAngles = Vector3.Lerp(transform.localEulerAngles,
+                                                  transform.localEulerAngles + new Vector3(0, 0, -90), 1);
             currentTime = 0;
             print("갈고리 셀프 수리 완료!");
         }
