@@ -28,7 +28,7 @@ public class PalletSystem : MonoBehaviour
         palFsm = GetComponent<PalletFSM>();
 
         //startRotation = palletAxis.eulerAngles;
-        targetRotation = new Vector3(transform.rotation.x, transform.rotation.y, 50);
+        targetRotation = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 50);
         //targetRotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 50));
     }
 
@@ -44,7 +44,7 @@ public class PalletSystem : MonoBehaviour
             float t = Mathf.Clamp01(fallTime / fallDuration);
             // Lerp를 이용해 타겟로테이션으로 서서히 변하게 해준다. // 근데 서서히 변하지않아!!!!!!!!!
 
-            palletAxis.eulerAngles = Vector3.Lerp(transform.eulerAngles, targetRotation, t);
+            palletAxis.localEulerAngles = Vector3.Lerp(transform.localEulerAngles, targetRotation, t);
 
             //transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, t);
             //print(t);

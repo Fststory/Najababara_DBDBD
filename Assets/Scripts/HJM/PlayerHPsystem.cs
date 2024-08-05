@@ -23,19 +23,20 @@ public class PlayerHPsystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerfsm.pyState == PlayerFSM.PlayerState.Dying)
-        {
-            DyingHP(1.0f);
-        }
-
         if (playerfsm.pyState == PlayerFSM.PlayerState.Injured)
         {
+        
             healGuide.SetActive(true);
             if(Input.GetMouseButton(0)) // 상태회복 창 따로 파줘야함 체력이랑 별개라
             {
+                
                 print("힐 시작함");
                 SelfHealHP(1.0f);
 
+            }
+            else
+            {
+                DyingHP(1.0f);
             }
         }
 
@@ -48,6 +49,7 @@ public class PlayerHPsystem : MonoBehaviour
     // 체력이 다 사라질 때 까지
     void DyingHP(float delayTime)
     {
+        
         currentTime += Time.deltaTime;
         if(currentTime > delayTime)
         {
