@@ -171,15 +171,15 @@ public class EnemyController : MonoBehaviour
     {        
         NMA.SetDestination(targetTransform.position);
         print("플레이어에게 간다!");
+
+        float distance = Vector3.Distance(transform.position, targetTransform.position);
         
         // 질주 조건을 만족한다면...(질주 토큰이 5개이고, 전방 27.6m 이내 충돌할 곳이 있다)
-        if (rushToken == 5 && ISaw("Player", degree, 27.6f))
+        if (rushToken == 5 && ISaw("Player", degree, 27.6f) && CanIRush())
         {
             ChangeState(EnemyState.Rush);   // 질주 상태로 전환
         }
-
-        float distance = Vector3.Distance(transform.position, targetTransform.position);
-        if ((int)playerFSM.pyState <= 1 && distance < attackRange)   // 범위 내에서 아직 플레이어가 건강 or 부상 상태면 공격을 시도
+        else if ((int)playerFSM.pyState <= 1 && distance < attackRange)   // 범위 내에서 아직 플레이어가 건강 or 부상 상태면 공격을 시도
         {
             Attack();
         }
@@ -257,27 +257,30 @@ public class EnemyController : MonoBehaviour
         }
     }    
 
-    // [EnemyState.JudgeRush] 질주 판단 상태에서 진행되는 기능
+    // [EnemyState.Rush] 질주 상태에서 진행되는 기능
     void Rush()
+    {
+        NMA.speed = 9.2f;   // 속도는 9.2 (m/s) 3초간 전방으로 돌진
+        NMA.SetDestination(targetTransform.position);   // 목표는 자신의 전방으로 질주 최대거리의 Ray를 쏴서 맞은 지점
+        //if (Vector3.Distance(transform.position, hitInfo.point) < 3.0f)
+        //{
+
+        //}
+    }
+
+    bool CanIRush() // 질주 조건 판단 (미구현) **************************************************************
     {
         Ray rushRay = new Ray(transform.position, targetTransform.position - transform.position);
         RaycastHit hitInfo;
-        if (Physics.Raycast(rushRay, out hitInfo, 27.6f, ~(1 << 8)))
+        if (Physics.Raycast(rushRay, out hitInfo, 27.6f, ~(1<<8)))
         {
-            NMA.speed = 9.2f;   // 속도는 9.2 (m/s) 3초간 전방으로 돌진
-            NMA.SetDestination(hitInfo.point);   // 목표는 자신의 전방으로 질주 최대거리의 Ray를 쏴서 맞은 지점
-            //if (Vector3.Distance(transform.position, hitInfo.point) < 3.0f)
-            //{
-
-            //}
+            targetTransform = hitInfo.transform;
+            print(hitInfo.transform.name);
+            return true;
         }
+        return false;
     }
 
-    //bool CanIRush() // 질주 조건 판단 (미구현) **************************************************************
-    //{
-    //    return true;
-    //}
-    
 
     /// <summary>
     /// 시야 내 증거 발견 시 타겟으로 설정하고 true 반환, 시야 내에 없을 시 타겟을 null로 설정하고 false 반환
