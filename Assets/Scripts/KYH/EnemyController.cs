@@ -13,11 +13,12 @@ public class EnemyController : MonoBehaviour
         시야에 들어온 증거들 중에 우선순위를 따져서 타겟으로 잡는다.        
     */
 
-    NavMeshAgent NMA;
+    public NavMeshAgent NMA;
 
     public GameObject player;
     public Transform targetTransform;
     public float moveSpeed = 7.0f;
+
     HangPlayerHookInteraction hang;
     public PlayerFSM playerFSM;         // 0 - 건강, 1 - 부상, 2 - 빈사, 3 - 특수 행동(업힘, 수리, 구조, 창문 넘기 등), 4 - 걸림
     public float attackRange = 2.0f;    // 공격 사정 거리
@@ -26,9 +27,10 @@ public class EnemyController : MonoBehaviour
     float attackDelay = 2.0f;
     public float degree = 45.0f;    // 에너미 시야각
     public float maxDistance;       // 에너미 가시거리
-    public float stunTime = 2.0f;
-    public GameObject[] generators;
-    int currentGeneratorIndex = 0;
+    public GameObject[] generators; // 맵 상의 모든 발전기
+    int currentGeneratorIndex = 0;  // 현재 탐색중인 발전기 번호
+
+    public int rushToken = 5;  // 최초 질주 토큰 5개 보유
 
 
     public enum EnemyState
@@ -38,7 +40,8 @@ public class EnemyController : MonoBehaviour
         FindTrace = 2,  // 흔적 발견
         FindPlayer = 3, // 플레이어 발견
         GetPlayer = 4,  // 플레이어 업음
-        OnGroggy = 5   // 조작 불능(스턴)
+        OnGroggy = 5,   // 조작 불능(스턴)
+        Rush = 6   // 질주 판단
     }
 
     public EnemyState currentState;    // 현재 상태
@@ -73,7 +76,10 @@ public class EnemyController : MonoBehaviour
                 GoToHang();
                 break;
             case EnemyState.OnGroggy:
-                Stuned();
+                Stuned(2);
+                break;
+            case EnemyState.Rush:
+                Rush();
                 break;
         }
     }
@@ -83,36 +89,34 @@ public class EnemyController : MonoBehaviour
     {
         // 증거가 없으면 돌아다닌다.(가장 가까운 발전기부터 순서대로.. 하고 싶었지만 그냥 씬에서 순서대로)
         // 이때 가장 가까운 발전기를 찾은 뒤 타겟으로 잡는다. 근처에 도달하면 다음 발전기를 타겟으로
-        //for(int i = 0; i < generators.Length; i++)
-        //{
         targetTransform = generators[currentGeneratorIndex].transform;
         NMA.SetDestination(targetTransform.position);
+        
+        // 발전기 근처에 왔다면...
         if (Vector3.Distance(transform.position, targetTransform.position) < 2.0f)
         {
+            // 모든 발전기를 돌지 않았다면..
             if (currentGeneratorIndex < generators.Length - 1)
-            {
-                currentGeneratorIndex++;
+            {                
+                currentGeneratorIndex++;    // 다음 발전기로!
                 print("다음 발전기로!");
             }
-            else
-            {
-                currentGeneratorIndex = 0;
+            else // 모든 발전기를 돌았다면..
+            {                
+                currentGeneratorIndex = 0;  // 처음부터 다시!
             }
+        }        
+        else if (ISaw("Player", degree, maxDistance))   // 발전기로 가던 도중 플레이어 발견 시
+        {
+            ChangeState(EnemyState.FindPlayer); // 플레이어를 쫓는다.
         }
-
-        // 증거 발견 시 우선 순위에 따라 특정 증거를 타겟으로 지정하고 상태를 변경
-            if (ISaw("Player", degree, maxDistance))
-            {
-                ChangeState(EnemyState.FindPlayer);
-            }
-            else if (ISaw("Trace", degree, maxDistance))
-            {
-                ChangeState(EnemyState.FindTrace);
-            }
-            //else if (ISaw("Aura", 180.0f, 1000))
-            //{
-            //    ChangeState(EnemyState.FindAura);
-            //}           
+        else if (ISaw("Trace", degree, maxDistance))    // 발전기로 가던 도중 플레이어는 못 봤지만 흔적을 봤다면
+        {
+            ChangeState(EnemyState.FindTrace);  // 흔적을 쫓는다.
+        }
+        //else if (ISaw("Aura", 180.0f, 1000))
+        //{
+        //    ChangeState(EnemyState.FindAura);
         //}
     }
 
@@ -141,18 +145,24 @@ public class EnemyController : MonoBehaviour
     // [EnemyState.FindTrace] 흔적을 쫓는 상태
     void ChaseTrace()
     {
-        if (targetTransform != null)    // 발견한 흔적이 남아있다면
+        if (targetTransform != null)    // 발견한 흔적이 사라지지 않았다면
         {
             NMA.SetDestination(targetTransform.position);   // 그쪽으로 간다.
+            if (Vector3.Distance(transform.position, targetTransform.position) < 3.0f)  // 근처에 도착했으면...
+            {
+                if (ISaw("Trace", degree, maxDistance)) // 다른 흔적이 없나 찾는다.
+                {
+                    return;
+                }
+            }
         }
-
-        if (ISaw("Player", degree, maxDistance))   // 플레이어를 발견하면 (타겟 = 플레이어 설정)
+        if (ISaw("Player", degree, maxDistance))   // 흔적을 쫓는 도중 플레이어를 발견하면
         {
-            ChangeState(EnemyState.FindPlayer);     // 플레이어 추격상태로 전환
+            ChangeState(EnemyState.FindPlayer);     // 플레이어를 추격한다.
         }
         else if (targetTransform == null)           // 플레이어를 못 찾았는데 흔적마저 놓치면
         {
-            ChangeState(EnemyState.NoEvidence);     // 다시 증거 없는 상태로 돌아간다.
+            ChangeState(EnemyState.NoEvidence);     // 남은 증거가 없기에 발전기부터 다시 돌아다닌다.
         }
     }
 
@@ -161,6 +171,12 @@ public class EnemyController : MonoBehaviour
     {        
         NMA.SetDestination(targetTransform.position);
         print("플레이어에게 간다!");
+        
+        // 질주 조건을 만족한다면...(질주 토큰이 5개이고, 전방 27.6m 이내 충돌할 곳이 있다)
+        if (rushToken == 5 && ISaw("Player", degree, 27.6f))
+        {
+            ChangeState(EnemyState.Rush);   // 질주 상태로 전환
+        }
 
         float distance = Vector3.Distance(transform.position, targetTransform.position);
         if ((int)playerFSM.pyState <= 1 && distance < attackRange)   // 범위 내에서 아직 플레이어가 건강 or 부상 상태면 공격을 시도
@@ -214,8 +230,57 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    // [EnemyState.OnGroggy] 판자 맞을 때 그로기 걸리는 기능
+    public void Stuned(float stunTime)
+    {
+        print("스턴!");
+        targetTransform = null;
+        currentTime += Time.deltaTime;
+        // 스턴 시간 동안 움직임이 없고 스턴 시간이 끝나면 다시 증거를 찾아 다님
+        if (currentTime > stunTime)
+        {
+            ChangeState(EnemyState.NoEvidence);
+            print("스턴 해제!");
+        }
+    }
+    void RushTokenManage()
+    {
+        // 질주 토큰은 2초에 1개씩 차고 최대 5개 보유 가능하다.
+        if (rushToken != 5)
+        {
+            currentTime += Time.deltaTime;
+            if (currentTime > 2.0f)
+            {
+                rushToken++;
+                currentTime = 0;
+            }
+        }
+    }    
+
+    // [EnemyState.JudgeRush] 질주 판단 상태에서 진행되는 기능
+    void Rush()
+    {
+        Ray rushRay = new Ray(transform.position, targetTransform.position - transform.position);
+        RaycastHit hitInfo;
+        if (Physics.Raycast(rushRay, out hitInfo, 27.6f, ~(1 << 8)))
+        {
+            NMA.speed = 9.2f;   // 속도는 9.2 (m/s) 3초간 전방으로 돌진
+            NMA.SetDestination(hitInfo.point);   // 목표는 자신의 전방으로 질주 최대거리의 Ray를 쏴서 맞은 지점
+            //if (Vector3.Distance(transform.position, hitInfo.point) < 3.0f)
+            //{
+
+            //}
+        }
+    }
+
+    //bool CanIRush() // 질주 조건 판단 (미구현) **************************************************************
+    //{
+    //    return true;
+    //}
+    
+
     /// <summary>
-    /// 시야 내 증거 발견 시 타겟으로 설정하고 true 반환, 시야 내에 없을 시 false 반환
+    /// 시야 내 증거 발견 시 타겟으로 설정하고 true 반환, 시야 내에 없을 시 타겟을 null로 설정하고 false 반환
     /// </summary>
     /// <param name="evidence">타겟의 태그(string)</param>
     /// <param name="degree">시야각: 전방 기준 탐지 각도</param>
@@ -232,8 +297,8 @@ public class EnemyController : MonoBehaviour
                 Vector3 lookVector = evidences[i].transform.position - transform.position;
                 lookVector.Normalize();
 
-                float cosTheta = Vector3.Dot(lookVector, transform.forward);
-                float theta = Mathf.Acos(cosTheta) * Mathf.Rad2Deg;
+                float cosTheta = Vector3.Dot(lookVector, transform.forward);    // 두 단위 벡터를 내적해서 코사인 값을 구함
+                float theta = Mathf.Acos(cosTheta) * Mathf.Rad2Deg; // 코사인 값을 아크 코사인에 넣어 사이각을 구함
 
                 if (theta < degree)
                 {
@@ -243,22 +308,8 @@ public class EnemyController : MonoBehaviour
                 }
             }
         }
-        targetTransform = null;
+        //targetTransform = null;
         return false;
-    }
-
-    // [EnemyState.OnGroggy] 판자 맞을 때 그로기 걸리는 기능
-    public void Stuned()
-    {
-        print("스턴!");
-        targetTransform = null;
-        currentTime += Time.deltaTime;
-        // 스턴 시간 동안 움직임이 없고 스턴 시간이 끝나면 다시 증거를 찾아 다님
-        if (currentTime > stunTime)
-        {
-            ChangeState(EnemyState.NoEvidence);
-            print("스턴 해제!");
-        }
     }
 
     public void ChangeState(EnemyState newState)   // 상태 변화 기능
