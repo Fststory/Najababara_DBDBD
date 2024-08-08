@@ -8,6 +8,8 @@ TagManager:
   - Floor
   - Trace
   - Generator
+  - SkillNote
+  - HidePlayer
   layers:
   - Default
   - TransparentFX
