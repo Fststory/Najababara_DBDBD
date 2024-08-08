@@ -6,7 +6,7 @@ public class GeneratorManager : MonoBehaviour
 {
 
     public static GeneratorManager generatorManager { get; private set; }
-
+    SkillCheckManager skillCheckManager;
     public ExitSystem exitSystem;
     public GameObject generatorPrefab; // Generator 프리팹
     public int numberOfGenerators = 3; // 생성할 Generator의 수
@@ -37,6 +37,8 @@ public class GeneratorManager : MonoBehaviour
 
     void Start()
     {
+        skillCheckManager = GetComponent<SkillCheckManager>();
+
         AddRepairCount(0);
         generators = new GameObject[numberOfGenerators];
 
@@ -53,6 +55,16 @@ public class GeneratorManager : MonoBehaviour
 
             // exitSystem.generatorSystem은 생성된 generator프리팹의 컴포넌트인 GeneratorSystem이다.
             exitSystem.generatorSystem = generator.GetComponent<GeneratorSystem>();
+            GeneratorSystem generatorSystem = generator.GetComponent<GeneratorSystem>();
+            SkillCheckManager skillCheckManager = generator.AddComponent<SkillCheckManager>(); // 각 Generator에 SkillCheckManager 추가
+
+
+            //GeneratorSystem: 각 GeneratorSystem은 자신과 연결된 SkillCheckManager를 통해 repairPercent 값을 전달합니다.
+            //SkillCheckManager: RandomPercent 메서드를 통해 전달된 repairPercent 값을 사용합니다.
+            //GeneratorManager: 각 발전기를 생성할 때마다 해당 발전기에 SkillCheckManager를 추가하고, 이를 GeneratorSystem과 연결합니다.
+
+            // 연결
+            generatorSystem.skillCheckManager = skillCheckManager;
 
             // numberOfRepairs(수리해야할 수)는 numberOfGenerators(생성할 발전기 수)에서 1을 뺀 값이다.
             numberOfRepairs = (numberOfGenerators - 1); 

@@ -13,9 +13,6 @@ public class PalletFSM : MonoBehaviour
     }
 
     public PalletState palState;
-    
-
-
 
 
     private void Update()
