@@ -265,7 +265,7 @@ public class EnemyController : MonoBehaviour
     // [EnemyState.Rush] 질주 상태에서 진행되는 기능
     void Rush()
     {
-        if (rushing) return;    // 이미 질주 중이면 추가 호출 방지
+        if (rushing) return;    // 이미 질주 중이면 추가 호출 방지       [gpt 중복 호출 방지]
         rushing = true;
 
         NMA.speed = 9.2f;   // 속도는 9.2 (m/s) 3초간 전방으로 돌진
