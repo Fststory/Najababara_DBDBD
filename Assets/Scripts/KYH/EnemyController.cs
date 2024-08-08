@@ -13,7 +13,10 @@ public class EnemyController : MonoBehaviour
         시야에 들어온 증거들 중에 우선순위를 따져서 타겟으로 잡는다.        
     */
 
-    public NavMeshAgent NMA;
+    NavMeshAgent NMA;
+    Rigidbody rb;
+    Vector3 knockBackDir;
+    public float knockBackPow;
 
     public GameObject player;
     public Transform targetTransform;
@@ -31,6 +34,7 @@ public class EnemyController : MonoBehaviour
     int currentGeneratorIndex = 0;  // 현재 탐색중인 발전기 번호
 
     public int rushToken = 5;  // 최초 질주 토큰 5개 보유
+    bool rushing = false;
 
 
     public enum EnemyState
@@ -53,6 +57,7 @@ public class EnemyController : MonoBehaviour
         hang = GetComponent<HangPlayerHookInteraction>();
         playerFSM = player.GetComponent<PlayerFSM>();
         NMA = GetComponent<NavMeshAgent>();
+        rb = GetComponent<Rigidbody>();
         generators = GameObject.FindGameObjectsWithTag("Generator");
     }
 
@@ -260,22 +265,53 @@ public class EnemyController : MonoBehaviour
     // [EnemyState.Rush] 질주 상태에서 진행되는 기능
     void Rush()
     {
-        NMA.speed = 9.2f;   // 속도는 9.2 (m/s) 3초간 전방으로 돌진
-        NMA.SetDestination(targetTransform.position);   // 목표는 자신의 전방으로 질주 최대거리의 Ray를 쏴서 맞은 지점
-        //if (Vector3.Distance(transform.position, hitInfo.point) < 3.0f)
-        //{
+        if (rushing) return;    // 이미 질주 중이면 추가 호출 방지
+        rushing = true;
 
-        //}
+        NMA.speed = 9.2f;   // 속도는 9.2 (m/s) 3초간 전방으로 돌진
+        print("돌진!");
+
+        Vector3 destination = NMA.destination;
+        destination.y = 1;
+        float distance = Vector3.Distance(destination, transform.position);
+
+        if (distance < 1.6f)
+        {
+            NMA.ResetPath();
+            print("경로 잃음!");
+            currentTime += Time.deltaTime;
+            if (currentTime <= 1)
+            {
+                transform.position = Vector3.Lerp(transform.position, transform.position + knockBackDir * knockBackPow, currentTime);
+            }
+            else
+            {
+                NMA.speed = 4.6f;   // 질주 종료 시 원래 속도로 돌아온다.
+                print("넉백 끝남!");
+                rushing = false;
+                currentTime = 0;
+                if (rushToken != 0 && CanIRush())
+                {
+                    Rush();
+                    rushToken--;
+                }
+            }
+        }       
+        print(NMA.remainingDistance);
+        print(NMA.destination);
+        print(distance);
     }
 
     bool CanIRush() // 질주 조건 판단 (미구현) **************************************************************
     {
-        Ray rushRay = new Ray(transform.position, targetTransform.position - transform.position);
+        Vector3 dir = targetTransform.position - transform.position;
+        dir.y = transform.position.y;
+        Ray rushRay = new Ray(transform.position, dir);
         RaycastHit hitInfo;
         if (Physics.Raycast(rushRay, out hitInfo, 27.6f, ~(1<<8)))
         {
-            targetTransform = hitInfo.transform;
-            print(hitInfo.transform.name);
+            NMA.SetDestination(hitInfo.point);
+            knockBackDir = (transform.position - hitInfo.point).normalized;
             return true;
         }
         return false;
@@ -320,5 +356,13 @@ public class EnemyController : MonoBehaviour
         currentState = newState;
         currentTime = 0;
         print("상태변화: " + newState.ToString());
+    }
+
+    private void OnDrawGizmos()
+    {
+        Vector3 dir = targetTransform.position - transform.position;
+        dir.y = transform.position.y;
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(transform.position,dir);
     }
 }
