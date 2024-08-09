@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using static EnemyController;
 using static PalletFSM;
 using static PlayerFSM;
 
@@ -11,6 +12,10 @@ public class PalletSystem : MonoBehaviour
     PalletFSM palFsm;
     public Animator playerAnim;
     public CharacterController cc;
+
+    EnemyController enemyController;
+
+    public GameObject enemy;
 
     public Collider palletCollider;
     public Transform palletAxis;
@@ -30,6 +35,9 @@ public class PalletSystem : MonoBehaviour
         //startRotation = palletAxis.eulerAngles;
         targetRotation = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 50);
         //targetRotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 50));
+        
+        
+
     }
 
 
@@ -111,32 +119,16 @@ public class PalletSystem : MonoBehaviour
             cc = other.gameObject.GetComponent<CharacterController>();
             
         }
+        if (other.gameObject.tag == ("Enemy") && palFsm.palState == PalletFSM.PalletState.Falling)
+        {
+
+            enemyController = enemy.GetComponent<EnemyController>();
+
+            print("에너미 기절시킴");
+            enemyController.Stuned();
+
+        }
     }
-
-    
-
-
-    public void DropPallet()
-    {
-        // 판자가 세워져 있는 상태의 행동
-    }
-
-    private void FallingState()
-    {
-        // 예: 판자가 넘어가는 중일 때의 행동
-        
-    }
-
-    private void FallDownState()
-    {
-        // 예: 판자가 완전히 넘어졌을 때의 행동
-    }
-
-    private void DestroyedState()
-    {
-        // 예: 판자가 부서졌을 때의 행동
-       
-    }
-
+  
 
 }
