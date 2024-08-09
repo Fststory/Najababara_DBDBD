@@ -179,12 +179,12 @@ public class EnemyController : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, targetTransform.position);
         
-        // 질주 조건을 만족한다면...(질주 토큰이 5개이고, 전방 27.6m 이내 충돌할 곳이 있다)
-        if (rushToken == 5 && ISaw("Player", degree, 27.6f) && CanIRush())
-        {
-            ChangeState(EnemyState.Rush);   // 질주 상태로 전환
-        }
-        else if ((int)playerFSM.pyState <= 1 && distance < attackRange)   // 범위 내에서 아직 플레이어가 건강 or 부상 상태면 공격을 시도
+        //// 질주 조건을 만족한다면...(질주 토큰이 5개이고, 전방 27.6m 이내 충돌할 곳이 있다)
+        //if (rushToken == 5 && ISaw("Player", degree, 27.6f) && CanIRush())
+        //{
+        //    ChangeState(EnemyState.Rush);   // 질주 상태로 전환
+        //}else
+        if ((int)playerFSM.pyState <= 1 && distance < attackRange)   // 범위 내에서 아직 플레이어가 건강 or 부상 상태면 공격을 시도
         {
             Attack();
         }
@@ -275,7 +275,7 @@ public class EnemyController : MonoBehaviour
         destination.y = 1;
         float distance = Vector3.Distance(destination, transform.position);
 
-        if (distance < 1.6f)
+        if (distance < 2.1f)
         {
             NMA.ResetPath();
             print("경로 잃음!");
@@ -312,6 +312,7 @@ public class EnemyController : MonoBehaviour
         {
             NMA.SetDestination(hitInfo.point);
             knockBackDir = (transform.position - hitInfo.point).normalized;
+            print(hitInfo.transform.name);
             return true;
         }
         return false;
@@ -358,11 +359,11 @@ public class EnemyController : MonoBehaviour
         print("상태변화: " + newState.ToString());
     }
 
-    private void OnDrawGizmos()
-    {
-        Vector3 dir = targetTransform.position - transform.position;
-        dir.y = transform.position.y;
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position,dir);
-    }
+    //private void OnDrawGizmos()
+    //{
+    //    Vector3 dir = targetTransform.position - transform.position;
+    //    dir.y = transform.position.y;
+    //    Gizmos.color = Color.green;
+    //    Gizmos.DrawLine(transform.position,dir);
+    //}
 }
