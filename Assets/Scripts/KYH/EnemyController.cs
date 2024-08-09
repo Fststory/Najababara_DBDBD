@@ -12,6 +12,7 @@ public class EnemyController : MonoBehaviour
         매 이동시 방향 전환을 위한 타겟이 필요하다(트랜스폼 컴포넌트를 받아온다)
         시야에 들어온 증거들 중에 우선순위를 따져서 타겟으로 잡는다.        
     */
+    public Transform testCube;
 
     public NavMeshAgent NMA;
 
@@ -31,6 +32,9 @@ public class EnemyController : MonoBehaviour
     int currentGeneratorIndex = 0;  // 현재 탐색중인 발전기 번호
 
     public int rushToken = 5;  // 최초 질주 토큰 5개 보유
+    bool rushing = false;
+    Vector3 knockBackDir;
+    float knockBackPow;
 
 
     public enum EnemyState
@@ -171,9 +175,9 @@ public class EnemyController : MonoBehaviour
     {        
         NMA.SetDestination(targetTransform.position);
         print("플레이어에게 간다!");
-        
+
         // 질주 조건을 만족한다면...(질주 토큰이 5개이고, 전방 27.6m 이내 충돌할 곳이 있다)
-        if (rushToken == 5 && ISaw("Player", degree, 27.6f))
+        if (rushToken == 5 && ISaw("Player", degree, 27.6f) && CanIRush())
         {
             ChangeState(EnemyState.Rush);   // 질주 상태로 전환
         }
@@ -260,24 +264,55 @@ public class EnemyController : MonoBehaviour
     // [EnemyState.JudgeRush] 질주 판단 상태에서 진행되는 기능
     void Rush()
     {
-        Ray rushRay = new Ray(transform.position, targetTransform.position - transform.position);
+        print(NMA.remainingDistance);
+        //if (rushing) return;    // 질주 중이면 중복 호출 방지!
+        //rushing = true;
+
+        NMA.speed = 9.2f;   // 속도는 9.2 (m/s) 3초간 전방으로 돌진
+        print("질주!");
+
+        if (NMA.remainingDistance == 0)
+        {
+            print("멈췄다!");
+            //NMA.ResetPath();
+            //print("경로 잃음!");
+            currentTime += Time.deltaTime;
+            if (currentTime <= 1)
+            {
+                transform.position = Vector3.Lerp(transform.position, transform.position + knockBackDir * knockBackPow, currentTime);
+            }
+            else
+            {
+                NMA.speed = 4.6f;   // 넉백 끝나면 이동 속도 정상화
+                print("넉백 끝남!");
+                //rushing = false;
+                currentTime = 0;
+                if (rushToken != 0 && CanIRush())
+                {
+                    Rush();
+                    rushToken--;
+                }
+            }
+        }
+        
+        testCube.position = NMA.destination + new Vector3(0, NMA.baseOffset, 0);
+    }
+
+    bool CanIRush() // 질주 조건 판단 (미구현) **************************************************************
+    {
+        Vector3 dir = targetTransform.position - transform.position;
+        dir.y = 0;
+        Ray rushRay = new Ray(transform.position, dir);
+        print("내 위치: " + transform.position);
         RaycastHit hitInfo;
         if (Physics.Raycast(rushRay, out hitInfo, 27.6f, ~(1 << 8)))
         {
-            NMA.speed = 9.2f;   // 속도는 9.2 (m/s) 3초간 전방으로 돌진
-            NMA.SetDestination(hitInfo.point);   // 목표는 자신의 전방으로 질주 최대거리의 Ray를 쏴서 맞은 지점
-            //if (Vector3.Distance(transform.position, hitInfo.point) < 3.0f)
-            //{
-
-            //}
+            NMA.SetDestination(hitInfo.point);
+            knockBackDir = (transform.position - hitInfo.point).normalized;
+            return true;
         }
+        return false;
     }
-
-    //bool CanIRush() // 질주 조건 판단 (미구현) **************************************************************
-    //{
-    //    return true;
-    //}
-    
 
     /// <summary>
     /// 시야 내 증거 발견 시 타겟으로 설정하고 true 반환, 시야 내에 없을 시 타겟을 null로 설정하고 false 반환

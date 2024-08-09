@@ -125,7 +125,7 @@ public class PalletSystem : MonoBehaviour
             enemyController = enemy.GetComponent<EnemyController>();
 
             print("에너미 기절시킴");
-            enemyController.Stuned();
+            enemyController.Stuned(2);
 
         }
     }

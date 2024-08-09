@@ -10,7 +10,7 @@ public class GeneratorSystem : MonoBehaviour
     // 플레이어가 마우스 좌클 시 수리가 진행된다.(수리도가 올라간다.)
     // 일정 타이밍에 수리 타이밍게임이 나온다.
 
-    //public PlayerController playerController;
+    //public PlayerController playerController; *****발전기는 게임이 시작될 때 나오니까 그 전까지는 인스펙터에서 플레이어 관련 컴포넌트 넣어주는 것이 불가능했을 것임!!!*****
 
     public SkillCheckSystem skillCheckSystem;
 
@@ -58,6 +58,7 @@ public class GeneratorSystem : MonoBehaviour
         repairPercent = 20.0f;
         //// playerAnim은 playerController의 애니메이터 컴포넌트다.
         //playerAnim = playerController.GetComponent<Animator>();
+        playerAnim = GameObject.FindGameObjectWithTag("Player").GetComponent<Animator>();
 
     }
 
@@ -149,7 +150,7 @@ public class GeneratorSystem : MonoBehaviour
             if (other.gameObject.name == ("Player"))
             {
                 // 여기서 플레이어 애니메이터 받아와
-                playerAnim = other.gameObject.GetComponent<Animator>();
+                //playerAnim = other.gameObject.GetComponent<Animator>(); *********스타트로 옮기겠습니다*********
 
                 if (Complete == false)
                 {

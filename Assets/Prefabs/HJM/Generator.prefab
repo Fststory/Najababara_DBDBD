@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 312075167108256081}
   - component: {fileID: 154209980580360474}
   - component: {fileID: -853001609740433970}
+  - component: {fileID: 8090549060156856725}
   m_Layer: 0
   m_Name: Generator
   m_TagString: Generator
@@ -119,6 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 042cf4ec96eed8f4c95e6c58fbe6ef96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  skillCheckSystem: {fileID: 0}
   playerAnim: {fileID: 0}
   repairGuide: {fileID: 0}
   repairSlider: {fileID: 0}
@@ -129,6 +131,12 @@ MonoBehaviour:
   repairPercent: 0
   repairCount: 0
   Complete: 0
+  checking: 0
+  skillChecking: 0
+  check1: 0
+  check2: 0
+  checkStart: 0
+  randomPercent: 0
 --- !u!65 &-853001609740433970
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -150,3 +158,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!208 &8090549060156856725
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1963956483083900327}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 0
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
