@@ -32,6 +32,7 @@ public class EnemyController : MonoBehaviour
     int currentGeneratorIndex = 0;  // 현재 탐색중인 발전기 번호
 
     public int rushToken = 5;  // 최초 질주 토큰 5개 보유
+    float chargingTime = 0;
     bool rushing = false;
     Vector3 knockBackDir;
     float knockBackPow;
@@ -85,6 +86,14 @@ public class EnemyController : MonoBehaviour
             case EnemyState.Rush:
                 Rush();
                 break;
+        }
+    }
+
+    private void Update()
+    {
+        if (currentState != EnemyState.Rush && currentState != EnemyState.OnGroggy)
+        {
+            RushTokenManage();
         }
     }
 
@@ -251,12 +260,12 @@ public class EnemyController : MonoBehaviour
     {
         // 질주 토큰은 2초에 1개씩 차고 최대 5개 보유 가능하다.
         if (rushToken != 5)
-        {
-            currentTime += Time.deltaTime;
-            if (currentTime > 2.0f)
+        {            
+            chargingTime += Time.deltaTime;
+            if (chargingTime > 2.0f)
             {
                 rushToken++;
-                currentTime = 0;
+                chargingTime = 0;
             }
         }
     }    
@@ -292,9 +301,12 @@ public class EnemyController : MonoBehaviour
                     Rush();
                     rushToken--;
                 }
+                else
+                {
+                    ChangeState(EnemyState.OnGroggy);   
+                }
             }
-        }
-        
+        }        
         testCube.position = NMA.destination + new Vector3(0, NMA.baseOffset, 0);
     }
 
