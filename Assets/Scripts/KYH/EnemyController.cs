@@ -16,6 +16,9 @@ public class EnemyController : MonoBehaviour
 
     public NavMeshAgent NMA;
 
+    public Animator enemyAnim;
+    bool stunned = false;
+
     public GameObject player;
     public Transform targetTransform;
     public float moveSpeed = 7.0f;
@@ -25,7 +28,8 @@ public class EnemyController : MonoBehaviour
     public float attackRange = 2.0f;    // 공격 사정 거리
 
     public float currentTime = 0;
-    float attackDelay = 2.0f;
+
+    float attackDelay = 2.0f;       // 공격 쿨타임
     public float degree = 45.0f;    // 에너미 시야각
     public float maxDistance;       // 에너미 가시거리
     public GameObject[] generators; // 맵 상의 모든 발전기
@@ -33,9 +37,9 @@ public class EnemyController : MonoBehaviour
 
     public int rushToken = 5;  // 최초 질주 토큰 5개 보유
     float chargingTime = 0;
-    bool rushing = false;
-    Vector3 knockBackDir;
-    float knockBackPow;
+    //bool rushing = false;
+    Vector3 knockBackDir;   // 질주 후 충돌 넉백 방향
+    float knockBackPow;     // 넉백 파워
 
 
     public enum EnemyState
@@ -54,7 +58,7 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
-        currentState = EnemyState.NoEvidence;   // 초기 상태는 "배회" 상태 => 이게 기존 코드 밑에 줄은 실험을 위해 추가한 코드 이후 삭제 **********
+        currentState = EnemyState.NoEvidence;   // 초기 상태는 "배회" 상태
         hang = GetComponent<HangPlayerHookInteraction>();
         playerFSM = player.GetComponent<PlayerFSM>();
         NMA = GetComponent<NavMeshAgent>();
@@ -91,6 +95,7 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
+        // 질주 상태도 아니고 스턴 상태도 아닐 때 질주 토큰이 충전된다.
         if (currentState != EnemyState.Rush && currentState != EnemyState.OnGroggy)
         {
             RushTokenManage();
@@ -100,6 +105,7 @@ public class EnemyController : MonoBehaviour
     // [EnemyState.NoEvidence] 돌아다닌다.   
     void Wander()
     {
+        enemyAnim.SetBool("Walk", true);
         // 증거가 없으면 돌아다닌다.(가장 가까운 발전기부터 순서대로.. 하고 싶었지만 그냥 씬에서 순서대로)
         // 이때 가장 가까운 발전기를 찾은 뒤 타겟으로 잡는다. 근처에 도달하면 다음 발전기를 타겟으로
         targetTransform = generators[currentGeneratorIndex].transform;
@@ -181,7 +187,7 @@ public class EnemyController : MonoBehaviour
 
     // [EnemyState.FindPlayer] 플레이어를 쫓는 상태
     void ChasePlayer()
-    {        
+    {
         NMA.SetDestination(targetTransform.position);
         print("플레이어에게 간다!");
 
@@ -210,6 +216,7 @@ public class EnemyController : MonoBehaviour
     void Attack()
     {
         currentTime += Time.deltaTime;
+        enemyAnim.SetTrigger("Attack");
         if (currentTime > attackDelay)
         {
             if (playerFSM.pyState == PlayerFSM.PlayerState.Normal)
@@ -246,16 +253,24 @@ public class EnemyController : MonoBehaviour
     // [EnemyState.OnGroggy] 판자 맞을 때 그로기 걸리는 기능
     public void Stuned(float stunTime)
     {
-        print("스턴!");
+        if (!stunned)
+        {
+            enemyAnim.SetTrigger("Stunned");
+            print("스턴!");
+            stunned = true;
+        }
+
         targetTransform = null;
         currentTime += Time.deltaTime;
         // 스턴 시간 동안 움직임이 없고 스턴 시간이 끝나면 다시 증거를 찾아 다님
         if (currentTime > stunTime)
         {
+            stunned = false;
             ChangeState(EnemyState.NoEvidence);
             print("스턴 해제!");
         }
     }
+
     void RushTokenManage()
     {
         // 질주 토큰은 2초에 1개씩 차고 최대 5개 보유 가능하다.
@@ -270,7 +285,7 @@ public class EnemyController : MonoBehaviour
         }
     }    
 
-    // [EnemyState.JudgeRush] 질주 판단 상태에서 진행되는 기능
+    // [EnemyState.Rush] 질주 상태에서 진행되는 기능
     void Rush()
     {
         print(NMA.remainingDistance);
@@ -280,11 +295,10 @@ public class EnemyController : MonoBehaviour
         NMA.speed = 9.2f;   // 속도는 9.2 (m/s) 3초간 전방으로 돌진
         print("질주!");
 
-        if (NMA.remainingDistance == 0)
+        if (NMA.remainingDistance <= 1.0f)
         {
+            enemyAnim.SetBool("Rush", false);
             print("멈췄다!");
-            //NMA.ResetPath();
-            //print("경로 잃음!");
             currentTime += Time.deltaTime;
             if (currentTime <= 1)
             {
@@ -298,19 +312,19 @@ public class EnemyController : MonoBehaviour
                 currentTime = 0;
                 if (rushToken != 0 && CanIRush())
                 {
+                    enemyAnim.SetTrigger("Rush Again");
                     Rush();
-                    rushToken--;
                 }
                 else
                 {
-                    ChangeState(EnemyState.OnGroggy);   
+                    ChangeState(EnemyState.OnGroggy);
                 }
             }
         }        
         testCube.position = NMA.destination + new Vector3(0, NMA.baseOffset, 0);
     }
 
-    bool CanIRush() // 질주 조건 판단 (미구현) **************************************************************
+    bool CanIRush() // 질주 조건 판단 (일부 구현) **************************************************************
     {
         Vector3 dir = targetTransform.position - transform.position;
         dir.y = 0;
@@ -319,8 +333,10 @@ public class EnemyController : MonoBehaviour
         RaycastHit hitInfo;
         if (Physics.Raycast(rushRay, out hitInfo, 27.6f, ~(1 << 8)))
         {
+            enemyAnim.SetBool("Rush", true);
             NMA.SetDestination(hitInfo.point);
             knockBackDir = (transform.position - hitInfo.point).normalized;
+            rushToken--;
             return true;
         }
         return false;

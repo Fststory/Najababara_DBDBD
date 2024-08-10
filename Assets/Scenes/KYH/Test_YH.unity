@@ -6057,6 +6057,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3955028119621003567, guid: 8e83653efa46cde4588176c5421a7de1,
         type: 3}
+      propertyPath: m_Volume
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3955028119621003567, guid: 8e83653efa46cde4588176c5421a7de1,
+        type: 3}
       propertyPath: MaxDistance
       value: 20
       objectReference: {fileID: 0}
@@ -6186,7 +6191,7 @@ PrefabInstance:
     - target: {fileID: 2075346774550331569, guid: b59cf104c096b584294d861d04f317e7,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 12.54
       objectReference: {fileID: 0}
     - target: {fileID: 2075346774550331569, guid: b59cf104c096b584294d861d04f317e7,
         type: 3}
@@ -6222,6 +6227,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8613718278846044053, guid: b59cf104c096b584294d861d04f317e7,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 8622363222165716905, guid: b59cf104c096b584294d861d04f317e7,
         type: 3}
