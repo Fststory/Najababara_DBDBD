@@ -6145,6 +6145,11 @@ PrefabInstance:
       propertyPath: playerFSM
       value: 
       objectReference: {fileID: 858295782}
+    - target: {fileID: 7559840568368335959, guid: 8e83653efa46cde4588176c5421a7de1,
+        type: 3}
+      propertyPath: rushToken
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 8801032759615661773, guid: 8e83653efa46cde4588176c5421a7de1,
         type: 3}
       propertyPath: m_IsKinematic
@@ -6347,6 +6352,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Window
+      objectReference: {fileID: 0}
+    - target: {fileID: 8081312943392033910, guid: 9a0de68edd020114e802b202fc76b955,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8081312943392033910, guid: 9a0de68edd020114e802b202fc76b955,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8081312943392033910, guid: 9a0de68edd020114e802b202fc76b955,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 8081312943392033910, guid: 9a0de68edd020114e802b202fc76b955,
         type: 3}

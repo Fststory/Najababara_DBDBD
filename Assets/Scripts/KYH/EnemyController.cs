@@ -12,7 +12,7 @@ public class EnemyController : MonoBehaviour
         매 이동시 방향 전환을 위한 타겟이 필요하다(트랜스폼 컴포넌트를 받아온다)
         시야에 들어온 증거들 중에 우선순위를 따져서 타겟으로 잡는다.        
     */
-    public Transform testCube;
+    //public Transform testCube;
 
     public NavMeshAgent NMA;
 
@@ -99,6 +99,11 @@ public class EnemyController : MonoBehaviour
         if (currentState != EnemyState.Rush && currentState != EnemyState.OnGroggy)
         {
             RushTokenManage();
+        }
+
+        if (NMA.currentOffMeshLinkData.activated)
+        {
+            enemyAnim.SetTrigger("Vault");
         }
     }
 
@@ -190,14 +195,15 @@ public class EnemyController : MonoBehaviour
     {
         NMA.SetDestination(targetTransform.position);
         print("플레이어에게 간다!");
+        float distance = Vector3.Distance(transform.position, targetTransform.position);
 
-        // 질주 조건을 만족한다면...(질주 토큰이 5개이고, 전방 27.6m 이내 충돌할 곳이 있다)
-        if (rushToken == 5 && ISaw("Player", degree, 27.6f) && CanIRush())
+        // 거리가 먼데(질주 거리 이상) 질주 조건을 만족한다면...(질주 토큰이 5개이고, 전방 27.6m 이내 충돌할 곳이 있다)
+        if (rushToken == 5 && ISaw("Player", degree, 27.6f) && CanIRush() && distance >= 9.6f)
         {
             ChangeState(EnemyState.Rush);   // 질주 상태로 전환
+            return;
         }
 
-        float distance = Vector3.Distance(transform.position, targetTransform.position);
         if ((int)playerFSM.pyState <= 1 && distance < attackRange)   // 범위 내에서 아직 플레이어가 건강 or 부상 상태면 공격을 시도
         {
             Attack();
@@ -216,21 +222,20 @@ public class EnemyController : MonoBehaviour
     void Attack()
     {
         currentTime += Time.deltaTime;
-        enemyAnim.SetTrigger("Attack");
         if (currentTime > attackDelay)
         {
+            enemyAnim.SetTrigger("Attack");
             if (playerFSM.pyState == PlayerFSM.PlayerState.Normal)
             {
                 playerFSM.pyState = PlayerFSM.PlayerState.Injured;
-                currentTime = 0;
                 print("Attack");
             }
             else if (playerFSM.pyState == PlayerFSM.PlayerState.Injured)
             {
                 playerFSM.pyState = PlayerFSM.PlayerState.Dying;
-                currentTime = 0;
                 print("Attack");
             }
+            currentTime = 0;
         }
     }
 
@@ -257,7 +262,6 @@ public class EnemyController : MonoBehaviour
         {
             enemyAnim.SetTrigger("Stunned");
             print("스턴!");
-            stunned = true;
         }
 
         targetTransform = null;
@@ -268,7 +272,10 @@ public class EnemyController : MonoBehaviour
             stunned = false;
             ChangeState(EnemyState.NoEvidence);
             print("스턴 해제!");
+            return;
         }
+
+        stunned = true;
     }
 
     void RushTokenManage()
@@ -321,7 +328,7 @@ public class EnemyController : MonoBehaviour
                 }
             }
         }        
-        testCube.position = NMA.destination + new Vector3(0, NMA.baseOffset, 0);
+        //testCube.position = NMA.destination + new Vector3(0, NMA.baseOffset, 0);
     }
 
     bool CanIRush() // 질주 조건 판단 (일부 구현) **************************************************************
