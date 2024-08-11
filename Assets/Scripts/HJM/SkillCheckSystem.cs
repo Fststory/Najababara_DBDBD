@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class SkillCheckSystem : MonoBehaviour
 {
+
+    public GeneratorSystem generatorSystem;
     public Transform noteAxis; // 스킬체크 노트
     public Transform normalAxis; // 스킬체크 노트
     public GameObject noteCanvas; // 노트 캔버스UI
@@ -16,6 +18,7 @@ public class SkillCheckSystem : MonoBehaviour
     private void Start()
     {
         noteCanvas.SetActive(false);
+        generatorSystem = FindObjectOfType<GeneratorSystem>();
     }
 
     void Update()
@@ -33,6 +36,7 @@ public class SkillCheckSystem : MonoBehaviour
     public void CheckStart()
     {
         noteCanvas.SetActive(true);
+        finish = false;
 
     }
 
@@ -46,8 +50,12 @@ public class SkillCheckSystem : MonoBehaviour
                 finish = true;
                 noteCanvas.SetActive(false);
                 print(finish);
-                
-           
+                generatorSystem.RestartRepair();
+                generatorSystem.isSkillChecking = false;
+
+
+
+
              }
             else
             {
@@ -56,8 +64,10 @@ public class SkillCheckSystem : MonoBehaviour
                 finish = true;
                 noteCanvas.SetActive(false);
                 print(finish);
-                
-            }
+                generatorSystem.FailedCheck();
+                generatorSystem.repairPercent = generatorSystem.repairPercent * 0.7f;
+                generatorSystem.isSkillChecking = false;
+        }
 
     }
 
