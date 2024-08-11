@@ -26,6 +26,7 @@ public class GeneratorSystem : MonoBehaviour
     {
 
         // UI 요소와 스킬체크 시스템을 할당
+        skillCheckSystem = FindObjectOfType<SkillCheckSystem>();
         repairGuide = GameObject.Find("TXT_RepairGuide");
         repairSlider = GameObject.Find("SLD_RepairSlider");
         repairSliderUI = repairSlider.GetComponent<Slider>();
@@ -34,7 +35,6 @@ public class GeneratorSystem : MonoBehaviour
 
     void Start()
     {
-        skillCheckSystem = FindObjectOfType<SkillCheckSystem>();
         // UI 초기화 및 수리슬라이더 값에 현재수리퍼센트 할당
         repairGuide.SetActive(false);
         repairSlider.SetActive(false);

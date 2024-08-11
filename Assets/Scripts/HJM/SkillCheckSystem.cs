@@ -19,14 +19,12 @@ public class SkillCheckSystem : MonoBehaviour
 
     private void Start()
     {
-     
         noteCanvas.SetActive(false);
 
         print("제너레이터 찾기 시작");
         generator = GameObject.FindWithTag("Generator");
         generatorSystem = generator.GetComponent<GeneratorSystem>();
         print("제너레이터 찾기 시도 완료");
-
 
     }
 
@@ -37,7 +35,6 @@ public class SkillCheckSystem : MonoBehaviour
             Check();
             print("스페이스바 눌림!");
         }
-
 
     }
 
@@ -57,27 +54,23 @@ public class SkillCheckSystem : MonoBehaviour
             print("성공!!" + ", " + noteAxis.transform.eulerAngles.z.ToString());
             isChecked = true;
             finish = true;
-            noteCanvas.SetActive(false);
             print(finish);
+            noteCanvas.SetActive(false);
             generatorSystem.RestartRepair();
             generatorSystem.isSkillChecking = false;
 
-
-
         }
+
         else
         {
             print("실패!!" + ", " + noteAxis.transform.eulerAngles.z.ToString());
             isChecked = false;
             finish = true;
-            noteCanvas.SetActive(false);
             print(finish);
+            noteCanvas.SetActive(false);
             generatorSystem.FailedCheck();
             generatorSystem.repairPercent = generatorSystem.repairPercent * 0.7f;
             generatorSystem.isSkillChecking = false;
         }
-
     }
-
-
 }
