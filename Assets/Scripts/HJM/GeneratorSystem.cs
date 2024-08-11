@@ -3,228 +3,162 @@ using UnityEngine.UI;
 
 public class GeneratorSystem : MonoBehaviour
 {
-    // 발전기 컨트롤러
+    public SkillCheckSystem skillCheckSystem; // 스킬 체크 시스템
+    public Animator playerAnim; // 플레이어 애니메이터
 
-    // 발전기는 수리도를 갖는다.
-    // 수리도를 UI와 연결한다.
-    // 플레이어가 마우스 좌클 시 수리가 진행된다.(수리도가 올라간다.)
-    // 일정 타이밍에 수리 타이밍게임이 나온다.
+    public GameObject repairGuide; // 수리 안내 문구
+    public GameObject repairSlider; // 수리 슬라이더
+    public Slider repairSliderUI; // 수리 슬라이더 UI
 
-    //public PlayerController playerController; *****발전기는 게임이 시작될 때 나오니까 그 전까지는 인스펙터에서 플레이어 관련 컴포넌트 넣어주는 것이 불가능했을 것임!!!*****
+    public float repairSpeed = 1.0f; // 수리 속도
+    public bool isPlayerInTrigger = false; // 플레이어가 트리거에 들어 왔는지 체크
 
-    public SkillCheckSystem skillCheckSystem;
+    public float repairPercent = 0.0f; // 현재 수리 퍼센트
+    
+    public bool isSkillChecking = false; // 스킬체크 중인 지
+    public bool Complete = false; // 수리 완료 했는 지
 
-    public Animator playerAnim;
+    public bool SkillCheck1 = false;
 
-    public GameObject repairGuide;
-    public GameObject repairSlider;
-    public Slider repairSliderUI;
-
-    public float repairSpeed = 1.0f;
-    public bool isPlayerInTrigger = false;
-
-    public int CompleteGenerator = 0;
-    public float repairPercent = 0.0f;
-    public int repairCount;
-    public bool Complete = false;
-    public bool checking = false;
-    public bool skillChecking = false;
-    public bool check1;
-    public bool check2;
-    public bool checkStart = false;
-
-
-    public float randomPercent;
-
+    public float randomPercent = 0f; // 스킬체크가 발동하는 랜덤 시간
 
     private void Awake()
     {
-        // repairGuide, repairSlider, repairSliderUI을 게임에서 찾아서 할당한다.
+        // UI 요소와 스킬체크 시스템을 할당
         repairGuide = GameObject.Find("TXT_RepairGuide");
         repairSlider = GameObject.Find("SLD_RepairSlider");
         repairSliderUI = repairSlider.GetComponent<Slider>();
 
         skillCheckSystem = FindObjectOfType<SkillCheckSystem>();
     }
+
     void Start()
-
     {
-
-        // 수리안내, 슬라이더 UI를 false 상태로 시작한다.
+        // UI 초기화 및 수리슬라이더 값에 현재수리퍼센트 할당
         repairGuide.SetActive(false);
         repairSlider.SetActive(false);
-        // 슬라이더 바의 값을 0 으로 시작한다.
         repairSliderUI.value = repairPercent;
-        repairPercent = 20.0f;
-        //// playerAnim은 playerController의 애니메이터 컴포넌트다.
-        //playerAnim = playerController.GetComponent<Animator>();
-        playerAnim = GameObject.FindGameObjectWithTag("Player").GetComponent<Animator>();
 
+        // 플레이어 애니메이터 컴포넌트 할당
+        playerAnim = GameObject.FindGameObjectWithTag("Player").GetComponent<Animator>();
     }
 
     void Update()
     {
-        // 수리 영역 안에서 마우스 좌클 누르고 있는 때에는
-        // 수리 안내 문구를 숨기고, 슬라이더 바만 보이게 한다.
-
-
-        // 일반 수리
-        // 플레이어가 트리거 안이며, 마우스 좌클을 누르고 있는 동안이며, 수리퍼센트가 50이하 일 때 실행한다.
-        if (isPlayerInTrigger == true && Input.GetMouseButton(0) && repairPercent < 50 && !checkStart)
+        
+        if (isPlayerInTrigger && Input.GetMouseButton(0))
         {
             repairSliderUI.value = repairPercent;
 
+            // 수리퍼센트가 50 미만이면서 스킬체크중일 떄
+            if (repairPercent < 50 && !isSkillChecking)
+            {
+                RepairGenerator();
+            }
 
-            RepairGenerator();
+            // 수리퍼센트가 20 이상일 때
+            if (repairPercent >= 20.0f)
+            {
+                if (randomPercent == 0)
+                {   // 스킬체크 발동 랜덤시간을 추첨한다.
+                    randomPercent = Random.Range(25.0f, 30.0f);
+                }
+
+                // 수리퍼센트가 랜덤퍼센트 이상이면서 스킬체크가 발동하지 않았을 때
+                if (repairPercent >= randomPercent && !isSkillChecking && !SkillCheck1)
+                {
+                    StartSkillCheck();
+                    SkillCheck1 = true;
+                }
+
+                if (repairPercent >= randomPercent && !isSkillChecking && SkillCheck1)
+                {
+                    RestartRepair();
+                    
+                }
+
+            }
         }
 
-        //1차 스킬체크 수리
-        //플레이어가 트리거 안이며, 마우스 좌클을 누르고 있는 동안이며, 수리퍼센트가 20이상 일 때 실행한다.
-        if (isPlayerInTrigger == true && Input.GetMouseButton(0) && repairPercent >= 20.0f)
+        if (isPlayerInTrigger && Input.GetMouseButtonUp(0) && !Complete)
         {
-            repairSliderUI.value = repairPercent;
-            print("퍼센트값 추첨합니다.");
-
-
-            // 랜덤 값을 처음 한 번만 추첨하도록 수정
-            if (randomPercent == 0)
-            {
-                // 랜덤 구간 설정
-                randomPercent = Random.Range(25.0f, 30.0f);
-                print(randomPercent);
-            }
-
-            // 추첨한 값에 수리도가 도달했다면 스킬시스템의 체크시작함수를 호출한다.
-            if (repairPercent >= randomPercent && check1)
-            {
-                check1 = true;
-                skillCheckSystem.CheckStart();
-                print("스킬체크 시작함");
-                checking = true;
-
-
-                // 스킬체크가 끝나지 않았다면
-                if (skillCheckSystem.finish && !checking)
-                {
-                    // 체크리페어(스킬체크에 의해 수리가 멈춘상태)
-                    CheckRepair();
-
-                }
-                // 스킬체크가 끝났다면
-                else if (skillCheckSystem.finish && checking)
-                {
-                    checkStart = true;
-                    // 다시 수리를 진행한다.
-                    print("스킬체크 끝나서 다시 수리합니다.");
-                    RepairGenerator();
-
-                }
-            }
-
-
-
-
-
-
-            // 수리 영역 안에서 마우스 좌클을 뗐을 때에
-            // 수리 완료 상태가 false일 때에
-            // 수리 슬라이더를 감추고, 수리 안내 문구를 띄운다.
-            if (Complete == false)
-            {
-                if (isPlayerInTrigger == true && Input.GetMouseButtonUp(0))
-                {
-                    repairSliderUI.value = repairPercent;
-
-                    print("수리 중도 정지.");
-                    playerAnim.SetBool("isRepair", false);
-                    repairGuide.SetActive(true);
-                    repairSlider.SetActive(false);
-                }
-            }
+            StopRepair();
         }
     }
-        // 수리 영역안에 들어오면, 수리 안내 문구를 띄우고 isPlayerInTrigger true를 반환한다.
-        private void OnTriggerEnter(Collider other)
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player") && !Complete)
         {
-
-            if (other.gameObject.name == ("Player"))
-            {
-                // 여기서 플레이어 애니메이터 받아와
-                //playerAnim = other.gameObject.GetComponent<Animator>(); *********스타트로 옮기겠습니다*********
-
-                if (Complete == false)
-                {
-                    print("수리가능 영역에 들어옴.");
-
-                    repairGuide.SetActive(true);
-                    repairSlider.SetActive(false);
-                    isPlayerInTrigger = true;
-                }
-            }
+            repairGuide.SetActive(true);
+            isPlayerInTrigger = true;
         }
+    }
 
-        // 수리 영역에서 나가면, 수리 안내 문구를 감추고 isPlayerInTrigger false를 반환한다.
-        // 수리 슬라이더도 감춘다.
-        private void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player") && !Complete)
         {
-            if (Complete == false)
-            {
-                print("수리가능 영역에서 나감.");
-                playerAnim.SetBool("isRepair", false);
-                repairGuide.SetActive(false);
-                isPlayerInTrigger = false;
-                repairSlider.SetActive(false);
-            }
-        }
-
-        void RepairsComplete()
-        {
-            print("수리 완료됨");
-            GeneratorManager.generatorManager.AddRepairCount(1);
-            repairPercent = 100;
+            StopRepair();
             repairGuide.SetActive(false);
-            repairSlider.SetActive(false);
-            Complete = true;
-
+            isPlayerInTrigger = false;
         }
+    }
 
-        void RepairGenerator()
+    // 수리 중일 때
+    private void RepairGenerator()
+    {
+        playerAnim.SetBool("isRepair", true);
+        repairGuide.SetActive(false);
+        repairSlider.SetActive(true);
+
+        repairPercent += repairSpeed * Time.deltaTime;
+        if (repairPercent >= 100)
         {
-            print("수리 중입니다.");
-            repairSliderUI.value = repairPercent;
-            //print("수리 애니 재생");
-            playerAnim.SetBool("isRepair", true);
-            repairGuide.SetActive(false);
-            repairSlider.SetActive(true);
-            repairPercent += repairSpeed * Time.deltaTime;
-            if (repairPercent >= 100)
-            {
-                print("완료 카운트 1");
-                playerAnim.SetBool("isRepair", false);
-                RepairsComplete();
-                Complete = true;
-                return;
-            }
+            RepairsComplete();
         }
+    }
 
-        void CheckRepair()
+    private void StartSkillCheck()
+    {
+        isSkillChecking = true;
+        skillCheckSystem.CheckStart();
+        
+
+    }
+
+    public void RestartRepair()
+    {
+        if (isSkillChecking == false)
         {
-            print("스킬체크로 인해 수리 정지");
-            checkStart = true;
-            repairSliderUI.value = repairPercent;
-            playerAnim.SetBool("isRepair", true);
-            repairGuide.SetActive(false);
-            repairSlider.SetActive(true);
+            print("스킬체크 완료 후 다시 수리시작.");
+            RepairGenerator();
 
-            if (skillCheckSystem.finish == true)
-            {
-                checking = false;
-                checkStart = false;
-
-            }
 
         }
+    }
+    public void FailedCheck()
+    {
+        print("펑!");
 
 
-    
+    }
+
+
+private void StopRepair()
+    {
+        playerAnim.SetBool("isRepair", false);
+        repairGuide.SetActive(true);
+        repairSlider.SetActive(false);
+    }
+
+    private void RepairsComplete()
+    {
+        repairPercent = 100;
+        repairGuide.SetActive(false);
+        repairSlider.SetActive(false);
+        Complete = true;
+
+        GeneratorManager.generatorManager.AddRepairCount(1);
+    }
 }
