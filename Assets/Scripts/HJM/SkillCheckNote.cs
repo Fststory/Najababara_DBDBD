@@ -10,6 +10,8 @@ public class SkillCheckNote : MonoBehaviour
     public Transform noteAxis; // 회전 축
     public Transform note; // 회전하는 이미지 UI
 
+   
+
     private Quaternion startnoteRot; // 노트 회전 저장
 
     void Start()
