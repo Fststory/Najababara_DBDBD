@@ -45,7 +45,7 @@ public class GeneratorManager : MonoBehaviour
         for (int i = 0; i < numberOfGenerators; i++)
         {
             // Generator 프리팹 인스턴스 생성
-            GameObject generator = Instantiate(generatorPrefab, new Vector3(Random.Range(x_min,x_max), 0.5f, Random.Range(y_min,y_max)), Quaternion.identity);
+            GameObject generator = Instantiate(generatorPrefab, new Vector3(Random.Range(x_min,x_max), 0.0f, Random.Range(y_min,y_max)), Quaternion.identity);
             generators[i] = generator;
 
 
