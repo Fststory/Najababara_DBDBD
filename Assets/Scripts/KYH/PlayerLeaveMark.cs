@@ -14,7 +14,7 @@ public class PlayerLeaveMark : MonoBehaviour
     public GameObject traceMarkPrefab;  // TraceMark 프리팹 넣기
     float currentTime = 0;
     public float markCycle = 0.5f;  // 흔적을 남기는 주기
-    public PlayerController playerController;   // 플레이어에 달려있는 PlayerController 컴포넌트 넣어줘야 됨
+    public PlayerController playerController;   // 플레이어에 달려있는 PlayerController 컴포넌트 넣어줘야 됨 => 플레이어가 뛰고 있는지를 받아오기 위해서
 
 
     void Update()
