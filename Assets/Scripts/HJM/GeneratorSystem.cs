@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.PlayerSettings;
+//using static UnityEditor.PlayerSettings;
 
 public class GeneratorSystem : MonoBehaviour
 {
@@ -121,7 +121,7 @@ public class GeneratorSystem : MonoBehaviour
         {
             RepairsComplete();
         }
-        playerAnim.SetBool("Exposion", false);
+        //playerAnim.SetBool("Exposion", false);
     }
 
     private void StartSkillCheck()
@@ -146,7 +146,7 @@ public class GeneratorSystem : MonoBehaviour
     {
         print("Æã!");
         explosion.SetActive(true);
-        playerAnim.SetBool("Exposion", true);
+        //playerAnim.SetBool("Exposion", true);
     }
 
 
