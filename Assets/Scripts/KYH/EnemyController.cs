@@ -295,7 +295,7 @@ public class EnemyController : MonoBehaviour
     // [EnemyState.Rush] 질주 상태에서 진행되는 기능
     void Rush()
     {
-        print(NMA.remainingDistance);
+        print("질주 남은 거리: " + NMA.remainingDistance);
         //if (rushing) return;    // 질주 중이면 중복 호출 방지!
         //rushing = true;
 
@@ -327,7 +327,7 @@ public class EnemyController : MonoBehaviour
                     ChangeState(EnemyState.OnGroggy);
                 }
             }
-        }        
+        }
         //testCube.position = NMA.destination + new Vector3(0, NMA.baseOffset, 0);
     }
 
