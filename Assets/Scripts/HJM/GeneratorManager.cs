@@ -8,8 +8,8 @@ public class GeneratorManager : MonoBehaviour
     public static GeneratorManager generatorManager { get; private set; }
     public ExitSystem exitSystem;
     public GameObject generatorPrefab; // Generator 프리팹
-    public int numberOfGenerators = 3; // 생성할 Generator의 수
-    public int numberOfRepairs; // 수리해야할 Generator의 수
+    public int numberOfGenerators = 7; // 생성할 Generator의 수
+    public int numberOfRepairs = 2; // 수리해야할 Generator의 수
     private GameObject[] generators;
     public float x_min, x_max, y_min, y_max;
 
@@ -45,20 +45,20 @@ public class GeneratorManager : MonoBehaviour
         for (int i = 0; i < numberOfGenerators; i++)
         {
             // Generator 프리팹 인스턴스 생성
-            GameObject generator = Instantiate(generatorPrefab, new Vector3(Random.Range(x_min,x_max), 0.0f, Random.Range(y_min,y_max)), Quaternion.identity);
-            generators[i] = generator;
+           // GameObject generator = Instantiate(generatorPrefab, new Vector3(Random.Range(x_min,x_max), 0.0f, Random.Range(y_min,y_max)), Quaternion.identity);
+            //generators[i] = generator;
 
 
             // exitSystem.generator는 생성된 generator프리팹이다.
-            exitSystem.generator = generator;
+            //exitSystem.generator = generator;
 
             // exitSystem.generatorSystem은 생성된 generator프리팹의 컴포넌트인 GeneratorSystem이다.
-            exitSystem.generatorSystem = generator.GetComponent<GeneratorSystem>();
-            GeneratorSystem generatorSystem = generator.GetComponent<GeneratorSystem>();
+            //exitSystem.generatorSystem = generator.GetComponent<GeneratorSystem>();
+           // GeneratorSystem generatorSystem = generator.GetComponent<GeneratorSystem>();
             
            
             // numberOfRepairs(수리해야할 수)는 numberOfGenerators(생성할 발전기 수)에서 1을 뺀 값이다.
-            numberOfRepairs = (numberOfGenerators - 1); 
+            //numberOfRepairs = (numberOfGenerators - 1); 
 
         }
        

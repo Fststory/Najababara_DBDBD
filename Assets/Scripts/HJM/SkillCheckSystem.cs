@@ -5,27 +5,33 @@ using UnityEngine.UI;
 
 public class SkillCheckSystem : MonoBehaviour
 {
-
+    public static SkillCheckSystem skillCheckSystem;
     public GeneratorSystem generatorSystem;
-    public GameObject generator;
     public Transform noteAxis; // 스킬체크 노트
     public Transform normalAxis; // 스킬체크 노트
     public GameObject noteCanvas; // 노트 캔버스UI
-
 
     public bool isChecked = false;
     public bool finish = false;
 
 
+    //private void Awake()
+    //{
+    //    // 다른 인스턴스가 이미 존재하면 이 객체를 파괴합니다.
+    //    if (skillCheckSystem == null)
+    //    {
+    //        skillCheckSystem = this;
+    //        DontDestroyOnLoad(gameObject);  // 씬 전환 시 객체가 파괴되지 않도록 설정
+    //    }
+    //    else
+    //    {
+    //        Destroy(gameObject);
+    //    }
+    //}
     private void Start()
     {
         noteCanvas.SetActive(false);
-
-        print("제너레이터 찾기 시작");
-        generator = GameObject.FindWithTag("Generator");
-        generatorSystem = generator.GetComponent<GeneratorSystem>();
-        print("제너레이터 찾기 시도 완료");
-
+        generatorSystem = FindObjectOfType<GeneratorSystem>();
     }
 
     void Update()
@@ -35,6 +41,7 @@ public class SkillCheckSystem : MonoBehaviour
             Check();
             print("스페이스바 눌림!");
         }
+
 
     }
 
@@ -54,23 +61,29 @@ public class SkillCheckSystem : MonoBehaviour
             print("성공!!" + ", " + noteAxis.transform.eulerAngles.z.ToString());
             isChecked = true;
             finish = true;
-            print(finish);
             noteCanvas.SetActive(false);
+            print(finish);
             generatorSystem.RestartRepair();
             generatorSystem.isSkillChecking = false;
 
-        }
 
+
+
+        }
         else
         {
             print("실패!!" + ", " + noteAxis.transform.eulerAngles.z.ToString());
             isChecked = false;
             finish = true;
-            print(finish);
             noteCanvas.SetActive(false);
+            print(finish);
             generatorSystem.FailedCheck();
             generatorSystem.repairPercent = generatorSystem.repairPercent * 0.7f;
             generatorSystem.isSkillChecking = false;
         }
+
     }
+
+
+
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.PlayerSettings;
 
 public class GeneratorSystem : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class GeneratorSystem : MonoBehaviour
     public bool isPlayerInTrigger = false; // 플레이어가 트리거에 들어 왔는지 체크
 
     public float repairPercent = 0.0f; // 현재 수리 퍼센트
-
+    
     public bool isSkillChecking = false; // 스킬체크 중인 지
     public bool Complete = false; // 수리 완료 했는 지
 
@@ -22,15 +23,16 @@ public class GeneratorSystem : MonoBehaviour
 
     public float randomPercent = 0f; // 스킬체크가 발동하는 랜덤 시간
 
+    public GameObject explosion;
+
     private void Awake()
     {
-
         // UI 요소와 스킬체크 시스템을 할당
-        skillCheckSystem = FindObjectOfType<SkillCheckSystem>();
         repairGuide = GameObject.Find("TXT_RepairGuide");
         repairSlider = GameObject.Find("SLD_RepairSlider");
         repairSliderUI = repairSlider.GetComponent<Slider>();
 
+        skillCheckSystem = FindObjectOfType<SkillCheckSystem>();
     }
 
     void Start()
@@ -40,15 +42,14 @@ public class GeneratorSystem : MonoBehaviour
         repairSlider.SetActive(false);
         repairSliderUI.value = repairPercent;
 
-
         // 플레이어 애니메이터 컴포넌트 할당
         playerAnim = GameObject.FindGameObjectWithTag("Player").GetComponent<Animator>();
     }
 
     void Update()
     {
-
-        if (isPlayerInTrigger && Input.GetMouseButton(0))
+        
+        if (isPlayerInTrigger && Input.GetMouseButton(0) && !Complete)
         {
             repairSliderUI.value = repairPercent;
 
@@ -76,10 +77,11 @@ public class GeneratorSystem : MonoBehaviour
                 if (repairPercent >= randomPercent && !isSkillChecking && SkillCheck1)
                 {
                     RestartRepair();
-
+                    
                 }
 
             }
+           
         }
 
         if (isPlayerInTrigger && Input.GetMouseButtonUp(0) && !Complete)
@@ -119,13 +121,14 @@ public class GeneratorSystem : MonoBehaviour
         {
             RepairsComplete();
         }
+        playerAnim.SetBool("Exposion", false);
     }
 
     private void StartSkillCheck()
     {
         isSkillChecking = true;
         skillCheckSystem.CheckStart();
-
+        
 
     }
 
@@ -135,28 +138,30 @@ public class GeneratorSystem : MonoBehaviour
         {
             print("스킬체크 완료 후 다시 수리시작.");
             RepairGenerator();
-
+            
 
         }
     }
     public void FailedCheck()
     {
         print("펑!");
-
-
+        Instantiate(explosion, transform.position, Quaternion.identity);
+        playerAnim.SetBool("Exposion", true);
     }
 
 
-    private void StopRepair()
+private void StopRepair()
     {
+        print("수리를 종료합니다.");
         playerAnim.SetBool("isRepair", false);
         repairGuide.SetActive(true);
         repairSlider.SetActive(false);
+        
     }
-
     private void RepairsComplete()
     {
         repairPercent = 100;
+        playerAnim.SetBool("isRepair", false);
         repairGuide.SetActive(false);
         repairSlider.SetActive(false);
         Complete = true;

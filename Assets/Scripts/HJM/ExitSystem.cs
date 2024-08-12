@@ -10,7 +10,7 @@ public class ExitSystem : MonoBehaviour
 
     public GameObject generator;
     public GeneratorSystem generatorSystem;
-    
+    public bool isPlayerInTrigger = false;
 
 
 
@@ -33,13 +33,29 @@ private void Start()
        
     }
 
+    public void Update()
+    {
+        
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            OpenExit();
+            isPlayerInTrigger = true;
+        }
+    }
+
     public void OpenExit()
     {
-     print("출구가 열렸습니다!");
-     transform.position += Vector3.up * Time.deltaTime;
+        if(isPlayerInTrigger == true)
+        {
+        print("출구가 열렸습니다!");
+        transform.position += Vector3.up * Time.deltaTime;
+
+        }
 
     }
 
 
-    
 }
