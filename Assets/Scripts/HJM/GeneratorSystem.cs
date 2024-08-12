@@ -145,7 +145,7 @@ public class GeneratorSystem : MonoBehaviour
     public void FailedCheck()
     {
         print("Æã!");
-        Instantiate(explosion, transform.position, Quaternion.identity);
+        explosion.SetActive(true);
         playerAnim.SetBool("Exposion", true);
     }
 
