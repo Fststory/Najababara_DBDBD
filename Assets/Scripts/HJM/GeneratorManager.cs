@@ -73,11 +73,11 @@ public class GeneratorManager : MonoBehaviour
     private void Update()
     {
         // 만일 numberOfRepairs(수리해야할 수) 보다 CompleteRepair(수리완료한 수) 가 크거나 같다면
-        if (CompleteRepair >= numberOfRepairs)
-        {
-            // exitSystem의 OpenExit 함수를 실행한다.
-            exitSystem.OpenExit();
-        }
+        //if (CompleteRepair >= numberOfRepairs)
+        //{
+        //    // exitSystem의 OpenExit 함수를 실행한다.
+        //    exitSystem.OpenExit();
+        //}
         
     }
 

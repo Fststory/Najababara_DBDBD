@@ -35,7 +35,7 @@ private void Start()
 
     public void Update()
     {
-        
+        OpenExit();
     }
     private void OnTriggerEnter(Collider other)
     {

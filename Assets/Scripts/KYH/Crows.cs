@@ -5,15 +5,15 @@ using UnityEngine;
 public class Crows : MonoBehaviour
 {
     AudioSource audioSource;
-    bool flying = false;
-    float currentTime = 0;
-    Transform startTransform;
+    //bool flying = false;
+    //float currentTime = 0;
+    //Transform startTransform;
 
 
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        startTransform.position = transform.position;
+        //startTransform.position = transform.position;
     }
 
     void Update()
@@ -37,7 +37,10 @@ public class Crows : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        audioSource.Play();
-        flying = true;
+        if (other.CompareTag("Player"))
+        {
+            audioSource.Play();
+            //flying = true;
+        }
     }
 }
