@@ -15,7 +15,7 @@ public class GeneratorSystem : MonoBehaviour
     public bool isPlayerInTrigger = false; // 플레이어가 트리거에 들어 왔는지 체크
 
     public float repairPercent = 0.0f; // 현재 수리 퍼센트
-    
+
     public bool isSkillChecking = false; // 스킬체크 중인 지
     public bool Complete = false; // 수리 완료 했는 지
 
@@ -48,7 +48,7 @@ public class GeneratorSystem : MonoBehaviour
 
     void Update()
     {
-        
+
         if (isPlayerInTrigger && Input.GetMouseButton(0) && !Complete)
         {
             repairSliderUI.value = repairPercent;
@@ -77,11 +77,11 @@ public class GeneratorSystem : MonoBehaviour
                 if (repairPercent >= randomPercent && !isSkillChecking && SkillCheck1)
                 {
                     RestartRepair();
-                    
+
                 }
 
             }
-           
+
         }
 
         if (isPlayerInTrigger && Input.GetMouseButtonUp(0) && !Complete)
@@ -128,7 +128,7 @@ public class GeneratorSystem : MonoBehaviour
     {
         isSkillChecking = true;
         skillCheckSystem.CheckStart();
-        
+
 
     }
 
@@ -138,7 +138,7 @@ public class GeneratorSystem : MonoBehaviour
         {
             print("스킬체크 완료 후 다시 수리시작.");
             RepairGenerator();
-            
+
 
         }
     }
@@ -150,13 +150,13 @@ public class GeneratorSystem : MonoBehaviour
     }
 
 
-private void StopRepair()
+    private void StopRepair()
     {
         print("수리를 종료합니다.");
         playerAnim.SetBool("isRepair", false);
         repairGuide.SetActive(true);
         repairSlider.SetActive(false);
-        
+
     }
     private void RepairsComplete()
     {
