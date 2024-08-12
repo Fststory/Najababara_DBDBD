@@ -23,7 +23,7 @@ public class PalletSystem : MonoBehaviour
     public bool isPlayerInTrigger = false;
 
     private bool palFallen = false;
-    public float fallDuration = 3.0f; // 넘어질 때 걸리는 시간
+    public float fallDuration = 2.0f; // 넘어질 때 걸리는 시간
     public float fallTime;
     private Vector3 targetRotation;
     private Vector3 startRotation;
@@ -36,6 +36,8 @@ public class PalletSystem : MonoBehaviour
         targetRotation = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 50);
         //targetRotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 50));
         
+            playerAnim = playerAnim.GetComponent<Animator>();
+            cc = cc.GetComponent<CharacterController>();
         
 
     }
@@ -57,7 +59,7 @@ public class PalletSystem : MonoBehaviour
             //transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, t);
             //print(t);
             //print(transform.eulerAngles);
-            palletCollider.isTrigger = false;
+            //palletCollider.isTrigger = false;
 
 
             // 판자가 완전히 넘어졌다면 상태를 FallDown으로 변경하고 fallTime을 초기화한다.
@@ -80,43 +82,33 @@ public class PalletSystem : MonoBehaviour
             fallTime = 0f;
             palFallen = true;
 
-            
+
         }
 
 
-        // 만일, 판자의 상태가 넘어지는 중일 때(만 실행한다.)
+        // 만일, 판자의 상태가 완전히 넘어진 후 라면
         if (palFsm.palState == PalletFSM.PalletState.FallDown)
         {
-            if((isPlayerInTrigger && Input.GetKey(KeyCode.Space) && palFallen))
+            if ((isPlayerInTrigger && Input.GetKey(KeyCode.Space) && palFallen == true))
             {
-            print("넘어가기, 스페이스바 또 누름");
+                print("넘어가기, 스페이스바 또 누름");
                 // 넘어가는 애니메이션을 재생한다.
-                playerAnim.SetTrigger("isClimb");
+                playerAnim.SetBool("isClimb", true);
                 // 넘어가기 전의 위치에 캐릭터컨트롤러를 고정시킨다.
-                // 만일, 넘어가는 시간이 지났다면
-                // cc를 전방에서 일정거리 떨어진 곳으로 보낸다.
-                // 판자 축이랑 콜라이더용 엠티를 따로 파야할듯, 축이 회전하고 콜라이더는 고정
-                //isPlayerInTrigger = false;
-                
+               
             }
 
         }
 
-
     }
 
  
-
-
-
     public void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == ("Player"))
         {
             isPlayerInTrigger = true;
             print("판자 영역 들어옴");
-            playerAnim = other.gameObject.GetComponent<Animator>();
-            cc = other.gameObject.GetComponent<CharacterController>();
             
         }
         if (other.gameObject.tag == ("Enemy") && palFsm.palState == PalletFSM.PalletState.Falling)
@@ -132,3 +124,5 @@ public class PalletSystem : MonoBehaviour
   
 
 }
+
+    
