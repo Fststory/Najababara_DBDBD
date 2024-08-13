@@ -28,7 +28,7 @@ public class GeneratorSystem : MonoBehaviour
     private void Awake()
     {
         // UI 요소와 스킬체크 시스템을 할당
-        repairGuide = GameObject.Find("TXT_RepairGuide");
+        repairGuide = GameObject.Find("img_RepairGuide");
         repairSlider = GameObject.Find("SLD_RepairSlider");
         repairSliderUI = repairSlider.GetComponent<Slider>();
 

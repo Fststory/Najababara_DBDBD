@@ -18,7 +18,8 @@ public class PlayerFSM : MonoBehaviour
         Injured = 1,
         Dying = 2,
         InAction = 3,
-        Hooked = 4
+        Hooked = 4,
+        
 
     }
 
@@ -27,6 +28,7 @@ public class PlayerFSM : MonoBehaviour
     public float playerMaxHp = 100.0f;
     public float currentHp;
     public float moveSpeed;
+    public float runSpeed;
     PlayerController playerCtrl;
     public Slider playerHpSLD;
 
@@ -60,7 +62,10 @@ public class PlayerFSM : MonoBehaviour
                 break;
             case PlayerState.Hooked:
                 Hooked();
-                break;
+                break; 
+            
+            
+
         }
 
 
@@ -70,33 +75,36 @@ public class PlayerFSM : MonoBehaviour
 
     public void Normal()
     {
-        // 걷는 속도 5.0f , 달리는 속도 8.0f
-        playerCtrl.InputMovement(5.0f, 8.0f);
+        moveSpeed = 4.0f;
+        runSpeed = 6.0f;
     }
 
     public void Injured()
     {
-        // 걷는 속도 4.0f , 달리는 속도 7.0f
-        playerCtrl.InputMovement(4.0f, 7.0f);
+        moveSpeed = 3.5f;
+        runSpeed = 5.5f;
 
     }
 
     public void Dying()
     {
-        // 걷는 속도 1.0f , 달리는 속도 0.0f 달릴 수 없음
-        playerCtrl.InputMovement(1.0f, 0.0f);
+        moveSpeed = 0.7f;
+        runSpeed = 0.0f;
 
     }
 
     public void InAction()
     {
+        moveSpeed = 0.0f;
+        runSpeed = 0.0f;
+           
     }
 
     public void Hooked()
     {
-    }
+    } 
     
-
-
+    
+    
 
 }

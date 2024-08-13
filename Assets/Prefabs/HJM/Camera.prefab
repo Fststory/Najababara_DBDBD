@@ -53,8 +53,8 @@ MonoBehaviour:
   realCamera: {fileID: 3310642827316834207}
   dirNormalrized: {x: 0, y: 0, z: 0}
   finaDir: {x: 0, y: 0, z: 0}
-  minDistance: 1.1
-  maxDistance: 1.5
+  minDistance: 0.9
+  maxDistance: 1.1
   finalDistance: 0
 --- !u!1 &8963068023311994106
 GameObject:
