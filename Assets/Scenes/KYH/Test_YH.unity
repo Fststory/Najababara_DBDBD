@@ -1497,6 +1497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d7b041aba5d5d84d8c8a4479977d4cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
   playerAnim: {fileID: 0}
   cc: {fileID: 0}
   enemy: {fileID: 0}
@@ -1716,6 +1717,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d7b041aba5d5d84d8c8a4479977d4cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
   playerAnim: {fileID: 0}
   cc: {fileID: 0}
   enemy: {fileID: 0}
@@ -2697,6 +2699,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d7b041aba5d5d84d8c8a4479977d4cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
   playerAnim: {fileID: 0}
   cc: {fileID: 0}
   enemy: {fileID: 0}
@@ -3366,6 +3369,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d7b041aba5d5d84d8c8a4479977d4cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
   playerAnim: {fileID: 0}
   cc: {fileID: 0}
   enemy: {fileID: 0}
@@ -7401,7 +7405,7 @@ PrefabInstance:
     - target: {fileID: 6917742467541304907, guid: 8e83653efa46cde4588176c5421a7de1,
         type: 3}
       propertyPath: m_Acceleration
-      value: 10
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6917742467541304907, guid: 8e83653efa46cde4588176c5421a7de1,
         type: 3}
@@ -7421,7 +7425,12 @@ PrefabInstance:
     - target: {fileID: 7533215904935043565, guid: 8e83653efa46cde4588176c5421a7de1,
         type: 3}
       propertyPath: m_Size.z
-      value: 1.23
+      value: 0.73
+      objectReference: {fileID: 0}
+    - target: {fileID: 7533215904935043565, guid: 8e83653efa46cde4588176c5421a7de1,
+        type: 3}
+      propertyPath: m_Center.z
+      value: 0.87
       objectReference: {fileID: 0}
     - target: {fileID: 7533215904935043565, guid: 8e83653efa46cde4588176c5421a7de1,
         type: 3}

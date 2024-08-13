@@ -347,13 +347,14 @@ public class EnemyController : MonoBehaviour
         RaycastHit hitInfo;
         if (Physics.Raycast(rushRay, out hitInfo, 27.6f, ~(1 << 8)))
         {
-            print("질주 각!");
-            print("다음 장소: " + hitInfo.transform.gameObject.name);
+            print("충돌 포인트: " + hitInfo.transform.gameObject.name);
             enemyAnim.SetBool("Walk", false);
             enemyAnim.SetBool("Rush", true);
+            transform.eulerAngles = player.transform.position - transform.position; // 질주 전 질주 방향으로 회전 => 기존에 SetDestination으로 이동할 때 발생하던 회전에 의한 어색한 충돌 해결
             NMA.SetDestination(hitInfo.point);
             knockBackDir = (transform.position - hitInfo.point).normalized;
             rushToken--;
+            print("남은 질주 토큰 갯수: " + rushToken);
             return true;
         }
         return false;
