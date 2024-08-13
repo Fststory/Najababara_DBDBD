@@ -20,7 +20,7 @@ private void Awake()
     if (exitSystem == null)
     {
         exitSystem = this;
-        DontDestroyOnLoad(gameObject);  // 씬 전환 시 객체가 파괴되지 않도록 설정
+        //DontDestroyOnLoad(gameObject);  // 씬 전환 시 객체가 파괴되지 않도록 설정
     }
     else
     {

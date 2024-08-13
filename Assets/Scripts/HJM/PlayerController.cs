@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     Animator _animator;
     Camera _camera;
     CharacterController _controller;
+    PlayerFSM PlayerFSM;
 
     public float moveSpeed;
     public float runSpeed;
@@ -29,7 +30,11 @@ public class PlayerController : MonoBehaviour
     public bool alraedyHooked;
     public bool HookedLv2;
 
+    public Vector3 arriveCC;
+
     float[] idleAnims = new float[3] { 0.0f, 0.5f, 1.0f };
+
+
 
 
 
@@ -38,9 +43,11 @@ public class PlayerController : MonoBehaviour
         _animator = this.GetComponent<Animator>();
         _camera = Camera.main;
         _controller = this.GetComponent<CharacterController>();
+        PlayerFSM = GetComponent<PlayerFSM>();
+
+
 
         
-
 
     }
 
@@ -48,6 +55,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if(PlayerFSM.pyState != PlayerFSM.PlayerState.InAction)
+        {
+            InputMovement();
+        }
+
         if (Input.GetKey(KeyCode.LeftAlt))
         {
             toggleCameraRotation = true; // 둘러보기 활성화
@@ -72,7 +84,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftControl))
         {
             _animator.SetBool("isCrouch", true);
-            InputMovement(2.0f, 4.0f);
+            InputMovement();
         }
         else
         {
@@ -106,8 +118,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void InputMovement(float moveSpeed, float runSpeed)
+    public void InputMovement()
     {
+        moveSpeed = PlayerFSM.moveSpeed;
+        runSpeed = PlayerFSM.runSpeed;
         // 만약 run이 true라면, finalSpeed는 runSpeed 값을 갖는다.
         // 만약 run이 false라면, finalSpeed는 speed 값을 갖는다.
         finalSpeed = run ? runSpeed : moveSpeed;
