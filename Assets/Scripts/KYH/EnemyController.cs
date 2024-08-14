@@ -12,6 +12,7 @@ public class EnemyController : MonoBehaviour
         매 이동시 방향 전환을 위한 타겟이 필요하다(트랜스폼 컴포넌트를 받아온다)
         시야에 들어온 증거들 중에 우선순위를 따져서 타겟으로 잡는다.        
     */
+
     //public Transform testCube;
 
     public NavMeshAgent NMA;
@@ -39,7 +40,8 @@ public class EnemyController : MonoBehaviour
     float chargingTime = 0;
     //bool rushing = false;
     Vector3 knockBackDir;   // 질주 후 충돌 넉백 방향
-    float knockBackPow;     // 넉백 파워
+    public float knockBackPow;     // 넉백 파워
+    RushCollision rushCollision;
 
 
     public enum EnemyState
@@ -63,6 +65,7 @@ public class EnemyController : MonoBehaviour
         playerFSM = player.GetComponent<PlayerFSM>();
         NMA = GetComponent<NavMeshAgent>();
         generators = GameObject.FindGameObjectsWithTag("Generator");
+        rushCollision = GetComponentInChildren<RushCollision>();
     }
 
     private void FixedUpdate()
@@ -264,7 +267,8 @@ public class EnemyController : MonoBehaviour
             print("스턴!");
         }
 
-        targetTransform = null;
+        targetTransform = null;        
+        
         currentTime += Time.deltaTime;
         // 스턴 시간 동안 움직임이 없고 스턴 시간이 끝나면 다시 증거를 찾아 다님
         if (currentTime > stunTime)
@@ -295,37 +299,49 @@ public class EnemyController : MonoBehaviour
     // [EnemyState.Rush] 질주 상태에서 진행되는 기능
     void Rush()
     {
-        print("질주 남은 거리: " + NMA.remainingDistance);
+        //print("질주 남은 거리: " + NMA.remainingDistance);
         //if (rushing) return;    // 질주 중이면 중복 호출 방지!
         //rushing = true;
 
         NMA.speed = 9.2f;   // 속도는 9.2 (m/s) 3초간 전방으로 돌진
-        print("질주!");
+        //print("질주!");
 
-        if (NMA.remainingDistance <= 1.0f)
+        if (rushCollision.crashed)
         {
-            enemyAnim.SetBool("Rush", false);
-            print("멈췄다!");
+            NMA.speed = 4.6f;   // 충돌 시 이동 속도 정상화
             currentTime += Time.deltaTime;
-            if (currentTime <= 1)
+            if (currentTime <= 0.2f)
             {
-                transform.position = Vector3.Lerp(transform.position, transform.position + knockBackDir * knockBackPow, currentTime);
+                transform.position = Vector3.Lerp(transform.position, transform.position + knockBackDir * knockBackPow, currentTime * 5);
+                enemyAnim.SetBool("Rush", false);
+                enemyAnim.SetBool("Walk", true);
             }
             else
             {
-                NMA.speed = 4.6f;   // 넉백 끝나면 이동 속도 정상화
-                print("넉백 끝남!");
                 //rushing = false;
                 currentTime = 0;
+                rushCollision.crashed = false;
+                print("넉백 끝남!");
                 if (rushToken != 0 && CanIRush())
                 {
+                    print("한번 더 달린다");
                     enemyAnim.SetTrigger("Rush Again");
                     Rush();
                 }
                 else
                 {
+                    print("이제 못 달린다");
                     ChangeState(EnemyState.OnGroggy);
                 }
+            }
+        }
+        else
+        {
+            currentTime += Time.deltaTime;
+            if (currentTime > 3.0f)
+            {
+                NMA.isStopped = true;
+                ChangeState(EnemyState.OnGroggy);
             }
         }
         //testCube.position = NMA.destination + new Vector3(0, NMA.baseOffset, 0);
@@ -333,17 +349,22 @@ public class EnemyController : MonoBehaviour
 
     bool CanIRush() // 질주 조건 판단 (일부 구현) **************************************************************
     {
-        Vector3 dir = targetTransform.position - transform.position;
+        Vector3 dir = player.transform.position - transform.position;
         dir.y = 0;
-        Ray rushRay = new Ray(transform.position, dir);
-        print("내 위치: " + transform.position);
+        Vector3 halfOffset = new Vector3(0, NMA.baseOffset / 2, 0);
+        Ray rushRay = new Ray(transform.position - halfOffset, dir);
+        //print("내 위치: " + transform.position);
         RaycastHit hitInfo;
-        if (Physics.Raycast(rushRay, out hitInfo, 27.6f, ~(1 << 8)))
+        if (Physics.Raycast(rushRay, out hitInfo, 50, ~(1 << 8)))
         {
+            print("충돌 포인트: " + hitInfo.transform.gameObject.name);
+            enemyAnim.SetBool("Walk", false);
             enemyAnim.SetBool("Rush", true);
+            transform.eulerAngles = player.transform.position - transform.position; // 질주 전 질주 방향으로 회전 => 기존에 SetDestination으로 이동할 때 발생하던 회전에 의한 어색한 충돌 해결
             NMA.SetDestination(hitInfo.point);
             knockBackDir = (transform.position - hitInfo.point).normalized;
             rushToken--;
+            print("남은 질주 토큰 갯수: " + rushToken);
             return true;
         }
         return false;
