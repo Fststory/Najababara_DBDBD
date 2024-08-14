@@ -13,7 +13,7 @@ public class EnemyController : MonoBehaviour
         시야에 들어온 증거들 중에 우선순위를 따져서 타겟으로 잡는다.        
     */
 
-    public Transform testCube;
+    //public Transform testCube;
 
     public NavMeshAgent NMA;
 
@@ -267,7 +267,8 @@ public class EnemyController : MonoBehaviour
             print("스턴!");
         }
 
-        targetTransform = null;
+        targetTransform = null;        
+        
         currentTime += Time.deltaTime;
         // 스턴 시간 동안 움직임이 없고 스턴 시간이 끝나면 다시 증거를 찾아 다님
         if (currentTime > stunTime)
@@ -334,7 +335,16 @@ public class EnemyController : MonoBehaviour
                 }
             }
         }
-        testCube.position = NMA.destination + new Vector3(0, NMA.baseOffset, 0);
+        else
+        {
+            currentTime += Time.deltaTime;
+            if (currentTime > 3.0f)
+            {
+                NMA.isStopped = true;
+                ChangeState(EnemyState.OnGroggy);
+            }
+        }
+        //testCube.position = NMA.destination + new Vector3(0, NMA.baseOffset, 0);
     }
 
     bool CanIRush() // 질주 조건 판단 (일부 구현) **************************************************************
@@ -345,7 +355,7 @@ public class EnemyController : MonoBehaviour
         Ray rushRay = new Ray(transform.position - halfOffset, dir);
         //print("내 위치: " + transform.position);
         RaycastHit hitInfo;
-        if (Physics.Raycast(rushRay, out hitInfo, 27.6f, ~(1 << 8)))
+        if (Physics.Raycast(rushRay, out hitInfo, 50, ~(1 << 8)))
         {
             print("충돌 포인트: " + hitInfo.transform.gameObject.name);
             enemyAnim.SetBool("Walk", false);
