@@ -26,11 +26,12 @@ public class EnemyController : MonoBehaviour
 
     HangPlayerHookInteraction hang;
     public PlayerFSM playerFSM;         // 0 - 건강, 1 - 부상, 2 - 빈사, 3 - 특수 행동(업힘, 수리, 구조, 창문 넘기 등), 4 - 걸림
+
     public float attackRange = 2.0f;    // 공격 사정 거리
+    float attackDelay = 2.0f;       // 공격 쿨타임
 
     public float currentTime = 0;
 
-    float attackDelay = 2.0f;       // 공격 쿨타임
     public float degree = 45.0f;    // 에너미 시야각
     public float maxDistance;       // 에너미 가시거리
     public GameObject[] generators; // 맵 상의 모든 발전기
@@ -133,7 +134,7 @@ public class EnemyController : MonoBehaviour
                 currentGeneratorIndex = 0;  // 처음부터 다시!
             }
         }        
-        else if (ISaw("Player", degree, maxDistance))   // 발전기로 가던 도중 플레이어 발견 시
+        else if (ISaw("Player", degree, maxDistance) && playerFSM.pyState != PlayerFSM.PlayerState.Hooked)   // 발전기로 가던 도중 플레이어 발견 시
         {
             ChangeState(EnemyState.FindPlayer); // 플레이어를 쫓는다.
         }
@@ -154,7 +155,7 @@ public class EnemyController : MonoBehaviour
         NMA.SetDestination(targetTransform.position);
         float distance = Vector3.Distance(transform.position, targetTransform.position);
 
-        if (ISaw("Player", degree, maxDistance))  // 플레이어를 발견하면 (타겟 = 플레이어 설정)
+        if (ISaw("Player", degree, maxDistance) && playerFSM.pyState != PlayerFSM.PlayerState.Hooked)  // 플레이어를 발견하면 (타겟 = 플레이어 설정)
         {
             ChangeState(EnemyState.FindPlayer);     // 플레이어 추격 상태로 전환
         }
@@ -183,7 +184,7 @@ public class EnemyController : MonoBehaviour
                 }
             }
         }
-        if (ISaw("Player", degree, maxDistance))   // 흔적을 쫓는 도중 플레이어를 발견하면
+        if (ISaw("Player", degree, maxDistance) && playerFSM.pyState != PlayerFSM.PlayerState.Hooked)   // 흔적을 쫓는 도중 플레이어를 발견하면
         {
             ChangeState(EnemyState.FindPlayer);     // 플레이어를 추격한다.
         }
@@ -228,16 +229,6 @@ public class EnemyController : MonoBehaviour
         if (currentTime > attackDelay)
         {
             enemyAnim.SetTrigger("Attack");
-            if (playerFSM.pyState == PlayerFSM.PlayerState.Normal)
-            {
-                playerFSM.pyState = PlayerFSM.PlayerState.Injured;
-                print("Attack");
-            }
-            else if (playerFSM.pyState == PlayerFSM.PlayerState.Injured)
-            {
-                playerFSM.pyState = PlayerFSM.PlayerState.Dying;
-                print("Attack");
-            }
             currentTime = 0;
         }
     }
@@ -299,9 +290,9 @@ public class EnemyController : MonoBehaviour
     // [EnemyState.Rush] 질주 상태에서 진행되는 기능
     void Rush()
     {
+        enemyAnim.SetBool("Walk", false);
+        enemyAnim.SetBool("Rush", true);
         //print("질주 남은 거리: " + NMA.remainingDistance);
-        //if (rushing) return;    // 질주 중이면 중복 호출 방지!
-        //rushing = true;
 
         NMA.speed = 9.2f;   // 속도는 9.2 (m/s) 3초간 전방으로 돌진
         //print("질주!");
@@ -330,6 +321,7 @@ public class EnemyController : MonoBehaviour
                 }
                 else
                 {
+                    enemyAnim.SetBool("Rush", false);
                     print("이제 못 달린다");
                     ChangeState(EnemyState.OnGroggy);
                 }
@@ -340,7 +332,10 @@ public class EnemyController : MonoBehaviour
             currentTime += Time.deltaTime;
             if (currentTime > 3.0f)
             {
+                NMA.speed = 4.6f;
                 NMA.isStopped = true;
+                NMA.isStopped = false;
+                enemyAnim.SetBool("Rush", false);
                 ChangeState(EnemyState.OnGroggy);
             }
         }
@@ -358,8 +353,7 @@ public class EnemyController : MonoBehaviour
         if (Physics.Raycast(rushRay, out hitInfo, 50, ~(1 << 8)))
         {
             print("충돌 포인트: " + hitInfo.transform.gameObject.name);
-            enemyAnim.SetBool("Walk", false);
-            enemyAnim.SetBool("Rush", true);
+            
             transform.eulerAngles = player.transform.position - transform.position; // 질주 전 질주 방향으로 회전 => 기존에 SetDestination으로 이동할 때 발생하던 회전에 의한 어색한 충돌 해결
             NMA.SetDestination(hitInfo.point);
             knockBackDir = (transform.position - hitInfo.point).normalized;
