@@ -8,10 +8,18 @@ public class PalletCollider : MonoBehaviour
     public Animator playerAnim;
     public CharacterController cc;
 
+    public GameObject climbUI;
+
     private void Start()
     {
         // PalletSystem를 palletSystem에 받는다.
         palletSystem = palletSystem.GetComponent<PalletSystem>();
+
+        if(climbUI != null)
+        {
+        climbUI.SetActive(false);
+
+        }
     }
 
 
@@ -24,6 +32,7 @@ public class PalletCollider : MonoBehaviour
             playerAnim = other.gameObject.GetComponent<Animator>();
             cc = other.gameObject.GetComponent<CharacterController>();
             palletSystem.isPlayerInTrigger = true;
+            climbUI.SetActive(true);
 
         }
     }
@@ -33,6 +42,8 @@ public class PalletCollider : MonoBehaviour
         if (other.gameObject.tag == ("Player"))
         {
             palletSystem.isPlayerInTrigger = false;
+            climbUI.SetActive(false);
+
         }
     }
 }
