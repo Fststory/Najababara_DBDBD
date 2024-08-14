@@ -66,7 +66,7 @@ public class Climb : MonoBehaviour
             {
                 targetPoint = pointA.position; // A 방향으로 이동
                 print("A로 이동, B 방향으로 넘어감");
-                Vector3 dirA = new Vector3(0.032195773f, 317.030273f, 0.0817971006f);
+                Vector3 dirA = transform.forward;
                 player.transform.localEulerAngles = dirA;
                 arrivePoint = pointB.position;
             }
@@ -74,7 +74,7 @@ public class Climb : MonoBehaviour
             {
                 targetPoint = pointB.position; // B 방향으로 이동
                 print("B로 이동, A 방향으로 넘어감");
-                Vector3 dirB = new Vector3(0f, 142.661469f, 0f);
+                Vector3 dirB = transform.forward;
                 player.transform.localEulerAngles = dirB;
                 arrivePoint = pointA.position;
 
@@ -112,7 +112,7 @@ public class Climb : MonoBehaviour
             //playerController.enabled = true;
             //cc.enabled = true;
             // 포인트에 도달하면 애니메이션 실행
-            playerAnim.SetBool("isClimb", true);
+            playerAnim.SetTrigger("isClimb");
             isClimbing = true;
             
 

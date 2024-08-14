@@ -77,6 +77,7 @@ public class PalletSystem : MonoBehaviour
         else if (isPlayerInTrigger && Input.GetKeyDown(KeyCode.Space) && !palFallen)
         {
 
+            playerAnim.SetTrigger("Close");
             print("판자엎기 스페이스바 누름");
             // 판자의 상태를 넘어가는 중으로 전환한다.
             palFsm.palState = PalletFSM.PalletState.Falling;

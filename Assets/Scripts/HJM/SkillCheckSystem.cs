@@ -1,89 +1,72 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class SkillCheckSystem : MonoBehaviour
 {
-    public static SkillCheckSystem skillCheckSystem;
-    public GeneratorSystem generatorSystem;
-    public Transform noteAxis; // 스킬체크 노트
-    public Transform normalAxis; // 스킬체크 노트
-    public GameObject noteCanvas; // 노트 캔버스UI
+    [HideInInspector]
+    public GeneratorSystem generatorSystem; // 각 발전기의 GeneratorSystem을 참조
+    public Transform noteAxis; // 스킬 체크 노트
+    public Transform normalAxis; // 기준 노트 (정상 노트 위치를 나타냄)
+    public GameObject noteCanvas; // 노트 캔버스 UI
 
-    public bool isChecked = false;
-    public bool finish = false;
+    private float timer = 0.0f; // 스킬 체크 타이머
+    private float rotationSpeed = 180.0f; // 노트의 회전 속도 (각도/초)
+    private float maxRotationTime; // 노트가 두 바퀴 도는 데 걸리는 최대 시간
+    private bool isChecking = false; // 스킬 체크 진행 중인지 여부
 
-
-    //private void Awake()
-    //{
-    //    // 다른 인스턴스가 이미 존재하면 이 객체를 파괴합니다.
-    //    if (skillCheckSystem == null)
-    //    {
-    //        skillCheckSystem = this;
-    //        DontDestroyOnLoad(gameObject);  // 씬 전환 시 객체가 파괴되지 않도록 설정
-    //    }
-    //    else
-    //    {
-    //        Destroy(gameObject);
-    //    }
-    //}
     private void Start()
     {
         noteCanvas.SetActive(false);
-        generatorSystem = FindObjectOfType<GeneratorSystem>();
+        maxRotationTime = 500.0f / rotationSpeed; // 두 바퀴 도는 데 걸리는 시간 계산
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (isChecking)
         {
-            Check();
-            print("스페이스바 눌림!");
+            // 타이머 업데이트
+            timer += Time.deltaTime;
+
+            // 스페이스바 입력 감지
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Check();
+                print("스페이스바 눌림!");
+            }
+
+            // 두 바퀴 시간이 초과되면 실패 처리
+            if (timer >= maxRotationTime)
+            {
+                FailCheck();
+            }
         }
-
-
     }
-
 
     public void CheckStart()
     {
         noteCanvas.SetActive(true);
-        finish = false;
-
+        generatorSystem.isSkillChecking = true; // 스킬 체크 시작 시 상태 변경
+        timer = 0.0f; // 타이머 초기화
+        isChecking = true; // 스킬 체크 진행 중 설정
     }
 
     public void Check()
     {
+        // 스킬 체크 성공 여부 판단
+        bool success = noteAxis.eulerAngles.z > 310 + normalAxis.eulerAngles.z || noteAxis.eulerAngles.z < 0 + normalAxis.eulerAngles.z;
 
-        if (noteAxis.eulerAngles.z > 310 + normalAxis.eulerAngles.z || noteAxis.eulerAngles.z < 0 + normalAxis.eulerAngles.z)
-        {
-            print("성공!!" + ", " + noteAxis.transform.eulerAngles.z.ToString());
-            isChecked = true;
-            finish = true;
-            noteCanvas.SetActive(false);
-            print(finish);
-            generatorSystem.RestartRepair();
-            generatorSystem.isSkillChecking = false;
+        // 결과 처리
+        generatorSystem.OnSkillCheckComplete(success);
 
-
-
-
-        }
-        else
-        {
-            print("실패!!" + ", " + noteAxis.transform.eulerAngles.z.ToString());
-            isChecked = false;
-            finish = true;
-            noteCanvas.SetActive(false);
-            print(finish);
-            generatorSystem.FailedCheck();
-            generatorSystem.repairPercent = generatorSystem.repairPercent * 0.7f;
-            generatorSystem.isSkillChecking = false;
-        }
-
+        // 공통 처리
+        noteCanvas.SetActive(false);
+        isChecking = false; // 스킬 체크 진행 중 해제
     }
 
-
-
+    private void FailCheck()
+    {
+        print("스킬 체크 시간 초과: 실패!!");
+        generatorSystem.OnSkillCheckComplete(false);
+        noteCanvas.SetActive(false);
+        isChecking = false; // 스킬 체크 진행 중 해제
+    }
 }
