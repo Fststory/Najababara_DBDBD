@@ -56,7 +56,23 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.34876403
+        functionName: TriggerOn
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 6a9c59587059abb49bf4536c83b36b95,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.57938886
+        functionName: TriggerOff
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 6a9c59587059abb49bf4536c83b36b95,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

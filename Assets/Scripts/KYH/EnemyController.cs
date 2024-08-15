@@ -13,7 +13,7 @@ public class EnemyController : MonoBehaviour
         시야에 들어온 증거들 중에 우선순위를 따져서 타겟으로 잡는다.        
     */
 
-    //public Transform testCube;
+    public Transform testCube;
 
     public NavMeshAgent NMA;
 
@@ -26,11 +26,12 @@ public class EnemyController : MonoBehaviour
 
     HangPlayerHookInteraction hang;
     public PlayerFSM playerFSM;         // 0 - 건강, 1 - 부상, 2 - 빈사, 3 - 특수 행동(업힘, 수리, 구조, 창문 넘기 등), 4 - 걸림
+
     public float attackRange = 2.0f;    // 공격 사정 거리
+    float attackDelay = 2.0f;       // 공격 쿨타임
 
     public float currentTime = 0;
 
-    float attackDelay = 2.0f;       // 공격 쿨타임
     public float degree = 45.0f;    // 에너미 시야각
     public float maxDistance;       // 에너미 가시거리
     public GameObject[] generators; // 맵 상의 모든 발전기
@@ -43,6 +44,10 @@ public class EnemyController : MonoBehaviour
     public float knockBackPow;     // 넉백 파워
     RushCollision rushCollision;
 
+    List<GameObject> pallet;
+
+    float currentSpeed;
+    bool vaulting = false;
 
     public enum EnemyState
     {
@@ -66,6 +71,7 @@ public class EnemyController : MonoBehaviour
         NMA = GetComponent<NavMeshAgent>();
         generators = GameObject.FindGameObjectsWithTag("Generator");
         rushCollision = GetComponentInChildren<RushCollision>();
+        pallet = new List<GameObject>(GameObject.FindGameObjectsWithTag("Pallet"));
     }
 
     private void FixedUpdate()
@@ -104,10 +110,22 @@ public class EnemyController : MonoBehaviour
             RushTokenManage();
         }
 
-        if (NMA.currentOffMeshLinkData.activated)
-        {
-            enemyAnim.SetTrigger("Vault");
-        }
+        //if (NMA.isOnOffMeshLink)
+        //{
+        //    if (NMA.currentOffMeshLinkData.activated && !vaulting)
+        //    {
+        //        currentSpeed = NMA.speed;
+        //        NMA.speed = 1;
+        //        enemyAnim.SetTrigger("Vault");
+        //        vaulting = true;
+        //    }
+            
+        //    if(!NMA.currentOffMeshLinkData.activated)
+        //    {
+        //        vaulting = false;
+        //        NMA.speed = currentSpeed;
+        //    }
+        //}
     }
 
     // [EnemyState.NoEvidence] 돌아다닌다.   
@@ -133,7 +151,7 @@ public class EnemyController : MonoBehaviour
                 currentGeneratorIndex = 0;  // 처음부터 다시!
             }
         }        
-        else if (ISaw("Player", degree, maxDistance))   // 발전기로 가던 도중 플레이어 발견 시
+        else if (ISaw("Player", degree, maxDistance) && playerFSM.pyState != PlayerFSM.PlayerState.Hooked)   // 발전기로 가던 도중 플레이어 발견 시
         {
             ChangeState(EnemyState.FindPlayer); // 플레이어를 쫓는다.
         }
@@ -154,7 +172,7 @@ public class EnemyController : MonoBehaviour
         NMA.SetDestination(targetTransform.position);
         float distance = Vector3.Distance(transform.position, targetTransform.position);
 
-        if (ISaw("Player", degree, maxDistance))  // 플레이어를 발견하면 (타겟 = 플레이어 설정)
+        if (ISaw("Player", degree, maxDistance) && playerFSM.pyState != PlayerFSM.PlayerState.Hooked)  // 플레이어를 발견하면 (타겟 = 플레이어 설정)
         {
             ChangeState(EnemyState.FindPlayer);     // 플레이어 추격 상태로 전환
         }
@@ -175,7 +193,7 @@ public class EnemyController : MonoBehaviour
         if (targetTransform != null)    // 발견한 흔적이 사라지지 않았다면
         {
             NMA.SetDestination(targetTransform.position);   // 그쪽으로 간다.
-            if (Vector3.Distance(transform.position, targetTransform.position) < 3.0f)  // 근처에 도착했으면...
+            if (Vector3.Distance(transform.position, targetTransform.position) < 1.0f)  // 근처에 도착했으면...
             {
                 if (ISaw("Trace", degree, maxDistance)) // 다른 흔적이 없나 찾는다.
                 {
@@ -183,7 +201,7 @@ public class EnemyController : MonoBehaviour
                 }
             }
         }
-        if (ISaw("Player", degree, maxDistance))   // 흔적을 쫓는 도중 플레이어를 발견하면
+        if (ISaw("Player", degree, maxDistance) && playerFSM.pyState != PlayerFSM.PlayerState.Hooked)   // 흔적을 쫓는 도중 플레이어를 발견하면
         {
             ChangeState(EnemyState.FindPlayer);     // 플레이어를 추격한다.
         }
@@ -207,38 +225,35 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
-        if ((int)playerFSM.pyState <= 1 && distance < attackRange)   // 범위 내에서 아직 플레이어가 건강 or 부상 상태면 공격을 시도
+        if (distance < attackRange)
         {
-            Attack();
-        }
-        else if ((int)playerFSM.pyState > 1 && distance < attackRange)    // 범위 내에서 플레이어가 빈사 or 특수행동 상태면 업을 수 있다
-        {
-            ChangeState(EnemyState.GetPlayer);      // 업은 상태로 전환
-        }
-        else if (!ISaw("Player", degree, maxDistance))      // 시야에서 플레이어를 놓치면
-        {
-            ChangeState(EnemyState.NoEvidence);     // 다시 증거 없는 상태로 돌아간다.
+            if ((int)playerFSM.pyState <= 1)   // 범위 내에서 아직 플레이어가 건강 or 부상 상태면 공격을 시도
+            {
+                Attack();
+            }
+            else if ((int)playerFSM.pyState > 1)    // 범위 내에서 플레이어가 빈사 or 특수행동 상태면 업을 수 있다
+            {
+                ChangeState(EnemyState.GetPlayer);      // 업은 상태로 전환
+            }
+            else if (!ISaw("Player", degree, maxDistance))      // 시야에서 플레이어를 놓치면
+            {
+                ChangeState(EnemyState.NoEvidence);     // 다시 증거 없는 상태로 돌아간다.
+            }
         }
     }
 
     // [EnemyState.FindPlayer] 사정 거리 내에 플레이어가 들어오면 공격
     void Attack()
     {
-        currentTime += Time.deltaTime;
-        if (currentTime > attackDelay)
+        float dir = Vector3.Distance(player.transform.position, transform.position);
+        if (dir < attackRange)
         {
-            enemyAnim.SetTrigger("Attack");
-            if (playerFSM.pyState == PlayerFSM.PlayerState.Normal)
+            currentTime += Time.deltaTime;
+            if (currentTime > attackDelay)
             {
-                playerFSM.pyState = PlayerFSM.PlayerState.Injured;
-                print("Attack");
+                enemyAnim.SetTrigger("Attack");
+                currentTime = 0;
             }
-            else if (playerFSM.pyState == PlayerFSM.PlayerState.Injured)
-            {
-                playerFSM.pyState = PlayerFSM.PlayerState.Dying;
-                print("Attack");
-            }
-            currentTime = 0;
         }
     }
 
@@ -267,6 +282,7 @@ public class EnemyController : MonoBehaviour
             print("스턴!");
         }
 
+        stunned = true;
         targetTransform = null;        
         
         currentTime += Time.deltaTime;
@@ -276,10 +292,28 @@ public class EnemyController : MonoBehaviour
             stunned = false;
             ChangeState(EnemyState.NoEvidence);
             print("스턴 해제!");
-            return;
+            BreakPallet();
         }
+    }
 
-        stunned = true;
+    void BreakPallet()
+    {       
+        if (pallet != null)
+        {
+            for(int i = 0; i < pallet.Count; i++)
+            {
+                if (pallet[i].GetComponent<PalletFSM>().palState == PalletFSM.PalletState.FallDown)
+                {
+                    enemyAnim.SetTrigger("BreakPallet");
+                    if (currentTime > 2)    // 판자 부수는 데 걸리는 시간 (애니메이션 끝나는 시간)
+                    {
+                        Destroy(pallet[i]);
+                        pallet.Remove(pallet[i]);
+                    }
+                    return;
+                }
+            }
+        }
     }
 
     void RushTokenManage()
@@ -299,9 +333,9 @@ public class EnemyController : MonoBehaviour
     // [EnemyState.Rush] 질주 상태에서 진행되는 기능
     void Rush()
     {
+        enemyAnim.SetBool("Walk", false);
+        enemyAnim.SetBool("Rush", true);
         //print("질주 남은 거리: " + NMA.remainingDistance);
-        //if (rushing) return;    // 질주 중이면 중복 호출 방지!
-        //rushing = true;
 
         NMA.speed = 9.2f;   // 속도는 9.2 (m/s) 3초간 전방으로 돌진
         //print("질주!");
@@ -318,8 +352,6 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
-                //rushing = false;
-                currentTime = 0;
                 rushCollision.crashed = false;
                 print("넉백 끝남!");
                 if (rushToken != 0 && CanIRush())
@@ -327,11 +359,14 @@ public class EnemyController : MonoBehaviour
                     print("한번 더 달린다");
                     enemyAnim.SetTrigger("Rush Again");
                     Rush();
+                    currentTime = 0;
                 }
-                else
+                else if(currentTime > 1.25f)
                 {
+                    enemyAnim.SetBool("Rush", false);
                     print("이제 못 달린다");
                     ChangeState(EnemyState.OnGroggy);
+                    currentTime = 0;
                 }
             }
         }
@@ -340,11 +375,14 @@ public class EnemyController : MonoBehaviour
             currentTime += Time.deltaTime;
             if (currentTime > 3.0f)
             {
+                NMA.speed = 4.6f;
                 NMA.isStopped = true;
+                NMA.isStopped = false;
+                enemyAnim.SetBool("Rush", false);
                 ChangeState(EnemyState.OnGroggy);
             }
         }
-        //testCube.position = NMA.destination + new Vector3(0, NMA.baseOffset, 0);
+        testCube.position = NMA.destination + new Vector3(0, NMA.baseOffset, 0);
     }
 
     bool CanIRush() // 질주 조건 판단 (일부 구현) **************************************************************
@@ -358,8 +396,7 @@ public class EnemyController : MonoBehaviour
         if (Physics.Raycast(rushRay, out hitInfo, 50, ~(1 << 8)))
         {
             print("충돌 포인트: " + hitInfo.transform.gameObject.name);
-            enemyAnim.SetBool("Walk", false);
-            enemyAnim.SetBool("Rush", true);
+            
             transform.eulerAngles = player.transform.position - transform.position; // 질주 전 질주 방향으로 회전 => 기존에 SetDestination으로 이동할 때 발생하던 회전에 의한 어색한 충돌 해결
             NMA.SetDestination(hitInfo.point);
             knockBackDir = (transform.position - hitInfo.point).normalized;
