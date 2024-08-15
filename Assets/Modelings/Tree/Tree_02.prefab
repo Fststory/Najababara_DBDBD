@@ -61,7 +61,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 4d93155b024a82641ac168630af38d07,
         type: 3}
       propertyPath: m_Name
-      value: tree_02
+      value: Tree_02
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -71,6 +71,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 8236850713997975728}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4d93155b024a82641ac168630af38d07,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6786509767124390728}
   m_SourcePrefab: {fileID: 100100000, guid: 4d93155b024a82641ac168630af38d07, type: 3}
 --- !u!1 &4275323678037435295 stripped
 GameObject:
@@ -99,3 +103,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.34, y: 2.46, z: 0.31}
   m_Center: {x: -0.04, y: 1.12, z: 0}
+--- !u!208 &6786509767124390728
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4275323678037435295}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.17, y: 0.5, z: 0.155}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 0
+  m_Center: {x: -0.04, y: 0, z: 0}
+  m_TimeToStationary: 0.5

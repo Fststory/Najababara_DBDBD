@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7950291990266190538}
   - component: {fileID: 7533215904935043565}
   - component: {fileID: 4671662955477921392}
-  - component: {fileID: 7596228101534375542}
+  - component: {fileID: 4199593442168151772}
   m_Layer: 0
   m_Name: RushCollisionTrigger
   m_TagString: Untagged
@@ -49,12 +49,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 384
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 2, z: 0.6}
-  m_Center: {x: 0, y: 0, z: 0.5}
+  m_Size: {x: 1, y: 2, z: 0.73}
+  m_Center: {x: 0, y: 0, z: 0.87}
 --- !u!114 &4671662955477921392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   crashed: 0
---- !u!54 &7596228101534375542
+--- !u!54 &4199593442168151772
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -407,14 +407,14 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 2, z: 1}
   m_Center: {x: 0, y: 0, z: 0.5}
@@ -434,7 +434,7 @@ Rigidbody:
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -500,7 +500,6 @@ GameObject:
   - component: {fileID: 6185557204914633}
   - component: {fileID: 8216324384512400029}
   - component: {fileID: 7559840568368335959}
-  - component: {fileID: 7084769448013823321}
   - component: {fileID: 5560602223811207320}
   - component: {fileID: 6917742467541304907}
   - component: {fileID: 3955028119621003567}
@@ -578,23 +577,11 @@ MonoBehaviour:
   attackRange: 2
   currentTime: 0
   degree: 103
-  maxDistance: 20
+  maxDistance: 50
   generators: []
   rushToken: 5
   knockBackPow: 0.2
   currentState: 0
---- !u!114 &7084769448013823321
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5665900733960635933}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9e76513a332db44bb4131e09f30e813, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5560602223811207320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -627,10 +614,10 @@ NavMeshAgent:
   m_Speed: 4.6
   m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 1000
+  m_AngularSpeed: 300
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 0
+  m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: 1
@@ -656,8 +643,8 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 32
+  MinDistance: 0.93165207
+  MaxDistance: 20
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -1126,7 +1113,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 8167438404513060609}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5a2ba259b3ae36948aef0d6502e1f880,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9142616971534107309}
   m_SourcePrefab: {fileID: 100100000, guid: 5a2ba259b3ae36948aef0d6502e1f880, type: 3}
 --- !u!95 &3368881687778716117 stripped
 Animator:
@@ -1140,6 +1131,25 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 9199228557771854916}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8316829595438672149 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 5a2ba259b3ae36948aef0d6502e1f880,
+    type: 3}
+  m_PrefabInstance: {fileID: 9199228557771854916}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &9142616971534107309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8316829595438672149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a9c59587059abb49bf4536c83b36b95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boxCol: {fileID: 0}
 --- !u!4 &8656060180265677743 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5a2ba259b3ae36948aef0d6502e1f880,

@@ -10,6 +10,7 @@ TagManager:
   - Generator
   - SkillNote
   - HidePlayer
+  - Pallet
   layers:
   - Default
   - TransparentFX

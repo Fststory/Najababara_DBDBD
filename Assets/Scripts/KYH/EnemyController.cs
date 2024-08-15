@@ -136,33 +136,36 @@ public class EnemyController : MonoBehaviour
         // 이때 가장 가까운 발전기를 찾은 뒤 타겟으로 잡는다. 근처에 도달하면 다음 발전기를 타겟으로
         targetTransform = generators[currentGeneratorIndex].transform;
         NMA.SetDestination(targetTransform.position);
-        
+
         // 발전기 근처에 왔다면...
         if (Vector3.Distance(transform.position, targetTransform.position) < 2.0f)
         {
             // 모든 발전기를 돌지 않았다면..
             if (currentGeneratorIndex < generators.Length - 1)
-            {                
+            {
                 currentGeneratorIndex++;    // 다음 발전기로!
                 print("다음 발전기로!");
             }
             else // 모든 발전기를 돌았다면..
-            {                
+            {
                 currentGeneratorIndex = 0;  // 처음부터 다시!
             }
-        }        
-        else if (ISaw("Player", degree, maxDistance) && playerFSM.pyState != PlayerFSM.PlayerState.Hooked)   // 발전기로 가던 도중 플레이어 발견 시
-        {
-            ChangeState(EnemyState.FindPlayer); // 플레이어를 쫓는다.
         }
-        else if (ISaw("Trace", degree, maxDistance))    // 발전기로 가던 도중 플레이어는 못 봤지만 흔적을 봤다면
+        else if (playerFSM.pyState != PlayerFSM.PlayerState.Hooked)
         {
-            ChangeState(EnemyState.FindTrace);  // 흔적을 쫓는다.
+            if (ISaw("Player", degree, maxDistance) && playerFSM.pyState != PlayerFSM.PlayerState.Hooked)   // 발전기로 가던 도중 플레이어 발견 시
+            {
+                ChangeState(EnemyState.FindPlayer); // 플레이어를 쫓는다.
+            }
+            else if (ISaw("Trace", degree, maxDistance))    // 발전기로 가던 도중 플레이어는 못 봤지만 흔적을 봤다면
+            {
+                ChangeState(EnemyState.FindTrace);  // 흔적을 쫓는다.
+            }
+            //else if (ISaw("Aura", 180.0f, 1000))
+            //{
+            //    ChangeState(EnemyState.FindAura);
+            //}
         }
-        //else if (ISaw("Aura", 180.0f, 1000))
-        //{
-        //    ChangeState(EnemyState.FindAura);
-        //}
     }
 
     // [EnemyState.FindAura] 아우라(오라)를 쫓는 상태
@@ -201,13 +204,16 @@ public class EnemyController : MonoBehaviour
                 }
             }
         }
-        if (ISaw("Player", degree, maxDistance) && playerFSM.pyState != PlayerFSM.PlayerState.Hooked)   // 흔적을 쫓는 도중 플레이어를 발견하면
+        if(playerFSM.pyState != PlayerFSM.PlayerState.Hooked)
         {
-            ChangeState(EnemyState.FindPlayer);     // 플레이어를 추격한다.
-        }
-        else if (targetTransform == null)           // 플레이어를 못 찾았는데 흔적마저 놓치면
-        {
-            ChangeState(EnemyState.NoEvidence);     // 남은 증거가 없기에 발전기부터 다시 돌아다닌다.
+            if (ISaw("Player", degree, maxDistance))   // 흔적을 쫓는 도중 플레이어를 발견하면
+            {
+                ChangeState(EnemyState.FindPlayer);     // 플레이어를 추격한다.
+            }
+            else if (targetTransform == null)           // 플레이어를 못 찾았는데 흔적마저 놓치면
+            {
+                ChangeState(EnemyState.NoEvidence);     // 남은 증거가 없기에 발전기부터 다시 돌아다닌다.
+            }
         }
     }
 
