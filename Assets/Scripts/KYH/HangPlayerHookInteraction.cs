@@ -17,6 +17,7 @@ public class HangPlayerHookInteraction : MonoBehaviour
     public PlayerFSM playerFSM;
     public PlayerController playerController;
     public EnemyController enemyController;
+    public AnimationClip animClip;
 
     void Start()
     {
@@ -38,6 +39,13 @@ public class HangPlayerHookInteraction : MonoBehaviour
         playerFSM.pyState = PlayerFSM.PlayerState.Hooked;
         playerObject.transform.SetParent(hookPoint);
         playerObject.transform.localPosition = new Vector3(0, 0, 0);
-        enemyController.ChangeState(EnemyController.EnemyState.NoEvidence);        
+        animClip = Resources.Load<AnimationClip>("Hook");
+        Invoke("AfterHook", animClip.length);
+    }
+    
+    void AfterHook()
+    {
+        enemyController.ChangeState(EnemyController.EnemyState.NoEvidence);
+        enemyController.hooking = false;
     }
 }
