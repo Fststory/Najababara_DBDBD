@@ -2,34 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponTrigger : MonoBehaviour
+public class AttackTrigger : MonoBehaviour
 {    
-    public PlayerFSM playerFSM;
-    public Animator enemyAnim;
-    BoxCollider boxCol;
+    PlayerFSM playerFSM;
+    public BoxCollider boxCol;
 
     void Start()
     {
         playerFSM = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerFSM>();
-        boxCol = GetComponent<BoxCollider>();
+        boxCol = GameObject.Find("AttackTrigger").GetComponent<BoxCollider>();
         boxCol.enabled = false;
     }
 
-    private void Update()
+    public void TriggerOn()
     {
-        //// Attack 애니메이션이 진행중일 때만 boxCol을 활성화 시킨다. => duration?
-        //if ()
-        //{
-        //    boxCol.enabled = true;
-        //}
-        //else
-        //{
-        //    boxCol.enabled = false;
-        //}
+        boxCol.enabled = true;
+    }
+    public void TriggerOff()
+    {
+        boxCol.enabled = false;
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        print(other.name + "때림");
         if (other.gameObject.CompareTag("Player"))
         {
             if (playerFSM.pyState == PlayerFSM.PlayerState.Normal)

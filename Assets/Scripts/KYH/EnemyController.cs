@@ -13,7 +13,7 @@ public class EnemyController : MonoBehaviour
         시야에 들어온 증거들 중에 우선순위를 따져서 타겟으로 잡는다.        
     */
 
-    //public Transform testCube;
+    public Transform testCube;
 
     public NavMeshAgent NMA;
 
@@ -44,6 +44,10 @@ public class EnemyController : MonoBehaviour
     public float knockBackPow;     // 넉백 파워
     RushCollision rushCollision;
 
+    List<GameObject> pallet;
+
+    float currentSpeed;
+    bool vaulting = false;
 
     public enum EnemyState
     {
@@ -67,6 +71,7 @@ public class EnemyController : MonoBehaviour
         NMA = GetComponent<NavMeshAgent>();
         generators = GameObject.FindGameObjectsWithTag("Generator");
         rushCollision = GetComponentInChildren<RushCollision>();
+        pallet = new List<GameObject>(GameObject.FindGameObjectsWithTag("Pallet"));
     }
 
     private void FixedUpdate()
@@ -105,10 +110,22 @@ public class EnemyController : MonoBehaviour
             RushTokenManage();
         }
 
-        if (NMA.currentOffMeshLinkData.activated)
-        {
-            enemyAnim.SetTrigger("Vault");
-        }
+        //if (NMA.isOnOffMeshLink)
+        //{
+        //    if (NMA.currentOffMeshLinkData.activated && !vaulting)
+        //    {
+        //        currentSpeed = NMA.speed;
+        //        NMA.speed = 1;
+        //        enemyAnim.SetTrigger("Vault");
+        //        vaulting = true;
+        //    }
+            
+        //    if(!NMA.currentOffMeshLinkData.activated)
+        //    {
+        //        vaulting = false;
+        //        NMA.speed = currentSpeed;
+        //    }
+        //}
     }
 
     // [EnemyState.NoEvidence] 돌아다닌다.   
@@ -176,7 +193,7 @@ public class EnemyController : MonoBehaviour
         if (targetTransform != null)    // 발견한 흔적이 사라지지 않았다면
         {
             NMA.SetDestination(targetTransform.position);   // 그쪽으로 간다.
-            if (Vector3.Distance(transform.position, targetTransform.position) < 3.0f)  // 근처에 도착했으면...
+            if (Vector3.Distance(transform.position, targetTransform.position) < 1.0f)  // 근처에 도착했으면...
             {
                 if (ISaw("Trace", degree, maxDistance)) // 다른 흔적이 없나 찾는다.
                 {
@@ -208,28 +225,35 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
-        if ((int)playerFSM.pyState <= 1 && distance < attackRange)   // 범위 내에서 아직 플레이어가 건강 or 부상 상태면 공격을 시도
+        if (distance < attackRange)
         {
-            Attack();
-        }
-        else if ((int)playerFSM.pyState > 1 && distance < attackRange)    // 범위 내에서 플레이어가 빈사 or 특수행동 상태면 업을 수 있다
-        {
-            ChangeState(EnemyState.GetPlayer);      // 업은 상태로 전환
-        }
-        else if (!ISaw("Player", degree, maxDistance))      // 시야에서 플레이어를 놓치면
-        {
-            ChangeState(EnemyState.NoEvidence);     // 다시 증거 없는 상태로 돌아간다.
+            if ((int)playerFSM.pyState <= 1)   // 범위 내에서 아직 플레이어가 건강 or 부상 상태면 공격을 시도
+            {
+                Attack();
+            }
+            else if ((int)playerFSM.pyState > 1)    // 범위 내에서 플레이어가 빈사 or 특수행동 상태면 업을 수 있다
+            {
+                ChangeState(EnemyState.GetPlayer);      // 업은 상태로 전환
+            }
+            else if (!ISaw("Player", degree, maxDistance))      // 시야에서 플레이어를 놓치면
+            {
+                ChangeState(EnemyState.NoEvidence);     // 다시 증거 없는 상태로 돌아간다.
+            }
         }
     }
 
     // [EnemyState.FindPlayer] 사정 거리 내에 플레이어가 들어오면 공격
     void Attack()
     {
-        currentTime += Time.deltaTime;
-        if (currentTime > attackDelay)
+        float dir = Vector3.Distance(player.transform.position, transform.position);
+        if (dir < attackRange)
         {
-            enemyAnim.SetTrigger("Attack");
-            currentTime = 0;
+            currentTime += Time.deltaTime;
+            if (currentTime > attackDelay)
+            {
+                enemyAnim.SetTrigger("Attack");
+                currentTime = 0;
+            }
         }
     }
 
@@ -258,6 +282,7 @@ public class EnemyController : MonoBehaviour
             print("스턴!");
         }
 
+        stunned = true;
         targetTransform = null;        
         
         currentTime += Time.deltaTime;
@@ -267,10 +292,28 @@ public class EnemyController : MonoBehaviour
             stunned = false;
             ChangeState(EnemyState.NoEvidence);
             print("스턴 해제!");
-            return;
+            BreakPallet();
         }
+    }
 
-        stunned = true;
+    void BreakPallet()
+    {       
+        if (pallet != null)
+        {
+            for(int i = 0; i < pallet.Count; i++)
+            {
+                if (pallet[i].GetComponent<PalletFSM>().palState == PalletFSM.PalletState.FallDown)
+                {
+                    enemyAnim.SetTrigger("BreakPallet");
+                    if (currentTime > 2)    // 판자 부수는 데 걸리는 시간 (애니메이션 끝나는 시간)
+                    {
+                        Destroy(pallet[i]);
+                        pallet.Remove(pallet[i]);
+                    }
+                    return;
+                }
+            }
+        }
     }
 
     void RushTokenManage()
@@ -309,8 +352,6 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
-                //rushing = false;
-                currentTime = 0;
                 rushCollision.crashed = false;
                 print("넉백 끝남!");
                 if (rushToken != 0 && CanIRush())
@@ -318,12 +359,14 @@ public class EnemyController : MonoBehaviour
                     print("한번 더 달린다");
                     enemyAnim.SetTrigger("Rush Again");
                     Rush();
+                    currentTime = 0;
                 }
-                else
+                else if(currentTime > 1.25f)
                 {
                     enemyAnim.SetBool("Rush", false);
                     print("이제 못 달린다");
                     ChangeState(EnemyState.OnGroggy);
+                    currentTime = 0;
                 }
             }
         }
@@ -339,7 +382,7 @@ public class EnemyController : MonoBehaviour
                 ChangeState(EnemyState.OnGroggy);
             }
         }
-        //testCube.position = NMA.destination + new Vector3(0, NMA.baseOffset, 0);
+        testCube.position = NMA.destination + new Vector3(0, NMA.baseOffset, 0);
     }
 
     bool CanIRush() // 질주 조건 판단 (일부 구현) **************************************************************
