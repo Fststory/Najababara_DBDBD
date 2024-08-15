@@ -75,15 +75,15 @@ public class PlayerFSM : MonoBehaviour
 
     public void Normal()
     {        
-        moveSpeed = 2.26f;      //moveSpeed = 4.0f;     // 08.15 수정!
-        runSpeed = 4.0f;        //runSpeed = 6.0f;
+        moveSpeed = 2.26f;          // 08.15 수정!
+        runSpeed = 4.0f;       
 
     }
 
     public void Injured()
     {
-        moveSpeed = 2.26f;      //moveSpeed = 3.5f;     // 08.15 수정!
-        runSpeed = 4.0f;        //runSpeed = 5.5f;
+        moveSpeed = 2.26f;           // 08.15 수정!
+        runSpeed = 4.0f;        
 
     }
 

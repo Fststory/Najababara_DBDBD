@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
 
     public Vector3 arriveCC;
 
-    float[] idleAnims = new float[3] { 0.0f, 0.5f, 1.0f };
+    
 
 
 
@@ -73,10 +73,13 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift))
         {
             run = true;
+            _animator.SetBool("Run", true);
         }
         else
         {
             run = false;
+            _animator.SetBool("Run", false);
+
         }
 
 
@@ -84,11 +87,12 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftControl))
         {
             _animator.SetBool("isCrouch", true);
-            InputMovement();
+            
         }
         else
         {
             _animator.SetBool("isCrouch", false);
+
         }
 
         // 땅 체크
@@ -122,6 +126,18 @@ public class PlayerController : MonoBehaviour
     {
         moveSpeed = PlayerFSM.moveSpeed;
         runSpeed = PlayerFSM.runSpeed;
+
+        // 앉을 때 속도 조절
+        if (_animator.GetBool("isCrouch"))
+        {
+            finalSpeed = moveSpeed * 0.5f; //  앉을 때 속도를 50%로 줄임
+        }
+        else
+        {
+            finalSpeed = run ? runSpeed : moveSpeed;
+        }
+
+
         // 만약 run이 true라면, finalSpeed는 runSpeed 값을 갖는다.
         // 만약 run이 false라면, finalSpeed는 speed 값을 갖는다.
         finalSpeed = run ? runSpeed : moveSpeed;

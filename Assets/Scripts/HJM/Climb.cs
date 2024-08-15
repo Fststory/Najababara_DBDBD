@@ -7,8 +7,8 @@ public class Climb : MonoBehaviour
     public Transform pointB; // 판자 오른쪽 포인트
     public GameObject player;
     public GameObject pallet;
-    public GameObject cam;
     public Vector3 camStart;
+    public GameObject climbUI;
 
     PalletFSM palletFSM;
     ClimbAnimation climbAnimation;
@@ -27,6 +27,7 @@ public class Climb : MonoBehaviour
     private Vector3 targetPoint; // 넘어가기 전 이동할 목표 포인트
     private Vector3 arrivePoint; // 넘어간 후 도착할 목표 포인트
 
+    //public GameObject cam;
 
     void Start()
     {
@@ -36,12 +37,18 @@ public class Climb : MonoBehaviour
             playerController = player.GetComponent<PlayerController>();
             cc = player.GetComponent<CharacterController>();
             climbAnimation = player.GetComponent<ClimbAnimation>();
-            camStart = cam.transform.localPosition;
+            //camStart = cam.transform.localPosition;
         }
 
         if (pallet != null)
         {
             palletFSM = pallet.GetComponent<PalletFSM>();
+
+        }
+
+        if (climbUI != null)
+        {
+            climbUI.SetActive(false);
 
         }
     }
@@ -66,16 +73,18 @@ public class Climb : MonoBehaviour
             {
                 targetPoint = pointA.position; // A 방향으로 이동
                 print("A로 이동, B 방향으로 넘어감");
-                Vector3 dirA = transform.forward;
-                player.transform.localEulerAngles = dirA;
+                //Vector3 dirA = transform.forward;
+                //player.transform.localEulerAngles = dirA;
+                player.transform.LookAt(pointB); // B 포인트를 바라보도록 회전
                 arrivePoint = pointB.position;
             }
             else
             {
                 targetPoint = pointB.position; // B 방향으로 이동
                 print("B로 이동, A 방향으로 넘어감");
-                Vector3 dirB = transform.forward;
-                player.transform.localEulerAngles = dirB;
+                //Vector3 dirB = transform.forward;
+                //player.transform.localEulerAngles = dirB;
+                player.transform.LookAt(pointA); // A 포인트를 바라보도록 회전
                 arrivePoint = pointA.position;
 
             }
@@ -122,23 +131,23 @@ public class Climb : MonoBehaviour
 
 
 
-    void MoveTowardsCam()
-    {
-        if (climbAnimation.isAnimating == true)
-        {// 포인트에 도달하면 도착포인트로 카메라 이동
-            print("카메라 이동 중");
-            Vector3 camArrive = new Vector3(arrivePoint.x, cam.transform.position.y, arrivePoint.z);
-            print(camArrive);
-            print(camStart);
-            Vector3 camPosition = Vector3.Lerp(cam.transform.position, camArrive, Time.deltaTime * 2);
-            cam.transform.position = camPosition;
-            if (climbAnimation.isAnimating == false)
-            {
-                cam.transform.localPosition = new Vector3(0.0280000009f, 1.34500003f, -0.138999999f);
-                return;
-            }
-        }
-    }
+    //void MoveTowardsCam()
+    //{
+    //    if (climbAnimation.isAnimating == true)
+    //    {// 포인트에 도달하면 도착포인트로 카메라 이동
+    //        print("카메라 이동 중");
+    //        Vector3 camArrive = new Vector3(arrivePoint.x, cam.transform.position.y, arrivePoint.z);
+    //        print(camArrive);
+    //        print(camStart);
+    //        Vector3 camPosition = Vector3.Lerp(cam.transform.position, camArrive, Time.deltaTime * 2);
+    //        cam.transform.position = camPosition;
+    //        if (climbAnimation.isAnimating == false)
+    //        {
+    //            cam.transform.localPosition = new Vector3(0.0280000009f, 1.34500003f, -0.138999999f);
+    //            return;
+    //        }
+    //    }
+    //}
 
 
 
@@ -148,6 +157,10 @@ public class Climb : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isPlayerInTrigger = true;
+            if (climbUI != null)
+            {
+            climbUI.SetActive(true);
+            }
         }
     }
 
@@ -156,6 +169,7 @@ public class Climb : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isPlayerInTrigger = false;
+            climbUI.SetActive(false);
 
         }
     }
