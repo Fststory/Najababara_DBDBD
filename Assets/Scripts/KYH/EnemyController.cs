@@ -121,7 +121,7 @@ public class EnemyController : MonoBehaviour
             NMA.speed = 1;
             enemyAnim.SetTrigger("Vault");
             vaulting = true;
-            StartCoroutine(AfterVault());
+            StartCoroutine(AfterVault());   // 코루틴으로 뛰어 넘기 완료 시 행동을 이어가게 했음. 근데 if(CompleteOnOffMeshLink)로 해도 됐을 듯
         }
     }
     
