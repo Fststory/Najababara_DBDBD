@@ -32,6 +32,20 @@ public class PlayerController : MonoBehaviour
 
     public Vector3 arriveCC;
 
+    // 발자국 소리 관련 변수
+    public List<AudioClip> footstepClips; // 여러 발자국 소리 클립
+    private AudioSource audioSource; // 발자국 소리를 재생할 오디오 소스
+    public float footstepInterval = 0.5f; // 기본 발자국 소리 간격
+    private float footstepTimer; // 발자국 소리 타이머
+
+
+    // 숨소리 관련 변수
+    public List<AudioClip> breathingClips; // 여러 숨소리 클립
+    private AudioSource breathingAudioSource; // 숨소리를 재생할 오디오 소스
+    public float breathingInterval = 2.0f; // 기본 숨소리 간격
+    private float breathingTimer; // 숨소리 타이머
+
+
 
     void Start()
     {
@@ -41,8 +55,11 @@ public class PlayerController : MonoBehaviour
         PlayerFSM = GetComponent<PlayerFSM>();
 
         _animator.SetTrigger("Hit02");
-    }
 
+        // 오디오 소스 초기화
+        audioSource = GetComponent<AudioSource>();
+        breathingAudioSource = gameObject.AddComponent<AudioSource>();
+    }
     
 
     void Update()
@@ -50,6 +67,8 @@ public class PlayerController : MonoBehaviour
         if(PlayerFSM.pyState != PlayerFSM.PlayerState.InAction)
         {
             InputMovement();
+            HandleFootsteps(); // 발자국 소리 처리
+            HandleBreathing(); // 숨소리 처리
         }
 
         if (Input.GetKey(KeyCode.LeftAlt))
@@ -60,6 +79,10 @@ public class PlayerController : MonoBehaviour
         {
             toggleCameraRotation = false; // 둘러보기 비활성화
         }
+
+        // 부상 상태 확인 및 애니메이터 파라미터 업데이트
+        bool isInjured = PlayerFSM.pyState == PlayerFSM.PlayerState.Injured;
+        _animator.SetBool("isInjured", true);
 
         // LeftShift 누르면 달리기
         if (Input.GetKey(KeyCode.LeftShift))
@@ -160,9 +183,72 @@ public class PlayerController : MonoBehaviour
 
         //print(moveDirection.magnitude);
         _controller.Move(moveDirection.normalized * finalSpeed * Time.deltaTime);
+        //if(PlayerFSM.pyState == PlayerFSM.PlayerState.Normal) // 여기부터 수정 이제 머리안돌아감
         _animator.SetFloat("DirLength", moveDirection.magnitude);
 
         //float percent = (run ? 1 : 0.5f) * moveDirection.magnitude;
         //_animator.SetFloat("Blend", percent, 0.1f, Time.deltaTime);
+
+        
+    }
+
+    void HandleFootsteps()
+    {
+        if (isGrounded && _controller.velocity.magnitude > 0.1f)
+        {
+            // 달릴 때 발자국 소리 간격 줄이기
+            float speedFactor = run ? 0.4f : 0.33f;
+            footstepTimer -= Time.deltaTime;
+
+            if (footstepTimer <= 0f)
+            {
+                PlayFootstepSound();
+                footstepTimer = footstepInterval / (_controller.velocity.magnitude * speedFactor);
+            }
+        }
+    }
+
+    void PlayFootstepSound()
+    {
+        if (footstepClips.Count > 0)
+        {
+            int index = Random.Range(0, footstepClips.Count);
+            audioSource.PlayOneShot(footstepClips[index]);
+        }
+    }
+
+    void HandleBreathing()
+    {
+        if (isGrounded && _controller.velocity.magnitude > 0.1f)
+        {
+            // 이동 속도에 따른 숨소리 간격 조절
+            float speedFactor = run ? 0.55f : 0.18f;
+            breathingTimer -= Time.deltaTime;
+
+            if (breathingTimer <= 0f)
+            {
+                PlayBreathingSound();
+                breathingTimer = breathingInterval / (_controller.velocity.magnitude * speedFactor);
+            }
+        }
+    }
+
+    void PlayBreathingSound()
+    {
+        if (breathingClips.Count > 0)
+        {
+            if (!run)
+            {
+                int index = Random.Range(0, 9);
+                breathingAudioSource.PlayOneShot(breathingClips[index]);
+
+            }
+            if (run)
+            {
+            int index = Random.Range(10, 20);
+            breathingAudioSource.PlayOneShot(breathingClips[index]);
+
+            }
+        }
     }
 }
