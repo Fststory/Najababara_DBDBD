@@ -8,10 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerFSM : MonoBehaviour
-{   
-
-
-
+{
     public enum PlayerState
     {
         Normal = 0,
@@ -19,8 +16,6 @@ public class PlayerFSM : MonoBehaviour
         Dying = 2,
         InAction = 3,
         Hooked = 4,
-        
-
     }
 
     public PlayerState pyState;
@@ -37,8 +32,6 @@ public class PlayerFSM : MonoBehaviour
     {
         playerCtrl = GetComponent<PlayerController>();
         currentHp = playerMaxHp;
-
-
     }
 
     void Update()
@@ -62,50 +55,36 @@ public class PlayerFSM : MonoBehaviour
                 break;
             case PlayerState.Hooked:
                 Hooked();
-                break; 
-            
-            
-
+                break;
         }
-
-
-
-
     }
 
     public void Normal()
     {        
         moveSpeed = 2.26f;          // 08.15 수정!
-        runSpeed = 4.0f;       
-
+        runSpeed = 4.0f;
     }
 
     public void Injured()
     {
         moveSpeed = 2.26f;           // 08.15 수정!
-        runSpeed = 4.0f;        
-
+        runSpeed = 4.0f;
     }
 
     public void Dying()
     {
         moveSpeed = 0.7f;
         runSpeed = 0.0f;
-
     }
 
     public void InAction()
     {
         moveSpeed = 0.0f;
         runSpeed = 0.0f;
-           
     }
 
     public void Hooked()
     {
     } 
-    
-    
-    
 
 }
