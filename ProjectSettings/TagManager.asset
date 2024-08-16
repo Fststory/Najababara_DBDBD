@@ -21,8 +21,8 @@ TagManager:
   - Wall
   - Floor
   - Player
-  - 
-  - 
+  - Obstacle
+  - Trigger
   - 
   - 
   - 

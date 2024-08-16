@@ -5,6 +5,19 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            LoadNextScene();
+        }
+    }
+
     // 다음 씬을 불러오는 함수
     public void LoadNextScene()
     {

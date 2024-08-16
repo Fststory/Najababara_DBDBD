@@ -44,10 +44,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 119
+    m_Bits: 1536
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 384
+    m_Bits: 503
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -84,10 +84,10 @@ Rigidbody:
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 119
+    m_Bits: 1536
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 384
+    m_Bits: 503
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
@@ -567,12 +567,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a28800866f71f7b4990eff873e077bc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testCube: {fileID: 0}
   NMA: {fileID: 0}
   enemyAnim: {fileID: 3368881687778716117}
   player: {fileID: 0}
   targetTransform: {fileID: 0}
-  moveSpeed: 10
+  hooking: 0
   playerFSM: {fileID: 0}
   attackRange: 2
   currentTime: 0
@@ -601,6 +600,7 @@ MonoBehaviour:
   playerFSM: {fileID: 0}
   playerController: {fileID: 0}
   enemyController: {fileID: 7559840568368335959}
+  animClip: {fileID: 0}
 --- !u!195 &6917742467541304907
 NavMeshAgent:
   m_ObjectHideFlags: 0
