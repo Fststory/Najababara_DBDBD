@@ -44,7 +44,7 @@ public class PlayerFSM : MonoBehaviour
     void Update()
     {
         // 현재 체력을 최대체력으로 나눈값을 슬라이더 값에 넣는다.
-        playerHpSLD.value = currentHp/ playerMaxHp;
+        //playerHpSLD.value = currentHp/ playerMaxHp;
 
         switch (pyState)
         {
