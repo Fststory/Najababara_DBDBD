@@ -20,7 +20,7 @@ public class PlayerHPsystem : MonoBehaviour
 
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
         if (playerfsm.pyState == PlayerFSM.PlayerState.Injured)

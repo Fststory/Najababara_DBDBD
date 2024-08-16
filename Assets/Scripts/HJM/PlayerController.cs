@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     public float groundDistance = 0.4f;  // 땅과의 거리
     public LayerMask groundMask;  // 땅 레이어 마스크
 
-    private bool isGrounded;
+    public bool isGrounded;
     public Transform groundCheck;  // 땅 체크용 트랜스폼
 
     public float smoothness = 10.0f;
@@ -103,10 +103,9 @@ public class PlayerController : MonoBehaviour
         {
             velocity.y = -2f;  // 약간의 음수 값을 주어 땅에 착지하는 느낌을 줍니다.
         }
-
+        
         // 중력 적용
         velocity.y += gravity * Time.deltaTime;
-
         // 속도에 따른 이동
         _controller.Move(velocity * Time.deltaTime);
 

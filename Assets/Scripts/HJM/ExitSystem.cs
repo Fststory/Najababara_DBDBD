@@ -8,8 +8,7 @@ public class ExitSystem : MonoBehaviour
 
 
 
-    public GameObject generator;
-    public GeneratorSystem generatorSystem;
+ 
     public bool isPlayerInTrigger = false;
 
 
@@ -35,13 +34,12 @@ private void Start()
 
     public void Update()
     {
-        OpenExit();
+        //OpenExit();
     }
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            OpenExit();
             isPlayerInTrigger = true;
         }
     }
