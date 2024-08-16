@@ -1,69 +1,9 @@
 fileFormatVersion: 2
-guid: 5a2ba259b3ae36948aef0d6502e1f880
+guid: c6c7f368b883834498399882e91fbb87
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 24_MIK21Head00_0.4_0_0
-    second: {fileID: 2100000, guid: dde4707051f3b1848b30acec2d0be64c, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 24_MIK21Legs00_0.4_0_0
-    second: {fileID: 2100000, guid: 8633d05ff24898940ad5d81854d0db44, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 24_MIK21Legs01_0.5_0_0
-    second: {fileID: 2100000, guid: b12d7b69c65efef4dbc60001f7655f2b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 24_MIK21Torso00_0.4_0_0
-    second: {fileID: 2100000, guid: 6497822dc5e353542bb34975b30b01bb, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 25_MIK21Acc01_0.5_0_0
-    second: {fileID: 2100000, guid: f5cfdd419289a3a44a495ff0d4c33514, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 25_MIK21Torso01_0.5_0_0
-    second: {fileID: 2100000, guid: c1778ed35bdd72947949cbea1a435008, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 39_MIK21Acc01Glow_0_0_0
-    second: {fileID: 2100000, guid: b9ea51febb6c1934c96bba5787d5afe5, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 39_MIK21Head00Glow_0_0_0
-    second: {fileID: 2100000, guid: 8f521f21d49c72544a345fd440a212c2, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 39_MIK21Legs00Glow_0_0_0
-    second: {fileID: 2100000, guid: 3d5a04043e386c841bfce9e32d8058e2, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 39_MIK21Legs01Glow_0_0_0
-    second: {fileID: 2100000, guid: a547cdd32f3968a47995efc277030a08, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 39_MIK21Torso00Glow_0_0_0
-    second: {fileID: 2100000, guid: a4d86f62ce1d99848b307c50b65d6386, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 39_MIK21Torso01Glow_0_0_0
-    second: {fileID: 2100000, guid: 526308e02343bb5479f9f09665b44900, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -76,8 +16,7 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
     motionNodeName: 
-    rigImportErrors: "Copied Avatar Rig Configuration mis-match. Transform hierarchy
-      does not match:\n\tTransform 'root hips' for human bone 'Hips' not found\n"
+    rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
