@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour
         PlayerFSM = GetComponent<PlayerFSM>();
 
 
-
+        _animator.SetTrigger("Hit02");
         
 
     }
