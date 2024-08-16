@@ -73,8 +73,9 @@ public class PlayerFSM : MonoBehaviour
 
     public void Dying()
     {
-        moveSpeed = 0.7f;
-        runSpeed = 0.0f;
+        moveSpeed = 0.5f;
+        runSpeed = 0.7f;
+
     }
 
     public void InAction()

@@ -23,7 +23,7 @@ public class PlayerHPsystem : MonoBehaviour
     
     void Update()
     {
-        if (playerfsm.pyState == PlayerFSM.PlayerState.Injured)
+        if (playerfsm.pyState == PlayerFSM.PlayerState.Dying)
         {
         
             healGuide.SetActive(true);

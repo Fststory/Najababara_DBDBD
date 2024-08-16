@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GeneratorManager : MonoBehaviour
 {
@@ -9,8 +10,9 @@ public class GeneratorManager : MonoBehaviour
     public ExitSystem exitSystem;
     public GameObject exit;
     public int numberOfRepairs = 2; // 수리해야할 Generator의 수
+    public Text geneCount;
+
     private GameObject[] generators;
-    
 
  
 
@@ -58,6 +60,8 @@ public class GeneratorManager : MonoBehaviour
             // exitSystem의 OpenExit 함수를 실행한다.
             exitSystem.OpenExit();
         }
+
+        geneCount.text = (numberOfRepairs - CompleteRepair).ToString();
 
 
 
