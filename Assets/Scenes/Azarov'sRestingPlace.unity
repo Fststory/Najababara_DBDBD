@@ -7231,7 +7231,7 @@ PrefabInstance:
         type: 3}
       propertyPath: playerObject
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 919132149091483423}
     - target: {fileID: 5560602223811207320, guid: 8e83653efa46cde4588176c5421a7de1,
         type: 3}
       propertyPath: pillarTransform
@@ -7250,7 +7250,7 @@ PrefabInstance:
     - target: {fileID: 5665900733960635933, guid: 8e83653efa46cde4588176c5421a7de1,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6917742467541304907, guid: 8e83653efa46cde4588176c5421a7de1,
         type: 3}
@@ -7276,7 +7276,7 @@ PrefabInstance:
         type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 919132149091483423}
     - target: {fileID: 7559840568368335959, guid: 8e83653efa46cde4588176c5421a7de1,
         type: 3}
       propertyPath: testCube
@@ -10853,7 +10853,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 169, y: -59}
+  m_AnchoredPosition: {x: 162.51, y: -51.6}
   m_SizeDelta: {x: 244.2, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1929325508639998043
@@ -11626,7 +11626,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Player Name
+  m_Text: Claudette Morel
 --- !u!1 &2597962278348378691
 GameObject:
   m_ObjectHideFlags: 0
@@ -17512,7 +17512,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointA: {fileID: 1608418467}
   pointB: {fileID: 594668268}
-  player: {fileID: 0}
+  player: {fileID: 919132149091483423}
   pallet: {fileID: 2506975957018896918}
   camStart: {x: 0, y: 0, z: 0}
   climbUI: {fileID: 1249643765}
@@ -17817,7 +17817,6 @@ SceneRoots:
   - {fileID: 725411712}
   - {fileID: 62307628}
   - {fileID: 1211219123}
-  - {fileID: 543450653629703589}
   - {fileID: 1377543471}
   - {fileID: 844329612}
   - {fileID: 5430717338885970133}
@@ -17826,3 +17825,4 @@ SceneRoots:
   - {fileID: 434851738}
   - {fileID: 3175692426437960935}
   - {fileID: 1779917819}
+  - {fileID: 543450653629703589}
