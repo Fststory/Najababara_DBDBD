@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -22,20 +23,24 @@ public class EnemyController : MonoBehaviour
 
     public GameObject player;
     public Transform targetTransform;
-    public float moveSpeed = 7.0f;
 
     HangPlayerHookInteraction hang;
+    public bool hooking = false;
+
     public PlayerFSM playerFSM;         // 0 - 건강, 1 - 부상, 2 - 빈사, 3 - 특수 행동(업힘, 수리, 구조, 창문 넘기 등), 4 - 걸림
 
     public float attackRange = 2.0f;    // 공격 사정 거리
     float attackDelay = 2.0f;       // 공격 쿨타임
+    bool cooldown = false;      // 쿨타임이면 트루
 
     public float currentTime = 0;
 
-    public float degree = 45.0f;    // 에너미 시야각
+    AnimationClip animClip;
+
+    public float degree;    // 에너미 시야각
     public float maxDistance;       // 에너미 가시거리
     public GameObject[] generators; // 맵 상의 모든 발전기
-    int currentGeneratorIndex = 0;  // 현재 탐색중인 발전기 번호
+    int currentGeneratorIndex;  // 현재 탐색중인 발전기 번호 (첫 시작은 0번)
 
     public int rushToken = 5;  // 최초 질주 토큰 5개 보유
     float chargingTime = 0;
@@ -109,24 +114,24 @@ public class EnemyController : MonoBehaviour
         {
             RushTokenManage();
         }
-
-        //if (NMA.isOnOffMeshLink)
-        //{
-        //    if (NMA.currentOffMeshLinkData.activated && !vaulting)
-        //    {
-        //        currentSpeed = NMA.speed;
-        //        NMA.speed = 1;
-        //        enemyAnim.SetTrigger("Vault");
-        //        vaulting = true;
-        //    }
-            
-        //    if(!NMA.currentOffMeshLinkData.activated)
-        //    {
-        //        vaulting = false;
-        //        NMA.speed = currentSpeed;
-        //    }
-        //}
+        
+        if (NMA.currentOffMeshLinkData.activated && !vaulting)
+        {
+            currentSpeed = NMA.speed;
+            NMA.speed = 1;
+            enemyAnim.SetTrigger("Vault");
+            vaulting = true;
+            StartCoroutine(AfterVault());   // 코루틴으로 뛰어 넘기 완료 시 행동을 이어가게 했음. 근데 if(CompleteOnOffMeshLink)로 해도 됐을 듯
+        }
     }
+    
+    IEnumerator AfterVault()
+    {
+        yield return new WaitForSeconds(0.9f);
+        vaulting = false;
+        NMA.speed = currentSpeed;
+    }
+
 
     // [EnemyState.NoEvidence] 돌아다닌다.   
     void Wander()
@@ -237,7 +242,7 @@ public class EnemyController : MonoBehaviour
             {
                 Attack();
             }
-            else if ((int)playerFSM.pyState > 1)    // 범위 내에서 플레이어가 빈사 or 특수행동 상태면 업을 수 있다
+            else if ((int)playerFSM.pyState > 1 && !cooldown)    // 범위 내에서 플레이어가 빈사 or 특수행동 상태면 업을 수 있다 && 공격 쿨다운이 끝났을 때 말이지!
             {
                 ChangeState(EnemyState.GetPlayer);      // 업은 상태로 전환
             }
@@ -251,16 +256,19 @@ public class EnemyController : MonoBehaviour
     // [EnemyState.FindPlayer] 사정 거리 내에 플레이어가 들어오면 공격
     void Attack()
     {
-        float dir = Vector3.Distance(player.transform.position, transform.position);
-        if (dir < attackRange)
+        animClip = Resources.Load<AnimationClip>("Attack");
+        if (!cooldown)
         {
-            currentTime += Time.deltaTime;
-            if (currentTime > attackDelay)
-            {
-                enemyAnim.SetTrigger("Attack");
-                currentTime = 0;
-            }
+            enemyAnim.SetTrigger("Attack");
+            cooldown = true;
+            StartCoroutine(CheckCoolDown(animClip.length + attackDelay));
         }
+    }
+
+    IEnumerator CheckCoolDown(float time)
+    {
+        yield return new WaitForSeconds(time);
+        cooldown = false;
     }
 
     // [EnemyState.GetPlayer] 플레이어를 업었을 때 갈고리로 향한다.
@@ -273,8 +281,10 @@ public class EnemyController : MonoBehaviour
 
         NMA.SetDestination(targetTransform.position);
         float distance = Vector3.Distance(transform.position, targetTransform.position);
-        if (distance < 2.0f)
+        if (distance < 2.0f && !hooking)
         {
+            hooking = true;
+            enemyAnim.SetTrigger("Hook");
             hang.HangPlayerOnHook();
         }
     }
@@ -302,6 +312,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    // 판자 부수기
     void BreakPallet()
     {       
         if (pallet != null)
@@ -322,9 +333,8 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    void RushTokenManage()
-    {
-        // 질주 토큰은 2초에 1개씩 차고 최대 5개 보유 가능하다.
+    void RushTokenManage()  // 질주 토큰은 2초에 1개씩 차고 최대 5개 보유 가능하다.
+    {        
         if (rushToken != 5)
         {            
             chargingTime += Time.deltaTime;
@@ -344,7 +354,6 @@ public class EnemyController : MonoBehaviour
         //print("질주 남은 거리: " + NMA.remainingDistance);
 
         NMA.speed = 9.2f;   // 속도는 9.2 (m/s) 3초간 전방으로 돌진
-        //print("질주!");
 
         if (rushCollision.crashed)
         {
