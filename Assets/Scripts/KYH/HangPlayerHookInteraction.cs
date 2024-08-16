@@ -16,6 +16,7 @@ public class HangPlayerHookInteraction : MonoBehaviour
     public Transform hookPoint;
     public PlayerFSM playerFSM;
     public PlayerController playerController;
+    public CharacterController cc;
     public EnemyController enemyController;
     public AnimationClip animClip;
 
@@ -32,7 +33,8 @@ public class HangPlayerHookInteraction : MonoBehaviour
         playerFSM.pyState = PlayerFSM.PlayerState.InAction;
         playerObject.transform.SetParent(hangPoint);
         playerObject.transform.localPosition = new Vector3(0, 0, 0);
-        playerController.enabled = !playerController.enabled;   // 플레이어 컨트롤러 비활성화!
+        //playerController.enabled = false;   // 플레이어 컨트롤러 비활성화!
+        cc.enabled = false;   // 캐릭터 컨트롤러 끄니까 왔다갔다 하는 거 없긴 함
     }
 
     public void HangPlayerOnHook()  // 플레이어를 매다는 기능
