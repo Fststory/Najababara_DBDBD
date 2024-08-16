@@ -41,7 +41,7 @@ public class HangPlayerHookInteraction : MonoBehaviour
     {
         playerFSM.pyState = PlayerFSM.PlayerState.Hooked;
         playerObject.transform.SetParent(hookPoint);
-        playerObject.transform.localPosition = new Vector3(0, 0, 0);        
+        playerObject.transform.localPosition = new Vector3(0, 0, 0);
         Invoke("AfterHook", animClip.length);
     }
     

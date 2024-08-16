@@ -14,7 +14,7 @@ public class EnemyController : MonoBehaviour
         시야에 들어온 증거들 중에 우선순위를 따져서 타겟으로 잡는다.        
     */
 
-    public Transform testCube;
+    //public Transform testCube;
 
     public NavMeshAgent NMA;
 
@@ -245,6 +245,8 @@ public class EnemyController : MonoBehaviour
             }
             else if ((int)playerFSM.pyState > 1 && !cooldown)    // 범위 내에서 플레이어가 빈사 or 특수행동 상태면 업을 수 있다 && 공격 쿨다운이 끝났을 때 말이지!
             {
+                hang.HangPlayerOnMe();
+                print("Player를 업었다!");
                 ChangeState(EnemyState.GetPlayer);      // 업은 상태로 전환
             }
             else if (!ISaw("Player", degree, maxDistance))      // 시야에서 플레이어를 놓치면
@@ -277,11 +279,8 @@ public class EnemyController : MonoBehaviour
     {
         //targetTransform = hang.pillarTransform;
         targetTransform = hang.hookPoint;
-
-        hang.HangPlayerOnMe();
-        print("Player를 업었다!");
-
         NMA.SetDestination(targetTransform.position);
+
         if (NMA.remainingDistance < 0.1f && !hooking)
         {
             hooking = true;
@@ -400,7 +399,7 @@ public class EnemyController : MonoBehaviour
             }
         }
         //testCube.position = NMA.destination + new Vector3(0, NMA.baseOffset, 0);
-        testCube.position = transform.position + knockBackDir * knockBackPow;
+        //testCube.position = transform.position + knockBackDir * knockBackPow;
     }
 
     bool CanIRush() // 질주 조건 판단 (일부 구현) **************************************************************

@@ -84,19 +84,24 @@ public class PlayerController : MonoBehaviour
             _animator.SetBool("isCrouch", false);
         }
 
-        // 땅 체크
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-
-        // 땅에 닿아있는 경우 속도 초기화
-        if (isGrounded && velocity.y < 0)
+        if (PlayerFSM.pyState == PlayerFSM.PlayerState.Normal || PlayerFSM.pyState == PlayerFSM.PlayerState.Injured)
         {
-            velocity.y = -2f;  // 약간의 음수 값을 주어 땅에 착지하는 느낌을 줍니다.
-        }
+            _controller.enabled = true;
+
+            // 땅 체크
+            isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+
+            // 땅에 닿아있는 경우 속도 초기화
+            if (isGrounded && velocity.y < 0)
+            {
+                velocity.y = -2f;  // 약간의 음수 값을 주어 땅에 착지하는 느낌을 줍니다.
+            }
         
-        // 중력 적용
-        velocity.y += gravity * Time.deltaTime;
-        // 속도에 따른 이동
-        _controller.Move(velocity * Time.deltaTime);
+            // 중력 적용
+            velocity.y += gravity * Time.deltaTime;
+            // 속도에 따른 이동
+            _controller.Move(velocity * Time.deltaTime);
+        }
     }
 
     void LateUpdate()
