@@ -14,7 +14,7 @@ public class EnemyController : MonoBehaviour
         시야에 들어온 증거들 중에 우선순위를 따져서 타겟으로 잡는다.        
     */
 
-    public Transform testCube;
+    //public Transform testCube;
 
     public NavMeshAgent NMA;
 
@@ -397,7 +397,7 @@ public class EnemyController : MonoBehaviour
                 ChangeState(EnemyState.OnGroggy);
             }
         }
-        testCube.position = NMA.destination + new Vector3(0, NMA.baseOffset, 0);
+        //testCube.position = NMA.destination + new Vector3(0, NMA.baseOffset, 0);
     }
 
     bool CanIRush() // 질주 조건 판단 (일부 구현) **************************************************************

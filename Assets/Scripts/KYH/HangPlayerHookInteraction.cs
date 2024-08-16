@@ -24,6 +24,7 @@ public class HangPlayerHookInteraction : MonoBehaviour
         playerObject = GameObject.FindGameObjectWithTag("Player"); // "플레이어" 오브젝트 캐싱
         playerFSM = playerObject.GetComponent<PlayerFSM>(); // 플레이어 상태 캐싱
         playerController = playerObject.GetComponent<PlayerController>(); // 플레이어 컨트롤러 캐싱
+        animClip = Resources.Load<AnimationClip>("Hook");
     }
     
     public void HangPlayerOnMe()    // 플레이어를 업는 기능
@@ -38,8 +39,7 @@ public class HangPlayerHookInteraction : MonoBehaviour
     {
         playerFSM.pyState = PlayerFSM.PlayerState.Hooked;
         playerObject.transform.SetParent(hookPoint);
-        playerObject.transform.localPosition = new Vector3(0, 0, 0);
-        animClip = Resources.Load<AnimationClip>("Hook");
+        playerObject.transform.localPosition = new Vector3(0, 0, 0);        
         Invoke("AfterHook", animClip.length);
     }
     
