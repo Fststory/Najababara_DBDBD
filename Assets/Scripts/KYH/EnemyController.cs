@@ -14,7 +14,7 @@ public class EnemyController : MonoBehaviour
         시야에 들어온 증거들 중에 우선순위를 따져서 타겟으로 잡는다.        
     */
 
-    //public Transform testCube;
+    public Transform testCube;
 
     public NavMeshAgent NMA;
 
@@ -34,6 +34,7 @@ public class EnemyController : MonoBehaviour
     bool cooldown = false;      // 쿨타임이면 트루
 
     public float currentTime = 0;
+    public float rushingTime = 0;
 
     AnimationClip animClip;
 
@@ -274,14 +275,14 @@ public class EnemyController : MonoBehaviour
     // [EnemyState.GetPlayer] 플레이어를 업었을 때 갈고리로 향한다.
     void GoToHang()
     {
-        targetTransform = hang.pillarTransform;
+        //targetTransform = hang.pillarTransform;
+        targetTransform = hang.hookPoint;
 
         hang.HangPlayerOnMe();
         print("Player를 업었다!");
 
         NMA.SetDestination(targetTransform.position);
-        float distance = Vector3.Distance(transform.position, targetTransform.position);
-        if (distance < 2.0f && !hooking)
+        if (NMA.remainingDistance < 0.1f && !hooking)
         {
             hooking = true;
             enemyAnim.SetTrigger("Hook");
@@ -357,6 +358,7 @@ public class EnemyController : MonoBehaviour
 
         if (rushCollision.crashed)
         {
+            rushingTime = 0;
             NMA.speed = 4.6f;   // 충돌 시 이동 속도 정상화
             currentTime += Time.deltaTime;
             if (currentTime <= 0.2f)
@@ -387,8 +389,8 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            currentTime += Time.deltaTime;
-            if (currentTime > 3.0f)
+            rushingTime += Time.deltaTime; // => 충돌 판정 전에 얘(3초 질주 타이머)가 이미 시간을 누적하고 있어서
+            if (rushingTime > 3.0f)
             {
                 NMA.speed = 4.6f;
                 NMA.isStopped = true;
@@ -398,6 +400,7 @@ public class EnemyController : MonoBehaviour
             }
         }
         //testCube.position = NMA.destination + new Vector3(0, NMA.baseOffset, 0);
+        testCube.position = transform.position + knockBackDir * knockBackPow;
     }
 
     bool CanIRush() // 질주 조건 판단 (일부 구현) **************************************************************

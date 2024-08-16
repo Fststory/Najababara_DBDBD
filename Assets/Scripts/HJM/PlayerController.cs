@@ -32,11 +32,6 @@ public class PlayerController : MonoBehaviour
 
     public Vector3 arriveCC;
 
-    
-
-
-
-
 
     void Start()
     {
@@ -45,10 +40,7 @@ public class PlayerController : MonoBehaviour
         _controller = this.GetComponent<CharacterController>();
         PlayerFSM = GetComponent<PlayerFSM>();
 
-
-        //_animator.SetTrigger("Hit02");
-        
-
+        _animator.SetTrigger("Hit02");
     }
 
     
@@ -79,20 +71,17 @@ public class PlayerController : MonoBehaviour
         {
             run = false;
             _animator.SetBool("Run", false);
-
         }
 
 
         // Ctrl 누르면 앉기
         if (Input.GetKey(KeyCode.LeftControl))
         {
-            _animator.SetBool("isCrouch", true);
-            
+            _animator.SetBool("isCrouch", true);            
         }
         else
         {
             _animator.SetBool("isCrouch", false);
-
         }
 
         // 땅 체크
@@ -108,7 +97,6 @@ public class PlayerController : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
         // 속도에 따른 이동
         _controller.Move(velocity * Time.deltaTime);
-
     }
 
     void LateUpdate()
