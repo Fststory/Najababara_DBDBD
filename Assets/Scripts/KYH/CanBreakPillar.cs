@@ -9,15 +9,15 @@ public class CanBreakPillar : MonoBehaviour
 
     // 필요한 것 : PillarFSM, PlayerFSM
 
-    PillarFSM pillarState;
+    public PillarFSM pillarState;
     public PlayerFSM playerFSM;
     public float currentTime = 0;
     public float damagedTime;   // 고장낼 때 걸리는 시간
 
-    void Start()
-    {
-        pillarState = gameObject.GetComponentInParent<PillarFSM>();
-    }
+    //void Start()
+    //{
+    //    pillarState = gameObject.GetComponentInParent<PillarFSM>();
+    //}
         
     private void OnTriggerStay(Collider other) // 플레이어가 갈고리에 걸리지 않은 상태로 상호작용 범위에 있을 때 사용 가능한 기능
     {

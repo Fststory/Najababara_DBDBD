@@ -50,7 +50,7 @@ public class EnemyController : MonoBehaviour
     public float knockBackPow;     // ³Ë¹é ÆÄ¿ö
     RushCollision rushCollision;
 
-    List<GameObject> pallet;
+    public List<GameObject> pallet;
 
     float currentSpeed;
     bool vaulting = false;
