@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
         _controller = this.GetComponent<CharacterController>();
         PlayerFSM = GetComponent<PlayerFSM>();
 
-        _animator.SetTrigger("Hit02");
+        
 
         // 오디오 소스 초기화
         audioSource = GetComponent<AudioSource>();

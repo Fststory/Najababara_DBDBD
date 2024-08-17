@@ -36,14 +36,16 @@ public class AttackTrigger : MonoBehaviour
             if (playerFSM.pyState == PlayerFSM.PlayerState.Normal)
             {
                 playerFSM.pyState = PlayerFSM.PlayerState.Injured;
-                print("Attack");
+                print("Hit01");
                 playerAnim.SetTrigger("Hit01");
                 
             }
             else if (playerFSM.pyState == PlayerFSM.PlayerState.Injured)
             {
                 playerFSM.pyState = PlayerFSM.PlayerState.Dying;
-                print("Attack");
+                print("Hit02");
+                playerAnim.SetTrigger("Hit02");
+                playerAnim.SetBool("Dying", true);
             }
         }
     }

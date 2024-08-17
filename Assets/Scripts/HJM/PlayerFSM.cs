@@ -76,6 +76,7 @@ public class PlayerFSM : MonoBehaviour
         moveSpeed = 0.5f;
         runSpeed = 0.7f;
 
+
     }
 
     public void InAction()
