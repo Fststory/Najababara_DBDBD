@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour
 
         // 부상 상태 확인 및 애니메이터 파라미터 업데이트
         bool isInjured = PlayerFSM.pyState == PlayerFSM.PlayerState.Injured;
-        _animator.SetBool("isInjured", true);
+        _animator.SetBool("isInjured", isInjured);
 
         // LeftShift 누르면 달리기
         if (Input.GetKey(KeyCode.LeftShift))
@@ -183,13 +183,28 @@ public class PlayerController : MonoBehaviour
 
         //print(moveDirection.magnitude);
         _controller.Move(moveDirection.normalized * finalSpeed * Time.deltaTime);
-        //if(PlayerFSM.pyState == PlayerFSM.PlayerState.Normal) // 여기부터 수정 이제 머리안돌아감
-        _animator.SetFloat("DirLength", moveDirection.magnitude);
 
-        //float percent = (run ? 1 : 0.5f) * moveDirection.magnitude;
-        //_animator.SetFloat("Blend", percent, 0.1f, Time.deltaTime);
+        if(PlayerFSM.pyState == PlayerFSM.PlayerState.Normal)
+        {
+            _animator.SetFloat("DirLength", moveDirection.magnitude);
+            _animator.SetBool("isInjured", false);
+            print("안아파요");
 
-        
+        }
+
+        else if (PlayerFSM.pyState == PlayerFSM.PlayerState.Injured)
+        {
+
+            _animator.SetBool("isInjured", true);
+            _animator.SetFloat("FloatInjured", moveDirection.magnitude);
+            print("아파요");
+
+
+        }
+
+
+
+
     }
 
     void HandleFootsteps()
@@ -219,17 +234,14 @@ public class PlayerController : MonoBehaviour
 
     void HandleBreathing()
     {
-        if (isGrounded && _controller.velocity.magnitude > 0.1f)
-        {
-            // 이동 속도에 따른 숨소리 간격 조절
-            float speedFactor = run ? 0.55f : 0.18f;
-            breathingTimer -= Time.deltaTime;
+        // 속도에 따른 숨소리 간격 조절
+        float speedFactor = run ? 0.55f : (_controller.velocity.magnitude > 0.1f ? 0.15f : 0.1f);
+        breathingTimer -= Time.deltaTime;
 
-            if (breathingTimer <= 0f)
-            {
-                PlayBreathingSound();
-                breathingTimer = breathingInterval / (_controller.velocity.magnitude * speedFactor);
-            }
+        if (breathingTimer <= 0f)
+        {
+            PlayBreathingSound();
+            breathingTimer = breathingInterval / speedFactor;
         }
     }
 
@@ -237,18 +249,26 @@ public class PlayerController : MonoBehaviour
     {
         if (breathingClips.Count > 0)
         {
-            if (!run)
-            {
-                int index = Random.Range(0, 9);
-                breathingAudioSource.PlayOneShot(breathingClips[index]);
+            int index;
 
-            }
-            if (run)
+            if (!run && _controller.velocity.magnitude <= 0.1f)
             {
-            int index = Random.Range(10, 20);
+                // 서 있을 때 숨소리 (0~8번 클립 중에서 랜덤 선택)
+                index = Random.Range(0, 9);
+            }
+            else if (!run)
+            {
+                // 걸을 때 숨소리 (0~8번 클립 중에서 랜덤 선택)
+                index = Random.Range(0, 9);
+            }
+            else
+            {
+                // 뛸 때 숨소리 (10~19번 클립 중에서 랜덤 선택)
+                index = Random.Range(10, 20);
+            }
+
             breathingAudioSource.PlayOneShot(breathingClips[index]);
-
-            }
+            
         }
     }
 }
