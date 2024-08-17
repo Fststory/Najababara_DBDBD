@@ -7966,7 +7966,7 @@ PrefabInstance:
     - target: {fileID: 5665900733960635933, guid: 8e83653efa46cde4588176c5421a7de1,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6917742467541304907, guid: 8e83653efa46cde4588176c5421a7de1,
         type: 3}
@@ -15727,7 +15727,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 595f0d98d6ab38640abbac683d4379ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pyState: 1
+  pyState: 0
   playerMaxHp: 100
   currentHp: 100
   moveSpeed: 2.26
