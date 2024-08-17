@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class AttackTrigger : MonoBehaviour
 {    
-    PlayerFSM playerFSM;
+    public PlayerFSM playerFSM;
+    public Animator playerAnim;
     public BoxCollider boxCol;
 
     void Start()
     {
-        playerFSM = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerFSM>();
+        GameObject player;
+        player = GameObject.FindGameObjectWithTag("Player");
+        playerFSM = player.GetComponent<PlayerFSM>();
+        playerAnim = player.GetComponent<Animator>();
+
         boxCol = GameObject.Find("AttackTrigger").GetComponent<BoxCollider>();
         boxCol.enabled = false;
     }
@@ -32,6 +37,8 @@ public class AttackTrigger : MonoBehaviour
             {
                 playerFSM.pyState = PlayerFSM.PlayerState.Injured;
                 print("Attack");
+                playerAnim.SetTrigger("Hit01");
+                
             }
             else if (playerFSM.pyState == PlayerFSM.PlayerState.Injured)
             {
