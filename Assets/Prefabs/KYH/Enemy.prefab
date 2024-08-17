@@ -683,10 +683,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 9668f53e157b2bc488af7aa10854e73f, type: 3}
   - {fileID: 8300000, guid: be77f271cce424a43b88fb3ea305f785, type: 3}
   - {fileID: 8300000, guid: 1a5035a44b94b4d438e5fd266c0acf94, type: 3}
-  walkSoundInterval: 1
-  runSoundInterval: 0.5
-  breathSoundInterval: 5
-  roarSoundInterval: 10
+  walkSoundInterval: 0.58
+  runSoundInterval: 0.23
+  breathSoundInterval: 2.7
+  roarSoundInterval: 9.54
   walkAudioSource: {fileID: 5206481100223069314}
   runAudioSource: {fileID: 5150426688007756279}
   breathAudioSource: {fileID: 562481398106155200}

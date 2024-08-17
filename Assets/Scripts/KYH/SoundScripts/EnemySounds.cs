@@ -47,7 +47,7 @@ public class EnemySounds : MonoBehaviour
     {
         if (enemyController.currentState == EnemyController.EnemyState.NoEvidence ||
             enemyController.currentState == EnemyController.EnemyState.FindTrace ||
-            enemyController.currentState == EnemyController.EnemyState.FindAura)
+            enemyController.currentState == EnemyController.EnemyState.FindPlayer)
         {
             HandleWalkingSounds();
             HandleBreathSounds();
@@ -55,9 +55,16 @@ public class EnemySounds : MonoBehaviour
         else if (enemyController.currentState == EnemyController.EnemyState.Rush)
         {
             HandleRunningSounds();
+            HandleBreathSounds();
+
+        }
+        else if (enemyController.currentState == EnemyController.EnemyState.GetPlayer)
+        {
+        HandleBreathSounds();
+        HandleWalkingSounds();
+
         }
 
-        HandleRoarSounds();
     }
 
     void HandleWalkingSounds()
