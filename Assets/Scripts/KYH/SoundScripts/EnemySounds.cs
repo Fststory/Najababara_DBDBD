@@ -15,7 +15,13 @@ public class EnemySounds : MonoBehaviour
     public float roarSoundInterval = 10.0f; // 울음소리 간격
 
     private EnemyController enemyController;
-    private AudioSource audioSource;  // 단일 AudioSource
+
+    // 각각의 사운드를 위한 AudioSource (인스펙터에서 할당)
+    public AudioSource walkAudioSource;
+    public AudioSource runAudioSource;
+    public AudioSource breathAudioSource;
+    public AudioSource roarAudioSource;
+
     private float nextWalkSoundTime;
     private float nextRunSoundTime;
     private float nextBreathSoundTime;
@@ -24,7 +30,13 @@ public class EnemySounds : MonoBehaviour
     void Start()
     {
         enemyController = GetComponent<EnemyController>();
-        audioSource = GetComponent<AudioSource>(); // 단일 AudioSource 컴포넌트 가져오기
+
+        // 인스펙터에서 할당된 AudioSource를 사용
+        if (!walkAudioSource || !runAudioSource || !breathAudioSource || !roarAudioSource)
+        {
+            Debug.LogError("오디오 소스가 할당되지 않았습니다! 인스펙터에서 오디오 소스를 할당해주세요.");
+        }
+
         nextWalkSoundTime = Time.time;
         nextRunSoundTime = Time.time;
         nextBreathSoundTime = Time.time;
@@ -45,7 +57,6 @@ public class EnemySounds : MonoBehaviour
             HandleRunningSounds();
         }
 
-        // 공격 사정거리에 들어온 경우 괴물 울음소리 재생
         HandleRoarSounds();
     }
 
@@ -53,9 +64,9 @@ public class EnemySounds : MonoBehaviour
     {
         if (Time.time > nextWalkSoundTime && enemyController.NMA.velocity.magnitude > 0.1f)
         {
-            if (!audioSource.isPlaying || audioSource.clip == GetRandomClip(walkSounds))
+            if (!walkAudioSource.isPlaying)
             {
-                PlayRandomSound(walkSounds);
+                PlayRandomSound(walkSounds, walkAudioSource);
             }
             nextWalkSoundTime = Time.time + walkSoundInterval;
         }
@@ -67,7 +78,7 @@ public class EnemySounds : MonoBehaviour
         {
             if (Time.time > nextRunSoundTime)
             {
-                PlayRandomSound(runSounds);
+                PlayRandomSound(runSounds, runAudioSource);
                 nextRunSoundTime = Time.time + runSoundInterval;
             }
         }
@@ -75,9 +86,9 @@ public class EnemySounds : MonoBehaviour
 
     void HandleBreathSounds()
     {
-        if (Time.time > nextBreathSoundTime && !audioSource.isPlaying)
+        if (Time.time > nextBreathSoundTime && !breathAudioSource.isPlaying)
         {
-            PlayRandomSound(breathSounds);
+            PlayRandomSound(breathSounds, breathAudioSource);
             nextBreathSoundTime = Time.time + breathSoundInterval;
         }
     }
@@ -90,28 +101,35 @@ public class EnemySounds : MonoBehaviour
 
             if (distance <= enemyController.attackRange)
             {
-                if (Time.time > nextRoarSoundTime && !audioSource.isPlaying)
+                if (Time.time > nextRoarSoundTime && !roarAudioSource.isPlaying)
                 {
-                    PlayRandomSound(roarSounds);
+                    PlayRandomSound(roarSounds, roarAudioSource);
                     nextRoarSoundTime = Time.time + roarSoundInterval;
                 }
             }
         }
     }
 
-    void PlayRandomSound(AudioClip[] audioClips)
+    void PlayRandomSound(AudioClip[] audioClips, AudioSource audioSource)
     {
         if (audioClips.Length == 0) return;
 
         AudioClip selectedClip = GetRandomClip(audioClips);
-        audioSource.clip = selectedClip;
-        audioSource.Play();
+        if (selectedClip == null)
+        {
+            Debug.LogWarning("Selected clip is null, skipping playback.");
+            return;
+        }
+
+        Debug.Log($"Playing clip: {selectedClip.name} on {audioSource.name}");
+        audioSource.PlayOneShot(selectedClip);  // PlayOneShot을 사용하여 클립 재생
     }
 
     AudioClip GetRandomClip(AudioClip[] audioClips)
     {
         if (audioClips.Length == 0) return null;
         int index = Random.Range(0, audioClips.Length);
+        Debug.Log($"Selected clip index: {index}");
         return audioClips[index];
     }
 }
