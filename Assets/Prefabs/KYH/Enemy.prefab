@@ -575,11 +575,13 @@ MonoBehaviour:
   playerFSM: {fileID: 0}
   attackRange: 2
   currentTime: 0
+  rushingTime: 0
   degree: 103
   maxDistance: 50
   generators: []
   rushToken: 5
   knockBackPow: 0.2
+  pallet: []
   currentState: 0
 --- !u!114 &5560602223811207320
 MonoBehaviour:
@@ -599,6 +601,7 @@ MonoBehaviour:
   hookPoint: {fileID: 0}
   playerFSM: {fileID: 0}
   playerController: {fileID: 0}
+  cc: {fileID: 0}
   enemyController: {fileID: 7559840568368335959}
   animClip: {fileID: 0}
 --- !u!195 &6917742467541304907
@@ -630,7 +633,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5665900733960635933}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 610d328874b6a614d8e46cac01dcc46a, type: 3}
@@ -644,7 +647,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 0.93165207
-  MaxDistance: 20
+  MaxDistance: 32
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -1149,7 +1152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a9c59587059abb49bf4536c83b36b95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boxCol: {fileID: 0}
+  boxCol: {fileID: 541538852361771228}
 --- !u!4 &8656060180265677743 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5a2ba259b3ae36948aef0d6502e1f880,

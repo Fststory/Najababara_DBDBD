@@ -26,6 +26,7 @@ public class HangPlayerHookInteraction : MonoBehaviour
         playerFSM = playerObject.GetComponent<PlayerFSM>(); // 플레이어 상태 캐싱
         playerController = playerObject.GetComponent<PlayerController>(); // 플레이어 컨트롤러 캐싱
         animClip = Resources.Load<AnimationClip>("Hook");
+        cc = playerObject.GetComponent<CharacterController>();
     }
     
     public void HangPlayerOnMe()    // 플레이어를 업는 기능
