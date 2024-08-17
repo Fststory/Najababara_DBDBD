@@ -28,6 +28,7 @@ public class EnemyController : MonoBehaviour
     public bool hooking = false;
 
     public PlayerFSM playerFSM;         // 0 - 건강, 1 - 부상, 2 - 빈사, 3 - 특수 행동(업힘, 수리, 구조, 창문 넘기 등), 4 - 걸림
+    public Animator playerAnim;
 
     public float attackRange = 2.0f;    // 공격 사정 거리
     float attackDelay = 2.0f;       // 공격 쿨타임
@@ -74,6 +75,7 @@ public class EnemyController : MonoBehaviour
         currentState = EnemyState.NoEvidence;   // 초기 상태는 "배회" 상태
         hang = GetComponent<HangPlayerHookInteraction>();
         playerFSM = player.GetComponent<PlayerFSM>();
+        playerAnim = player.GetComponent<Animator>();
         NMA = GetComponent<NavMeshAgent>();
         generators = GameObject.FindGameObjectsWithTag("Generator");
         rushCollision = GetComponentInChildren<RushCollision>();
@@ -248,6 +250,8 @@ public class EnemyController : MonoBehaviour
                 hang.HangPlayerOnMe();
                 print("Player를 업었다!");
                 ChangeState(EnemyState.GetPlayer);      // 업은 상태로 전환
+                playerAnim.SetTrigger("carried");
+
             }
             else if (!ISaw("Player", degree, maxDistance))      // 시야에서 플레이어를 놓치면
             {

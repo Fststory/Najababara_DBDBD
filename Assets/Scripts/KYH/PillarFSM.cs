@@ -17,6 +17,7 @@ public class PillarFSM : MonoBehaviour
     public GameObject player;   // 플레이어 오브젝트
     PlayerController playerController;   // 플레이어 컨트롤러
     PlayerFSM playerFSM;   // 플레이어 상태
+    Animator playerAnim;
     public pillarState currentState;   // 갈고리 현재 상태
 
     public float currentTime = 0;  // 현재 시간 (여러개의 타이머에 쓰임 흡수, 수리 등)
@@ -30,6 +31,7 @@ public class PillarFSM : MonoBehaviour
         currentState = pillarState.NoSacrifice;
         playerController = player.GetComponent<PlayerController>();
         playerFSM = player.GetComponent<PlayerFSM>();
+        playerAnim = player.GetComponent<Animator>();
     }
 
     void Update()
@@ -88,6 +90,7 @@ public class PillarFSM : MonoBehaviour
                 playerFSM.pyState = PlayerFSM.PlayerState.Injured;  // 플레이어를 부상 상태로 변경
                 ChangeState(pillarState.NoSacrifice);   // 갈고리를 제물 없음 상태로 전환
                 print("탈출 성공!");
+                playerAnim.SetTrigger("escape");
             }
             else
             {

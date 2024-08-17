@@ -20,6 +20,8 @@ public class HangPlayerHookInteraction : MonoBehaviour
     public EnemyController enemyController;
     public AnimationClip animClip;
 
+    public Animator playerAnim;
+
     void Start()
     {
         playerObject = GameObject.FindGameObjectWithTag("Player"); // "플레이어" 오브젝트 캐싱
@@ -27,6 +29,7 @@ public class HangPlayerHookInteraction : MonoBehaviour
         playerController = playerObject.GetComponent<PlayerController>(); // 플레이어 컨트롤러 캐싱
         animClip = Resources.Load<AnimationClip>("Hook");
         cc = playerObject.GetComponent<CharacterController>();
+        playerAnim = playerObject.GetComponent<Animator>();
     }
     
     public void HangPlayerOnMe()    // 플레이어를 업는 기능
@@ -34,6 +37,7 @@ public class HangPlayerHookInteraction : MonoBehaviour
         playerFSM.pyState = PlayerFSM.PlayerState.InAction;
         playerObject.transform.SetParent(hangPoint);
         playerObject.transform.localPosition = new Vector3(0, 0, 0);
+        playerObject.transform.localEulerAngles = new Vector3(0, 0, 0);
         //playerController.enabled = false;   // 플레이어 컨트롤러 비활성화!
         cc.enabled = false;   // 캐릭터 컨트롤러 끄니까 왔다갔다 하는 거 없긴 함
     }
@@ -43,7 +47,10 @@ public class HangPlayerHookInteraction : MonoBehaviour
         playerFSM.pyState = PlayerFSM.PlayerState.Hooked;
         playerObject.transform.SetParent(hookPoint);
         playerObject.transform.localPosition = new Vector3(0, 0, 0);
+        playerObject.transform.localEulerAngles = new Vector3(0, 0, 0);
         Invoke("AfterHook", animClip.length);
+
+        playerAnim.SetTrigger("hang");
     }
     
     void AfterHook()
