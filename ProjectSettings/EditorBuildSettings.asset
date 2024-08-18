@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Azarov'sRestingPlace.unity
     guid: 158bd28fa310da047934c19a1145c121
+  - enabled: 1
+    path: Assets/Scenes/WinScene.unity
+    guid: 4ffa7b96860a1b04b84de25b51b80285
   m_configObjects: {}

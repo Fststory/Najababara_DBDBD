@@ -8,6 +8,7 @@ public class EnemySounds : MonoBehaviour
     public AudioClip[] runSounds;    // 달리기 소리 클립 배열
     public AudioClip[] breathSounds; // 숨소리 클립 배열
     public AudioClip[] roarSounds;   // 괴물 울음소리 클립 배열
+    public AudioClip[] stunSounds;  // 스턴 소리 클릷 배열
 
     public float walkSoundInterval = 1.0f; // 걷기 소리 간격
     public float runSoundInterval = 0.5f;  // 달리기 소리 간격
@@ -21,6 +22,7 @@ public class EnemySounds : MonoBehaviour
     public AudioSource runAudioSource;
     public AudioSource breathAudioSource;
     public AudioSource roarAudioSource;
+    public AudioSource stunAudioSource;
 
     private float nextWalkSoundTime;
     private float nextRunSoundTime;
@@ -61,6 +63,11 @@ public class EnemySounds : MonoBehaviour
         {
             HandleBreathSounds();
             HandleWalkingSounds();
+        }
+        if (enemyController.currentState == EnemyController.EnemyState.OnGroggy)
+        {
+            if(!stunAudioSource.isPlaying)
+            PlayRandomSound(stunSounds, stunAudioSource);
         }
     }
 
