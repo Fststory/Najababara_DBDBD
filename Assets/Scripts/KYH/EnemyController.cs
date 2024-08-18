@@ -253,7 +253,7 @@ public class EnemyController : MonoBehaviour
                 print("Player를 업었다!");
                 ChangeState(EnemyState.GetPlayer);      // 업은 상태로 전환
                 playerAnim.SetTrigger("carried");
-
+                playerAnim.SetBool("Dying", false);
             }
             else if (!ISaw("Player", degree, maxDistance))      // 시야에서 플레이어를 놓치면
             {
