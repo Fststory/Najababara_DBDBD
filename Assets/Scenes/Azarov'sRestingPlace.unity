@@ -4896,6 +4896,108 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &916338804 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5665900733960635933, guid: 8e83653efa46cde4588176c5421a7de1,
+    type: 3}
+  m_PrefabInstance: {fileID: 1651480288}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &916338815
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 916338804}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &924657103
 GameObject:
   m_ObjectHideFlags: 0
@@ -8263,7 +8365,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6185557204914633, guid: 8e83653efa46cde4588176c5421a7de1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.61
+      value: 5.31
       objectReference: {fileID: 0}
     - target: {fileID: 6185557204914633, guid: 8e83653efa46cde4588176c5421a7de1, type: 3}
       propertyPath: m_LocalPosition.y
@@ -8271,7 +8373,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6185557204914633, guid: 8e83653efa46cde4588176c5421a7de1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -14.51
+      value: -34.69
       objectReference: {fileID: 0}
     - target: {fileID: 6185557204914633, guid: 8e83653efa46cde4588176c5421a7de1, type: 3}
       propertyPath: m_LocalRotation.w
@@ -8374,7 +8476,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5665900733960635933, guid: 8e83653efa46cde4588176c5421a7de1,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 916338815}
   m_SourcePrefab: {fileID: 100100000, guid: 8e83653efa46cde4588176c5421a7de1, type: 3}
 --- !u!1 &1661029611
 GameObject:
@@ -9669,6 +9775,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Blight
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5a2ba259b3ae36948aef0d6502e1f880,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16245,7 +16356,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 595f0d98d6ab38640abbac683d4379ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pyState: 2
+  pyState: 0
   playerMaxHp: 100
   currentHp: 100
   moveSpeed: 2.26

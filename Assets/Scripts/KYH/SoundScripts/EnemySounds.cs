@@ -8,11 +8,14 @@ public class EnemySounds : MonoBehaviour
     public AudioClip[] runSounds;    // 달리기 소리 클립 배열
     public AudioClip[] breathSounds; // 숨소리 클립 배열
     public AudioClip[] roarSounds;   // 괴물 울음소리 클립 배열
+    public AudioClip[] rushSounds;  // 질주 소리 클립 배열              
+    public AudioClip[] lethalRushSounds;    // 치명적인 질주 소리 클립 배열
 
     public float walkSoundInterval = 1.0f; // 걷기 소리 간격
     public float runSoundInterval = 0.5f;  // 달리기 소리 간격
     public float breathSoundInterval = 5.0f; // 숨소리 간격
     public float roarSoundInterval = 10.0f; // 울음소리 간격
+    // 질주 & 치질은 사운드 플레이, 스탑을 시간이 아니라 조건으로 조절해줄 거라 시간 기준 간격을 두지 않음
 
     private EnemyController enemyController;
 
@@ -21,6 +24,8 @@ public class EnemySounds : MonoBehaviour
     public AudioSource runAudioSource;
     public AudioSource breathAudioSource;
     public AudioSource roarAudioSource;
+    public AudioSource rushAudioSource;
+    public AudioSource lethalRushAudioSource;
 
     private float nextWalkSoundTime;
     private float nextRunSoundTime;
@@ -32,7 +37,7 @@ public class EnemySounds : MonoBehaviour
         enemyController = GetComponent<EnemyController>();
 
         // 인스펙터에서 할당된 AudioSource를 사용
-        if (!walkAudioSource || !runAudioSource || !breathAudioSource || !roarAudioSource)
+        if (!walkAudioSource || !runAudioSource || !breathAudioSource || !roarAudioSource || !rushAudioSource || !lethalRushAudioSource)
         {
             Debug.LogError("오디오 소스가 할당되지 않았습니다! 인스펙터에서 오디오 소스를 할당해주세요.");
         }
@@ -56,15 +61,17 @@ public class EnemySounds : MonoBehaviour
         {
             HandleRunningSounds();
             HandleBreathSounds();
+            if (!rushAudioSource.isPlaying)
+            {
+                PlayRandomSound(rushSounds, rushAudioSource);
+            }
 
         }
         else if (enemyController.currentState == EnemyController.EnemyState.GetPlayer)
         {
-        HandleBreathSounds();
-        HandleWalkingSounds();
-
+            HandleBreathSounds();
+            HandleWalkingSounds();
         }
-
     }
 
     void HandleWalkingSounds()

@@ -201,6 +201,19 @@ public class EnemyController : MonoBehaviour
     // [EnemyState.FindTrace] 흔적을 쫓는 상태
     void ChaseTrace()
     {
+        if(playerFSM.pyState != PlayerFSM.PlayerState.Hooked)
+        {
+            if (ISaw("Player", degree, maxDistance))   // 흔적을 쫓는 도중 플레이어를 발견하면
+            {
+                ChangeState(EnemyState.FindPlayer);     // 플레이어를 추격한다.
+                return;
+            }
+            else if (targetTransform == null)           // 플레이어를 못 찾았는데 흔적마저 놓치면
+            {
+                ChangeState(EnemyState.NoEvidence);     // 남은 증거가 없기에 발전기부터 다시 돌아다닌다.
+                return;
+            }
+        }
         if (targetTransform != null)    // 발견한 흔적이 사라지지 않았다면
         {
             NMA.SetDestination(targetTransform.position);   // 그쪽으로 간다.
@@ -210,17 +223,6 @@ public class EnemyController : MonoBehaviour
                 {
                     return;
                 }
-            }
-        }
-        if(playerFSM.pyState != PlayerFSM.PlayerState.Hooked)
-        {
-            if (ISaw("Player", degree, maxDistance))   // 흔적을 쫓는 도중 플레이어를 발견하면
-            {
-                ChangeState(EnemyState.FindPlayer);     // 플레이어를 추격한다.
-            }
-            else if (targetTransform == null)           // 플레이어를 못 찾았는데 흔적마저 놓치면
-            {
-                ChangeState(EnemyState.NoEvidence);     // 남은 증거가 없기에 발전기부터 다시 돌아다닌다.
             }
         }
     }
