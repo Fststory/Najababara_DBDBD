@@ -7895,12 +7895,12 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 543450653629703589}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1203187275306313195, guid: f6194f2773afbc44d9ae6020b862dbe4,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.09
+      value: -4.31
       objectReference: {fileID: 0}
     - target: {fileID: 1203187275306313195, guid: f6194f2773afbc44d9ae6020b862dbe4,
         type: 3}
@@ -7910,7 +7910,7 @@ PrefabInstance:
     - target: {fileID: 1203187275306313195, guid: f6194f2773afbc44d9ae6020b862dbe4,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.33
+      value: 4.87
       objectReference: {fileID: 0}
     - target: {fileID: 1203187275306313195, guid: f6194f2773afbc44d9ae6020b862dbe4,
         type: 3}
@@ -8027,10 +8027,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Camera
       objectReference: {fileID: 0}
+    - target: {fileID: 4207331345592269696, guid: f6194f2773afbc44d9ae6020b862dbe4,
+        type: 3}
+      propertyPath: m_TagString
+      value: MainCamera
+      objectReference: {fileID: 0}
     - target: {fileID: 8963068023311994106, guid: f6194f2773afbc44d9ae6020b862dbe4,
         type: 3}
       propertyPath: m_TagString
-      value: Untagged
+      value: MainCamera
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4466779871470610007, guid: f6194f2773afbc44d9ae6020b862dbe4, type: 3}
@@ -16088,7 +16093,7 @@ GameObject:
   - component: {fileID: 1672310702}
   m_Layer: 0
   m_Name: CineCam
-  m_TagString: MainCamera
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -20868,7 +20873,6 @@ Transform:
   - {fileID: 2834695132336383068}
   - {fileID: 3031406434140986603}
   - {fileID: 8879528566784963899}
-  - {fileID: 1203187274464122727}
   - {fileID: 4370627159837045219}
   - {fileID: 3205630278052985723}
   - {fileID: 1550000111}
@@ -21546,12 +21550,6 @@ Transform:
   - {fileID: 6888368215051889362}
   m_Father: {fileID: 4518058975597704945}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1203187274464122727 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1203187275306313195, guid: f6194f2773afbc44d9ae6020b862dbe4,
-    type: 3}
-  m_PrefabInstance: {fileID: 844329612}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1205189718765180773
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30226,6 +30224,7 @@ SceneRoots:
   - {fileID: 434851738}
   - {fileID: 3175692426437960935}
   - {fileID: 1779917819}
+  - {fileID: 844329612}
   - {fileID: 543450653629703589}
   - {fileID: 4083846145593351198}
   - {fileID: 1197786691}
