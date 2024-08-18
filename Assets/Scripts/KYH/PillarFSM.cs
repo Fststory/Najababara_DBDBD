@@ -26,12 +26,15 @@ public class PillarFSM : MonoBehaviour
     public float eatTime;   // 흡수 시간
     public float repairTime;    // 수리 시간
 
+    public GameObject entity;
+
     void Start()
     {
         currentState = pillarState.NoSacrifice;
         playerController = player.GetComponent<PlayerController>();
         playerFSM = player.GetComponent<PlayerFSM>();
         playerAnim = player.GetComponent<Animator>();
+        entity.SetActive(false);
     }
 
     void Update()
@@ -107,6 +110,8 @@ public class PillarFSM : MonoBehaviour
 
     private void TryToAbsorb()      // 잡아먹을 시도를 하는 기능   [SacrificeLV2]
     {
+        entity.SetActive(true);
+
         // 플레이어 체력을 조금씩 깎음
         currentTime += Time.deltaTime;
         if (currentTime > reduceHPTime)
