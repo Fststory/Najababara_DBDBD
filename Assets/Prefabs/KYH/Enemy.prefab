@@ -224,9 +224,7 @@ MonoBehaviour:
   playerFSM: {fileID: 0}
   playerAnim: {fileID: 0}
   boxCol: {fileID: 0}
-  bluntSounds: []
   attackSounds: []
-  bluntAudioSource: {fileID: 0}
   attackAudioSource: {fileID: 0}
 --- !u!1 &5293204082949000776
 GameObject:
@@ -1484,10 +1482,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 4988822942283586519}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5a2ba259b3ae36948aef0d6502e1f880,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1045018307145202090}
   m_SourcePrefab: {fileID: 100100000, guid: 5a2ba259b3ae36948aef0d6502e1f880, type: 3}
 --- !u!95 &3368881687778716117 stripped
 Animator:
@@ -1555,23 +1549,13 @@ MonoBehaviour:
   playerFSM: {fileID: 0}
   playerAnim: {fileID: 0}
   boxCol: {fileID: 541538852361771228}
-  bluntSounds:
-  - {fileID: 8300000, guid: f6a6654a0e841e84cb7fab03f405cce4, type: 3}
-  - {fileID: 8300000, guid: 123c9ed70965851428173e2a3cee5c62, type: 3}
-  - {fileID: 8300000, guid: 6a6daf71bc18b61458ac065b5906809f, type: 3}
-  - {fileID: 8300000, guid: 7ffbbe8c7c5117840b2baaed404f5516, type: 3}
-  - {fileID: 8300000, guid: 567fb9c8ba0a85d43ae3f26171966f95, type: 3}
-  - {fileID: 8300000, guid: 4ce7b1aed95c84e48bbfb52ba84ba2df, type: 3}
-  - {fileID: 8300000, guid: 465260f2ae368fb419243ead752d9846, type: 3}
-  - {fileID: 8300000, guid: 62de85e93aed3c34babf2ea40cd0bd8d, type: 3}
   attackSounds:
   - {fileID: 8300000, guid: d4cb3b431ad001140bd1ba09e0a05cb3, type: 3}
   - {fileID: 8300000, guid: 5cc979f443fcab745af54978b20d8ad3, type: 3}
   - {fileID: 8300000, guid: 8bc59d87a5d28c042838f5ed9b45c634, type: 3}
   - {fileID: 8300000, guid: a62b09892db6e45498b29d75528272c3, type: 3}
   - {fileID: 8300000, guid: 6a2346637060a7b4e929d6bc3f813553, type: 3}
-  bluntAudioSource: {fileID: 4988822942283586519}
-  attackAudioSource: {fileID: 1045018307145202090}
+  attackAudioSource: {fileID: 4988822942283586519}
 --- !u!82 &4817143848893517621
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1861,102 +1845,6 @@ AudioSource:
     m_PostInfinity: 2
     m_RotationOrder: 4
 --- !u!82 &4988822942283586519
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8316829595438672149}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
---- !u!82 &1045018307145202090
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
