@@ -266,7 +266,7 @@ public class PlayerController : MonoBehaviour
                 // ¶Û ¶§ ¼û¼Ò¸® (10~19¹ø Å¬¸³ Áß¿¡¼­ ·£´ý ¼±ÅÃ)
                 index = Random.Range(10, 20);
             }
-            if (PlayerFSM.pyState == PlayerFSM.PlayerState.Injured && PlayerFSM.pyState == PlayerFSM.PlayerState.Dying)
+            if (PlayerFSM.pyState == PlayerFSM.PlayerState.Injured || PlayerFSM.pyState == PlayerFSM.PlayerState.Dying)
             {
                 // ¶Û ¶§ ¼û¼Ò¸® (21~29¹ø Å¬¸³ Áß¿¡¼­ ·£´ý ¼±ÅÃ)
                 index = Random.Range(21, 30);
