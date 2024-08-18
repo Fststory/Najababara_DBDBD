@@ -11,8 +11,6 @@ public class RushSound : MonoBehaviour
     public AudioClip[] crashedSounds;
 
 
-    // 질주 & 치질은 사운드 플레이, 스탑을 시간이 아니라 조건으로 조절해줄 거라 시간 기준 간격을 두지 않음
-
     private EnemyController enemyController;
 
     // 각각의 사운드를 위한 AudioSource (인스펙터에서 할당)    
