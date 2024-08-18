@@ -15,7 +15,7 @@ public class PlayerHPsystem : MonoBehaviour
     void Start()
     {
         playerfsm = GetComponent<PlayerFSM>();
-        healGuide.SetActive(false);
+        //healGuide.SetActive(false);
 
 
     }
@@ -23,22 +23,22 @@ public class PlayerHPsystem : MonoBehaviour
     
     void Update()
     {
-        if (playerfsm.pyState == PlayerFSM.PlayerState.Dying)
-        {
+        //if (playerfsm.pyState == PlayerFSM.PlayerState.Dying)
+        //{
         
-            healGuide.SetActive(true);
-            if(Input.GetMouseButton(0)) // 상태회복 창 따로 파줘야함 체력이랑 별개라
-            {
+        //    healGuide.SetActive(true);
+        //    if(Input.GetMouseButton(0)) // 상태회복 창 따로 파줘야함 체력이랑 별개라
+        //    {
                 
-                print("힐 시작함");
-                SelfHealHP(1.0f);
+        //        print("힐 시작함");
+        //        SelfHealHP(1.0f);
 
-            }
-            else
-            {
-                DyingHP(1.0f);
-            }
-        }
+        //    }
+        //    else
+        //    {
+        //        DyingHP(1.0f);
+        //    }
+        //}
 
 
     }
