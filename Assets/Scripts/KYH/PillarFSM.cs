@@ -27,6 +27,7 @@ public class PillarFSM : MonoBehaviour
     public float repairTime;    // 수리 시간
 
     public GameObject entity;
+    public GameObject smoke;
 
     void Start()
     {
@@ -35,6 +36,7 @@ public class PillarFSM : MonoBehaviour
         playerFSM = player.GetComponent<PlayerFSM>();
         playerAnim = player.GetComponent<Animator>();
         entity.SetActive(false);
+        smoke.SetActive(false);
     }
 
     void Update()
@@ -111,6 +113,7 @@ public class PillarFSM : MonoBehaviour
     private void TryToAbsorb()      // 잡아먹을 시도를 하는 기능   [SacrificeLV2]
     {
         entity.SetActive(true);
+        smoke.SetActive(true);
 
         // 플레이어 체력을 조금씩 깎음
         currentTime += Time.deltaTime;
