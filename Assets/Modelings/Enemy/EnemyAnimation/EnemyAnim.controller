@@ -219,8 +219,8 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.032256126
-  m_TransitionOffset: 0
+  m_TransitionDuration: 0.14990306
+  m_TransitionOffset: 0.071332216
   m_ExitTime: 0.9848055
   m_HasExitTime: 0
   m_HasFixedDuration: 1
@@ -493,7 +493,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Vault
-  m_Speed: 0.8522222
+  m_Speed: 0.75
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -4395967170406637170}
@@ -524,7 +524,7 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 6130449371694232942}
-    m_Position: {x: 30, y: -30, z: 0}
+    m_Position: {x: -10, y: -30, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6268347675290657492}
     m_Position: {x: 270, y: 50, z: 0}

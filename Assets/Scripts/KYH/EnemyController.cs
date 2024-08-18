@@ -164,10 +164,12 @@ public class EnemyController : MonoBehaviour
             if (ISaw("Player", degree, maxDistance) && playerFSM.pyState != PlayerFSM.PlayerState.Hooked)   // 발전기로 가던 도중 플레이어 발견 시
             {
                 ChangeState(EnemyState.FindPlayer); // 플레이어를 쫓는다.
+                return;
             }
             else if (ISaw("Trace", degree, maxDistance))    // 발전기로 가던 도중 플레이어는 못 봤지만 흔적을 봤다면
             {
                 ChangeState(EnemyState.FindTrace);  // 흔적을 쫓는다.
+                return;
             }
             //else if (ISaw("Aura", 180.0f, 1000))
             //{
@@ -186,15 +188,18 @@ public class EnemyController : MonoBehaviour
         if (ISaw("Player", degree, maxDistance) && playerFSM.pyState != PlayerFSM.PlayerState.Hooked)  // 플레이어를 발견하면 (타겟 = 플레이어 설정)
         {
             ChangeState(EnemyState.FindPlayer);     // 플레이어 추격 상태로 전환
+            return;
         }
         else if (ISaw("Trace", degree, maxDistance))  // 플레이어는 못 봤는데 흔적을 발견하면 (타겟 = 흔적 설정)
         {
             ChangeState(EnemyState.FindTrace);      // 흔적 추격 상태로 전환
+            return;
         }
         else if (distance < 0.1f)       // 아우라 발생 발전기 근처에 도달했다면
         {
             targetTransform = null;                 // 타겟에서 제외한 후
             ChangeState(EnemyState.NoEvidence);     // 다시 증거 없는 상태로 돌아간다.
+            return;
         }
     }
 
@@ -234,13 +239,6 @@ public class EnemyController : MonoBehaviour
         print("플레이어에게 간다!");
         float distance = Vector3.Distance(transform.position, targetTransform.position);
 
-        // 거리가 먼데(질주 거리 이상) 질주 조건을 만족한다면...(질주 토큰이 5개이고, 전방 27.6m 이내 충돌할 곳이 있다)
-        if (rushToken == 5 && ISaw("Player", degree, 27.6f) && CanIRush() && distance >= 9.6f)
-        {
-            ChangeState(EnemyState.Rush);   // 질주 상태로 전환
-            return;
-        }
-
         if (distance < attackRange)
         {
             if ((int)playerFSM.pyState <= 1)   // 범위 내에서 아직 플레이어가 건강 or 부상 상태면 공격을 시도
@@ -251,14 +249,24 @@ public class EnemyController : MonoBehaviour
             {
                 hang.HangPlayerOnMe();
                 print("Player를 업었다!");
+                targetTransform = hang.hookPoint;
                 ChangeState(EnemyState.GetPlayer);      // 업은 상태로 전환
                 playerAnim.SetTrigger("carried");
                 playerAnim.SetBool("Dying", false);
+                return;
             }
             else if (!ISaw("Player", degree, maxDistance))      // 시야에서 플레이어를 놓치면
             {
                 ChangeState(EnemyState.NoEvidence);     // 다시 증거 없는 상태로 돌아간다.
+                return;
             }
+        }
+
+        // 거리가 먼데(질주 거리 이상) 질주 조건을 만족한다면...(질주 토큰이 5개이고, 전방 27.6m 이내 충돌할 곳이 있다)
+        if (rushToken == 5 && ISaw("Player", degree, 24.0f) && CanIRush() && distance >= 8.0f)
+        {
+            ChangeState(EnemyState.Rush);   // 질주 상태로 전환
+            return;
         }
     }
 
@@ -286,8 +294,9 @@ public class EnemyController : MonoBehaviour
         //targetTransform = hang.pillarTransform;
         targetTransform = hang.hookPoint;
         NMA.SetDestination(targetTransform.position);
+        float distance = Vector3.Distance(transform.position, hang.hookPoint.position);
 
-        if (NMA.remainingDistance < 0.1f && !hooking)
+        if (distance < 0.1f && !hooking)
         {
             hooking = true;
             enemyAnim.SetTrigger("Hook");
@@ -359,12 +368,12 @@ public class EnemyController : MonoBehaviour
         enemyAnim.SetBool("Rush", true);
         //print("질주 남은 거리: " + NMA.remainingDistance);
 
-        NMA.speed = 9.2f;   // 속도는 9.2 (m/s) 3초간 전방으로 돌진
+        NMA.speed = 8f;   // 속도는 8 (m/s) 3초간 전방으로 돌진
 
         if (rushCollision.crashed)
         {
             rushingTime = 0;
-            NMA.speed = 4.6f;   // 충돌 시 이동 속도 정상화
+            NMA.speed = 4.05f;   // 충돌 시 이동 속도 정상화
             currentTime += Time.deltaTime;
             if (currentTime <= 0.2f)
             {
@@ -389,6 +398,7 @@ public class EnemyController : MonoBehaviour
                     print("이제 못 달린다");
                     ChangeState(EnemyState.OnGroggy);
                     currentTime = 0;
+                    return;
                 }
             }
         }
@@ -397,11 +407,12 @@ public class EnemyController : MonoBehaviour
             rushingTime += Time.deltaTime; // => 충돌 판정 전에 얘(3초 질주 타이머)가 이미 시간을 누적하고 있어서
             if (rushingTime > 3.0f)
             {
-                NMA.speed = 4.6f;
+                NMA.speed = 4.05f;
                 NMA.isStopped = true;
                 NMA.isStopped = false;
                 enemyAnim.SetBool("Rush", false);
                 ChangeState(EnemyState.OnGroggy);
+                return;
             }
         }
         //testCube.position = NMA.destination + new Vector3(0, NMA.baseOffset, 0);

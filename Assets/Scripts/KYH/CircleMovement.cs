@@ -25,6 +25,6 @@ public class CircleMovement : MonoBehaviour
 
         // 트랜스폼의 포지션 업데이트
         transform.localEulerAngles += new Vector3(x, 0, z);
-        transform.localPosition += new Vector3(0, -0.0001f, 0);
+        transform.localPosition += new Vector3(0, -0.0003f, 0);
     }
 }

@@ -20,7 +20,6 @@ public class RushSound : MonoBehaviour
     
     void Start()
     {
-
         enemyController = GetComponent<EnemyController>();
 
         // 인스펙터에서 할당된 AudioSource를 사용
@@ -68,7 +67,10 @@ public class RushSound : MonoBehaviour
         }
 
         Debug.Log($"Playing clip: {selectedClip.name} on {rushAudioSource.name}");
-        rushAudioSource.PlayOneShot(selectedClip);  // PlayOneShot을 사용하여 클립 재생
+        if (!rushAudioSource.isPlaying)
+        {
+            rushAudioSource.PlayOneShot(selectedClip);  // PlayOneShot을 사용하여 클립 재생
+        }
     }
 
     void PlayRandomLethalRushSound()
@@ -83,7 +85,10 @@ public class RushSound : MonoBehaviour
         }
 
         Debug.Log($"Playing clip: {selectedClip.name} on {lethalRushAudioSource.name}");
-        lethalRushAudioSource.PlayOneShot(selectedClip);  // PlayOneShot을 사용하여 클립 재생
+        if (!lethalRushAudioSource.isPlaying)
+        {
+            lethalRushAudioSource.PlayOneShot(selectedClip);  // PlayOneShot을 사용하여 클립 재생
+        }
     }
 
     AudioClip GetRandomClip(AudioClip[] audioClips)

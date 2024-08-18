@@ -40,8 +40,6 @@ public class HangPlayerHookInteraction : MonoBehaviour
         animClip = Resources.Load<AnimationClip>("Hook");
         cc = playerObject.GetComponent<CharacterController>();
         playerAnim = playerObject.GetComponent<Animator>();
-
-
     }
     
     public void HangPlayerOnMe()    // 플레이어를 업는 기능
