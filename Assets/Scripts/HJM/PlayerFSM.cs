@@ -16,6 +16,7 @@ public class PlayerFSM : MonoBehaviour
         Dying = 2,
         InAction = 3,
         Hooked = 4,
+        Dead = 5
     }
 
     public PlayerState pyState;
@@ -27,11 +28,26 @@ public class PlayerFSM : MonoBehaviour
     PlayerController playerCtrl;
     public Slider playerHpSLD;
 
+    public GameObject img_Normal;
+    public GameObject img_Injured;
+    public GameObject img_Dying;
+    public GameObject img_Hooked;
+    public GameObject img_Hang;
+    public GameObject img_Dead;
+
 
     void Start()
     {
         playerCtrl = GetComponent<PlayerController>();
         currentHp = playerMaxHp;
+
+        img_Normal.SetActive(false);
+        img_Injured.SetActive(false);
+        img_Dying.SetActive(false);
+        img_Hooked.SetActive(false);
+        img_Hang.SetActive(false);
+        img_Dead.SetActive(false);
+
     }
 
     void Update()
@@ -56,6 +72,9 @@ public class PlayerFSM : MonoBehaviour
             case PlayerState.Hooked:
                 Hooked();
                 break;
+            case PlayerState.Dead:
+                Dead();
+                break;
         }
     }
 
@@ -63,12 +82,28 @@ public class PlayerFSM : MonoBehaviour
     {        
         moveSpeed = 2.26f;          // 08.15 수정!
         runSpeed = 4.0f;
+
+        img_Normal.SetActive(true);
+
+        img_Injured.SetActive(false);
+        img_Dying.SetActive(false);
+        img_Hooked.SetActive(false);
+        img_Hang.SetActive(false);
+        img_Dead.SetActive(false);
     }
 
     public void Injured()
     {
         moveSpeed = 2.26f;           // 08.15 수정!
         runSpeed = 4.0f;
+
+        img_Injured.SetActive(true);
+
+        img_Normal.SetActive(false);
+        img_Dying.SetActive(false);
+        img_Hooked.SetActive(false);
+        img_Hang.SetActive(false);
+        img_Dead.SetActive(false);
     }
 
     public void Dying()
@@ -76,6 +111,14 @@ public class PlayerFSM : MonoBehaviour
         moveSpeed = 0.5f;
         runSpeed = 0.7f;
 
+        
+        img_Dying.SetActive(true);
+
+        img_Normal.SetActive(false);
+        img_Injured.SetActive(false);
+        img_Hooked.SetActive(false);
+        //img_Hang.SetActive(false);
+        img_Dead.SetActive(false);
 
     }
 
@@ -87,6 +130,24 @@ public class PlayerFSM : MonoBehaviour
 
     public void Hooked()
     {
-    } 
+        img_Hooked.SetActive(true);
+
+        img_Normal.SetActive(false);
+        img_Injured.SetActive(false);
+        img_Dying.SetActive(false);
+        img_Hang.SetActive(false);
+        img_Dead.SetActive(false);
+    }
+
+    public void Dead()
+    {
+        img_Dead.SetActive(true);
+
+        img_Normal.SetActive(false);
+        img_Injured.SetActive(false);
+        img_Dying.SetActive(false);
+        img_Hang.SetActive(false);
+        img_Hooked.SetActive(false);
+    }
 
 }

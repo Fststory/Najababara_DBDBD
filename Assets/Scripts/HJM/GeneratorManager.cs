@@ -9,14 +9,17 @@ public class GeneratorManager : MonoBehaviour
     public static GeneratorManager generatorManager { get; private set; }
     public ExitSystem exitSystem;
     public GameObject exit;
-    public int numberOfRepairs = 2; // 수리해야할 Generator의 수
-    public Text geneCount;
-
     private GameObject[] generators;
 
+    public int numberOfRepairs = 2; // 수리해야할 Generator의 수
+    public int CompleteRepair;
+
+    public GameObject geneImage;
+    public GameObject exitImage;
+    public GameObject geneTXT;
+    public Text geneCount;
  
 
-    public int CompleteRepair;
     
     private void Awake()
     {
@@ -41,8 +44,9 @@ public class GeneratorManager : MonoBehaviour
 
         AddRepairCount(0);
         exitSystem = exit.GetComponent<ExitSystem>();
+        exitImage.SetActive(false);
 
-        
+
 
     }
 
@@ -54,15 +58,22 @@ public class GeneratorManager : MonoBehaviour
 
     private void Update()
     {
+        geneCount.text = (numberOfRepairs - CompleteRepair).ToString();
+
         //만일 numberOfRepairs(수리해야할 수) 보다 CompleteRepair(수리완료한 수) 가 크거나 같다면
         if (CompleteRepair >= numberOfRepairs)
         {
             // exitSystem의 OpenExit 함수를 실행한다.
             exitSystem.OpenExit();
+
+            geneTXT.SetActive(false);
+            geneImage.SetActive(false);
+            exitImage.SetActive(true);
+
         }
 
-        geneCount.text = (numberOfRepairs - CompleteRepair).ToString();
 
+        
 
 
     }

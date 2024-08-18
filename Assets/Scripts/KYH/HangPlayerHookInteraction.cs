@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HangPlayerHookInteraction : MonoBehaviour
 {
@@ -22,6 +23,15 @@ public class HangPlayerHookInteraction : MonoBehaviour
 
     public Animator playerAnim;
 
+    public GameObject img_Dying;
+    public GameObject img_Hang;
+
+    private void Awake()
+    {
+        img_Dying = GameObject.Find("img_Dying");
+        img_Hang = GameObject.Find("img_Hang");
+    }
+
     void Start()
     {
         playerObject = GameObject.FindGameObjectWithTag("Player"); // "플레이어" 오브젝트 캐싱
@@ -30,6 +40,8 @@ public class HangPlayerHookInteraction : MonoBehaviour
         animClip = Resources.Load<AnimationClip>("Hook");
         cc = playerObject.GetComponent<CharacterController>();
         playerAnim = playerObject.GetComponent<Animator>();
+
+
     }
     
     public void HangPlayerOnMe()    // 플레이어를 업는 기능
@@ -40,6 +52,10 @@ public class HangPlayerHookInteraction : MonoBehaviour
         playerObject.transform.localEulerAngles = new Vector3(0, 0, 0);
         //playerController.enabled = false;   // 플레이어 컨트롤러 비활성화!
         cc.enabled = false;   // 캐릭터 컨트롤러 끄니까 왔다갔다 하는 거 없긴 함
+
+        img_Dying.SetActive(false);
+        img_Hang.SetActive(true);
+        print("행 유아이 불러옴");
     }
 
     public void HangPlayerOnHook()  // 플레이어를 매다는 기능
@@ -51,6 +67,7 @@ public class HangPlayerHookInteraction : MonoBehaviour
         Invoke("AfterHook", animClip.length);
 
         playerAnim.SetTrigger("hang");
+
     }
     
     void AfterHook()
