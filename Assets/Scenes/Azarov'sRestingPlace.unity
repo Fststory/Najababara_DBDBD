@@ -5056,6 +5056,7 @@ GameObject:
   - component: {fileID: 913114047}
   - component: {fileID: 913114046}
   - component: {fileID: 913114045}
+  - component: {fileID: 913114048}
   m_Layer: 0
   m_Name: SoundManager
   m_TagString: Untagged
@@ -5197,6 +5198,31 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &913114048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913114044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a84075d398c56146bf41a090ed0bd52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screamClips:
+  - {fileID: 8300000, guid: f33f75800c227b845bf973494cfce7e0, type: 3}
+  - {fileID: 8300000, guid: 637a553087179224ba3f0dd6ce8f66f4, type: 3}
+  - {fileID: 8300000, guid: 69a3dcf0f44f37d42826e8b2fecbecf2, type: 3}
+  - {fileID: 8300000, guid: 4ca31966390cc714b8f2c278b5060caa, type: 3}
+  - {fileID: 8300000, guid: ff285ded6d80e1f4da7343a3594ed974, type: 3}
+  - {fileID: 8300000, guid: 8a68584764b20164ab64ea9a65940688, type: 3}
+  hitClips:
+  - {fileID: 8300000, guid: f6a6654a0e841e84cb7fab03f405cce4, type: 3}
+  - {fileID: 8300000, guid: 567fb9c8ba0a85d43ae3f26171966f95, type: 3}
+  - {fileID: 8300000, guid: 6a6daf71bc18b61458ac065b5906809f, type: 3}
+  - {fileID: 8300000, guid: 62de85e93aed3c34babf2ea40cd0bd8d, type: 3}
+  - {fileID: 8300000, guid: 62de85e93aed3c34babf2ea40cd0bd8d, type: 3}
 --- !u!1 &916338804 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5665900733960635933, guid: 8e83653efa46cde4588176c5421a7de1,
