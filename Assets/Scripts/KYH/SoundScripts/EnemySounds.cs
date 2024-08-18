@@ -125,7 +125,7 @@ public class EnemySounds : MonoBehaviour
             return;
         }
 
-        Debug.Log($"Playing clip: {selectedClip.name} on {audioSource.name}");
+        //Debug.Log($"Playing clip: {selectedClip.name} on {audioSource.name}");
         audioSource.PlayOneShot(selectedClip);  // PlayOneShot을 사용하여 클립 재생
     }
 
@@ -133,7 +133,7 @@ public class EnemySounds : MonoBehaviour
     {
         if (audioClips.Length == 0) return null;
         int index = Random.Range(0, audioClips.Length);
-        Debug.Log($"Selected clip index: {index}");
+        //Debug.Log($"Selected clip index: {index}");
         return audioClips[index];
     }
 }
