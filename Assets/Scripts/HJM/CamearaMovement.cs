@@ -80,6 +80,10 @@ public class CamearaMovement : MonoBehaviour
             // hit.distance(Ray와 충돌한 객체까지의 거리)를 minDistance와 maxDistance 사이의 값으로 제한한다.
             finalDistance = Mathf.Clamp(hit.distance, minDistance, maxDistance);
         }
+        if (hit.transform.name == "Enemy")
+        {
+            finalDistance = maxDistance;
+        }
         else // 그렇지 않고, 부딪히지 않았다면
         {
             // 최종 거리는 최대 거리다,

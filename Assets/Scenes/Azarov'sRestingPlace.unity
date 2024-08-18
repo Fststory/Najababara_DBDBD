@@ -8887,7 +8887,7 @@ PrefabInstance:
     - target: {fileID: 5665900733960635933, guid: 8e83653efa46cde4588176c5421a7de1,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6917742467541304907, guid: 8e83653efa46cde4588176c5421a7de1,
         type: 3}
@@ -16964,7 +16964,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 595f0d98d6ab38640abbac683d4379ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pyState: 0
+  pyState: 1
   playerMaxHp: 100
   currentHp: 100
   moveSpeed: 2.26
@@ -17050,6 +17050,16 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 36921f7c2c6af104187b5dcb437c0b7b, type: 3}
   - {fileID: 8300000, guid: c93b54c095cff0d4bb728069a778197a, type: 3}
   - {fileID: 8300000, guid: 7c3cfb4e98705414f8333ee50aec8967, type: 3}
+  - {fileID: 8300000, guid: 5c9388bd164eebf46b9c4226e38a9ab1, type: 3}
+  - {fileID: 8300000, guid: 55c804fc65285754a9ffb7a488e06b6a, type: 3}
+  - {fileID: 8300000, guid: 2b9792cbab2ac0d4e973c11eba9b9f3b, type: 3}
+  - {fileID: 8300000, guid: 6d04c06f2c3133f4dbe258d86f0caaf1, type: 3}
+  - {fileID: 8300000, guid: 5c89113c2c606484caabbd5f3d334ad3, type: 3}
+  - {fileID: 8300000, guid: d7ec26eb9a3e7b84797ed7e50f88f3b4, type: 3}
+  - {fileID: 8300000, guid: 42a0287adb742f8498543484c29e8953, type: 3}
+  - {fileID: 8300000, guid: 714446cb56f60684e86513e1dc9c9a2d, type: 3}
+  - {fileID: 8300000, guid: 612edea9413422b44978caa8d8c4e400, type: 3}
+  - {fileID: 8300000, guid: 39c64349d2d60fc479fb42b95ce48013, type: 3}
   breathingInterval: 0.8
 --- !u!143 &5866666021979471846
 CharacterController:
