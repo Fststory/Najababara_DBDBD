@@ -47,7 +47,7 @@ BoxCollider:
     m_Bits: 1536
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 503
+    m_Bits: 2551
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -87,7 +87,7 @@ Rigidbody:
     m_Bits: 1536
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 503
+    m_Bits: 2551
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0

@@ -407,6 +407,7 @@ public class EnemyController : MonoBehaviour
             rushingTime += Time.deltaTime; // => 충돌 판정 전에 얘(3초 질주 타이머)가 이미 시간을 누적하고 있어서
             if (rushingTime > 3.0f)
             {
+                rushingTime = 0;
                 NMA.speed = 4.05f;
                 NMA.isStopped = true;
                 NMA.isStopped = false;
@@ -431,7 +432,7 @@ public class EnemyController : MonoBehaviour
         {
             print("충돌 포인트: " + hitInfo.transform.gameObject.name);
             
-            transform.eulerAngles = player.transform.position - transform.position; // 질주 전 질주 방향으로 회전 => 기존에 SetDestination으로 이동할 때 발생하던 회전에 의한 어색한 충돌 해결
+            transform.localEulerAngles = player.transform.position - transform.position; // 질주 전 질주 방향으로 회전 => 기존에 SetDestination으로 이동할 때 발생하던 회전에 의한 어색한 충돌 해결
             NMA.SetDestination(hitInfo.point);
             knockBackDir = (transform.position - hitInfo.point).normalized;
             rushToken--;
