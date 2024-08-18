@@ -8,6 +8,9 @@ public class AttackTrigger : MonoBehaviour
     public Animator playerAnim;
     public BoxCollider boxCol;
 
+    public AudioClip[] attackSounds;  // 타격음 클립 배열
+
+
     void Start()
     {
         GameObject player;
@@ -49,4 +52,6 @@ public class AttackTrigger : MonoBehaviour
             }
         }
     }
+
+
 }
