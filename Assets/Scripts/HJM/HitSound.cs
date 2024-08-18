@@ -11,6 +11,8 @@ public class HitSound : MonoBehaviour
     // 오디오 소스 컴포넌트
     private AudioSource audioSource;
 
+    public GameObject bloodGo;   // 블러드 스크린 오브젝트
+
     private void Awake()
     {
         // 이 게임 오브젝트에 붙어있는 오디오 소스를 가져옴
@@ -67,4 +69,5 @@ public class HitSound : MonoBehaviour
             Debug.LogWarning("맞는 소리 클립이 없습니다.");
         }
     }
+
 }
