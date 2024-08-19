@@ -263,7 +263,7 @@ public class EnemyController : MonoBehaviour
         }
 
         // 거리가 먼데(질주 거리 이상) 질주 조건을 만족한다면...(질주 토큰이 5개이고, 전방 27.6m 이내 충돌할 곳이 있다)
-        if (rushToken == 5 && ISaw("Player", degree, 24.0f) && CanIRush() && distance >= 8.0f)
+        if (rushToken == 5 && ISaw("Player", degree, 24.0f) && CanIRush() && distance >= 6.0f)
         {
             ChangeState(EnemyState.Rush);   // 질주 상태로 전환
             return;
@@ -364,6 +364,15 @@ public class EnemyController : MonoBehaviour
     // [EnemyState.Rush] 질주 상태에서 진행되는 기능
     void Rush()
     {
+        float distance = Vector3.Distance(transform.position, targetTransform.position);
+
+        if (distance < attackRange + 5)
+        {
+            if ((int)playerFSM.pyState <= 1)   // 범위 내에서 아직 플레이어가 건강 or 부상 상태면 공격을 시도
+            {
+                Attack();
+            }
+        }
         enemyAnim.SetBool("Walk", false);
         enemyAnim.SetBool("Rush", true);
         //print("질주 남은 거리: " + NMA.remainingDistance);

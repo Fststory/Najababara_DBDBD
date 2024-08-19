@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8568064074044983603}
   - component: {fileID: 6521504088313525858}
   - component: {fileID: 7074149858733248086}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TraceMark
   m_TagString: Trace
   m_Icon: {fileID: 0}
