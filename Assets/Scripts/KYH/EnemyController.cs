@@ -382,7 +382,7 @@ public class EnemyController : MonoBehaviour
         if (rushCollision.crashed)
         {
             rushingTime = 0;
-            NMA.speed = 4.05f;   // 충돌 시 이동 속도 정상화
+            NMA.speed = 4f;   // 충돌 시 이동 속도 정상화
             currentTime += Time.deltaTime;
             if (currentTime <= 0.2f)
             {
@@ -417,7 +417,7 @@ public class EnemyController : MonoBehaviour
             if (rushingTime > 3.0f)
             {
                 rushingTime = 0;
-                NMA.speed = 4.05f;
+                NMA.speed = 4f;
                 NMA.isStopped = true;
                 NMA.isStopped = false;
                 enemyAnim.SetBool("Rush", false);
